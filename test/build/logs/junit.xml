@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites>
+  <testsuite name="SigmazSuite" tests="58" assertions="101" failures="0" errors="0" time="0.261292">
+    <testsuite name="Test\Jentin\Core\UtilTest" file="E:\htdocs\Dispatcher\test\Jentin\Core\UtilTest.php" namespace="Test\Jentin\Core" fullPackage="Test.SigmaZ.Core" tests="17" assertions="17" failures="0" errors="0" time="0.065228">
+      <testsuite name="Test\Jentin\Core\UtilTest::testGetCamelcased" tests="10" assertions="10" failures="0" errors="0" time="0.042263">
+        <testcase name="testGetCamelcased with data set #0" assertions="1" time="0.012729"/>
+        <testcase name="testGetCamelcased with data set #1" assertions="1" time="0.003107"/>
+        <testcase name="testGetCamelcased with data set #2" assertions="1" time="0.003363"/>
+        <testcase name="testGetCamelcased with data set #3" assertions="1" time="0.003184"/>
+        <testcase name="testGetCamelcased with data set #4" assertions="1" time="0.003196"/>
+        <testcase name="testGetCamelcased with data set #5" assertions="1" time="0.003278"/>
+        <testcase name="testGetCamelcased with data set #6" assertions="1" time="0.003387"/>
+        <testcase name="testGetCamelcased with data set #7" assertions="1" time="0.003371"/>
+        <testcase name="testGetCamelcased with data set #8" assertions="1" time="0.003357"/>
+        <testcase name="testGetCamelcased with data set #9" assertions="1" time="0.003291"/>
+      </testsuite>
+      <testsuite name="Test\Jentin\Core\UtilTest::testParsePattern" tests="7" assertions="7" failures="0" errors="0" time="0.022965">
+        <testcase name="testParsePattern with data set #0" assertions="1" time="0.003256"/>
+        <testcase name="testParsePattern with data set #1" assertions="1" time="0.003099"/>
+        <testcase name="testParsePattern with data set #2" assertions="1" time="0.003185"/>
+        <testcase name="testParsePattern with data set #3" assertions="1" time="0.003545"/>
+        <testcase name="testParsePattern with data set #4" assertions="1" time="0.003297"/>
+        <testcase name="testParsePattern with data set #5" assertions="1" time="0.003226"/>
+        <testcase name="testParsePattern with data set #6" assertions="1" time="0.003357"/>
+      </testsuite>
+    </testsuite>
+    <testsuite name="Test\Jentin\Mvc\DispatcherTest" file="E:\htdocs\Dispatcher\test\Jentin\Mvc\DispatcherTest.php" namespace="Test\Jentin\Mvc" fullPackage="Test.SigmaZ.Mvc" tests="9" assertions="9" failures="0" errors="0" time="0.040467">
+      <testcase name="testGetControllerPath" class="Test\Jentin\Mvc\DispatcherTest" file="E:\htdocs\Dispatcher\test\Jentin\Mvc\DispatcherTest.php" line="33" assertions="1" time="0.010354"/>
+      <testcase name="testNotExistingModuleThrowsException" class="Test\Jentin\Mvc\DispatcherTest" file="E:\htdocs\Dispatcher\test\Jentin\Mvc\DispatcherTest.php" line="46" assertions="1" time="0.005418"/>
+      <testcase name="testNotExistingControllerThrowsException" class="Test\Jentin\Mvc\DispatcherTest" file="E:\htdocs\Dispatcher\test\Jentin\Mvc\DispatcherTest.php" line="56" assertions="1" time="0.003510"/>
+      <testcase name="testNotDefinedModuleThrowsException" class="Test\Jentin\Mvc\DispatcherTest" file="E:\htdocs\Dispatcher\test\Jentin\Mvc\DispatcherTest.php" line="66" assertions="1" time="0.003198"/>
+      <testsuite name="Test\Jentin\Mvc\DispatcherTest::testGetControllerClassName" tests="5" assertions="5" failures="0" errors="0" time="0.017987">
+        <testcase name="testGetControllerClassName with data set #0" assertions="1" time="0.003508"/>
+        <testcase name="testGetControllerClassName with data set #1" assertions="1" time="0.003718"/>
+        <testcase name="testGetControllerClassName with data set #2" assertions="1" time="0.003691"/>
+        <testcase name="testGetControllerClassName with data set #3" assertions="1" time="0.003549"/>
+        <testcase name="testGetControllerClassName with data set #4" assertions="1" time="0.003521"/>
+      </testsuite>
+    </testsuite>
+    <testsuite name="Test\Jentin\Mvc\RequestTest" file="E:\htdocs\Dispatcher\test\Jentin\Mvc\Request\RequestTest.php" namespace="Test\Jentin\Mvc" fullPackage="Test.SigmaZ.Mvc" tests="11" assertions="11" failures="0" errors="0" time="0.037295">
+      <testsuite name="Test\Jentin\Mvc\RequestTest::testGetBaseUrl" tests="8" assertions="8" failures="0" errors="0" time="0.027259">
+        <testcase name="testGetBaseUrl with data set #0" assertions="1" time="0.003490"/>
+        <testcase name="testGetBaseUrl with data set #1" assertions="1" time="0.003456"/>
+        <testcase name="testGetBaseUrl with data set #2" assertions="1" time="0.003453"/>
+        <testcase name="testGetBaseUrl with data set #3" assertions="1" time="0.003278"/>
+        <testcase name="testGetBaseUrl with data set #4" assertions="1" time="0.003268"/>
+        <testcase name="testGetBaseUrl with data set #5" assertions="1" time="0.003392"/>
+        <testcase name="testGetBaseUrl with data set #6" assertions="1" time="0.003405"/>
+        <testcase name="testGetBaseUrl with data set #7" assertions="1" time="0.003517"/>
+      </testsuite>
+      <testsuite name="Test\Jentin\Mvc\RequestTest::testGetHost" tests="2" assertions="2" failures="0" errors="0" time="0.006696">
+        <testcase name="testGetHost with data set #0" assertions="1" time="0.003353"/>
+        <testcase name="testGetHost with data set #1" assertions="1" time="0.003343"/>
+      </testsuite>
+      <testcase name="testGetScheme" class="Test\Jentin\Mvc\RequestTest" file="E:\htdocs\Dispatcher\test\Jentin\Mvc\Request\RequestTest.php" line="115" assertions="1" time="0.003340"/>
+    </testsuite>
+    <testsuite name="Test\Jentin\Mvc\Response\RedirectResponseTest" file="E:\htdocs\Dispatcher\test\Jentin\Mvc\Response\RedirectResponseTest.php" namespace="Test\Jentin\Mvc\Response" fullPackage="Test.SigmaZ.Mvc.Response" tests="2" assertions="3" failures="0" errors="0" time="0.012780">
+      <testcase name="testEmptyRedirectUrlException" class="Test\Jentin\Mvc\Response\RedirectResponseTest" file="E:\htdocs\Dispatcher\test\Jentin\Mvc\Response\RedirectResponseTest.php" line="18" assertions="1" time="0.009132"/>
+      <testcase name="testSetRedirectUrl" class="Test\Jentin\Mvc\Response\RedirectResponseTest" file="E:\htdocs\Dispatcher\test\Jentin\Mvc\Response\RedirectResponseTest.php" line="25" assertions="2" time="0.003648"/>
+    </testsuite>
+    <testsuite name="Test\Jentin\Mvc\ResponseTest" file="E:\htdocs\Dispatcher\test\Jentin\Mvc\Response\ResponseTest.php" namespace="Test\Jentin\Mvc" fullPackage="Test.SigmaZ.Mvc" tests="1" assertions="2" failures="0" errors="0" time="0.003619">
+      <testcase name="testSetHeader" class="Test\Jentin\Mvc\ResponseTest" file="E:\htdocs\Dispatcher\test\Jentin\Mvc\Response\ResponseTest.php" line="15" assertions="2" time="0.003619"/>
+    </testsuite>
+    <testsuite name="Test\Jentin\Mvc\RouteTest" file="E:\htdocs\Dispatcher\test\Jentin\Mvc\Route\RouteTest.php" namespace="Test\Jentin\Mvc" fullPackage="Test.SigmaZ.Mvc" tests="11" assertions="43" failures="0" errors="0" time="0.053338">
+      <testcase name="testParseException" class="Test\Jentin\Mvc\RouteTest" file="E:\htdocs\Dispatcher\test\Jentin\Mvc\Route\RouteTest.php" line="18" assertions="1" time="0.008828"/>
+      <testsuite name="Test\Jentin\Mvc\RouteTest::testParse" tests="10" assertions="42" failures="0" errors="0" time="0.044510">
+        <testcase name="testParse with data set #0" assertions="5" time="0.004618"/>
+        <testcase name="testParse with data set #1" assertions="5" time="0.004456"/>
+        <testcase name="testParse with data set #2" assertions="5" time="0.004851"/>
+        <testcase name="testParse with data set #3" assertions="5" time="0.004661"/>
+        <testcase name="testParse with data set #4" assertions="5" time="0.004663"/>
+        <testcase name="testParse with data set #5" assertions="5" time="0.004588"/>
+        <testcase name="testParse with data set #6" assertions="5" time="0.004862"/>
+        <testcase name="testParse with data set #7" assertions="1" time="0.003631"/>
+        <testcase name="testParse with data set #8" assertions="1" time="0.003763"/>
+        <testcase name="testParse with data set #9" assertions="5" time="0.004417"/>
+      </testsuite>
+    </testsuite>
+    <testsuite name="Test\Jentin\Mvc\Router\RouterTest" file="E:\htdocs\Dispatcher\test\Jentin\Mvc\Router\RouterTest.php" namespace="Test\Jentin\Mvc\Router" fullPackage="Test.SigmaZ.Mvc.Router" tests="3" assertions="12" failures="0" errors="0" time="0.015625">
+      <testsuite name="Test\Jentin\Mvc\Router\RouterTest::testRoute" tests="3" assertions="12" failures="0" errors="0" time="0.015625">
+        <testcase name="testRoute with data set #0" assertions="4" time="0.006402"/>
+        <testcase name="testRoute with data set #1" assertions="4" time="0.004696"/>
+        <testcase name="testRoute with data set #2" assertions="4" time="0.004527"/>
+      </testsuite>
+    </testsuite>
+    <testsuite name="Test\Jentin\Mvc\View\RendererTest" file="E:\htdocs\Dispatcher\test\Jentin\Mvc\View\RendererTest.php" namespace="Test\Jentin\Mvc\View" fullPackage="Test.SigmaZ.Mvc.View" tests="4" assertions="4" failures="0" errors="0" time="0.032940">
+      <testcase name="testRender" class="Test\Jentin\Mvc\View\RendererTest" file="E:\htdocs\Dispatcher\test\Jentin\Mvc\View\RendererTest.php" line="31" assertions="1" time="0.012018"/>
+      <testcase name="testRenderWithPlugin" class="Test\Jentin\Mvc\View\RendererTest" file="E:\htdocs\Dispatcher\test\Jentin\Mvc\View\RendererTest.php" line="51" assertions="1" time="0.010152"/>
+      <testcase name="testRenderTemplateNotFound" class="Test\Jentin\Mvc\View\RendererTest" file="E:\htdocs\Dispatcher\test\Jentin\Mvc\View\RendererTest.php" line="72" assertions="1" time="0.004878"/>
+      <testcase name="testRenderWithEscapedVars" class="Test\Jentin\Mvc\View\RendererTest" file="E:\htdocs\Dispatcher\test\Jentin\Mvc\View\RendererTest.php" line="82" assertions="1" time="0.005892"/>
+    </testsuite>
+  </testsuite>
+</testsuites>

@@ -1,0 +1,1 @@
+Layout works! Content is: <?php echo $this->raw('content') ?>

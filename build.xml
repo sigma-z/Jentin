@@ -1,0 +1,26 @@
+<?xml version="1.0"?>
+
+<project name="Mvc"  basedir="./test">
+    <target name="prepare">
+        <delete dir="${basedir}/build"/>
+        <mkdir dir="${basedir}/build/logs"/>
+        <mkdir dir="${basedir}/build/coverage"/>
+    </target>
+
+    <target name="parallelTasks">
+        <parallel>
+            <!--antcall target="pdepend"/>
+            <antcall target="phpmd"/>
+            <antcall target="phpcpd"/>
+            <antcall target="phploc"/>
+            <antcall target="phpcs"/>
+            <antcall target="phpdoc"/-->
+        </parallel>
+    </target>
+
+    <target name="phpunit">
+        <exec dir="." executable="phpunit.bat" failonerror="true"/>
+    </target>
+
+    <target name="build" depends="prepare,parallelTasks,phpunit"/>
+</project>

@@ -1,0 +1,4 @@
+RewriteEngine on
+
+# redirect all requests to script index.php
+RewriteRule !\.(js|ico|gif|jpg|png|css|php5|php|pdf)$	index.php [L]

@@ -1,0 +1,42 @@
+body {
+    font-family: Arial;
+}
+
+ul {
+    margin-top: 5px;
+    margin-bottom: 15px;
+}
+
+li {
+    margin-bottom: 5px;
+}
+
+body {
+    margin: auto;
+    width: 600px;
+}
+
+div.copy {
+    margin-top: 30px;
+    text-align: center;
+    font-size: 10px;
+}
+
+div.menu {
+    margin: 10px 0;
+    clear: both;
+}
+
+div.menu > a {
+    width: 100px;
+    margin-right: 50px;
+    font-size: 16px;
+}
+
+a {
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
