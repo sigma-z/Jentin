@@ -1,6 +1,0 @@
-License DocComments
-Documentation   -> sphinx?
-
-AppKernel??
-
-GitUpload
