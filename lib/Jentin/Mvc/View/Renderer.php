@@ -317,29 +317,18 @@ class Renderer implements RendererInterface, Pluggable
 
 
     /**
-     * gets file
+     * gets template file
      *
-     * @param type $name
+     * @param  string $name template name without extension
      * @return string
-     * @throws RendererException
-     *   if file could not be found
-     *   if file could not be read
      */
-    protected function getFile($name)
+    public function getFile($name)
     {
         $name = str_replace('..', '', $name);
         $file = $this->path . '/' . $name;
         if (!empty($this->fileExtension)) {
             $file .= '.' . $this->fileExtension;
         }
-
-        if (!is_file($file)) {
-            throw new RendererException('Could not find view template at: ' . $file);
-        }
-        if (!is_readable($file)) {
-            throw new RendererException('Could not read view template at: ' . $file);
-        }
-
         return $file;
     }
 
@@ -350,10 +339,19 @@ class Renderer implements RendererInterface, Pluggable
      * @param   string  $name
      * @param   array   $vars
      * @return  string
+     * @throws RendererException
+     *   if file could not be found
+     *   if file could not be read
      */
     public function render($name, array $vars = null)
     {
         $file = $this->getFile($name);
+        if (!is_file($file)) {
+            throw new RendererException('Could not find view template at: ' . $file);
+        }
+        if (!is_readable($file)) {
+            throw new RendererException('Could not read view template at: ' . $file);
+        }
 
         if (!is_null($vars)) {
             $this->vars = array_merge($this->vars, $vars);

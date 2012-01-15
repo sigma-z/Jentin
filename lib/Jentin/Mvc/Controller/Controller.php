@@ -161,12 +161,12 @@ class Controller implements ControllerInterface, Pluggable
         }
 
         $actionMethod = $this->getActionMethod();
-        if (method_exists($this, $actionMethod)) {
+        //if (method_exists($this, $actionMethod) && !method_exists($this, '__call')) {
             return call_user_func(array($this, $actionMethod));
-        }
-        else {
-            throw new ControllerException("Action '$actionMethod' not found!");
-        }
+//        }
+//        else {
+//            throw new ControllerException("Action '$actionMethod' not found!");
+//        }
     }
 
 

@@ -3,7 +3,11 @@ Jentin MVC Framework
 
 It's lightweight and object orientend programmed.
 It components are loose coupled, introduced by interfaces, clean, maintainable and extensible.
-It requires php 5.3 or greater.
+
+Requires
+---
+ * PHP 5.3 or greater
+ * Symfony's EventDispatcher (https://github.com/symfony/EventDispatcher)
 
 [On GitHub]: https://github.com/sigma-z/Jentin
 [Documentation (coming soon)]: http://www.sigma-scripts.de/Jentin/docs

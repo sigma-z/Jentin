@@ -34,4 +34,6 @@ interface RendererInterface
 
     public function render($name, array $vars = null);
 
+    public function getFile($name);
+
 }

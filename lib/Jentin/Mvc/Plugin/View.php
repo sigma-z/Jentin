@@ -12,6 +12,7 @@ namespace Jentin\Mvc\Plugin;
 use Jentin\Mvc\Controller\ControllerAware;
 use Jentin\Mvc\Controller\ControllerInterface;
 use Jentin\Core\Plugin\PluginBrokerInterface;
+use \Jentin\Mvc\Request\RequestInterface;
 use Jentin\Mvc\View\RendererInterface;
 use Jentin\Mvc\View\Renderer;
 use Jentin\Core\Util;
@@ -30,7 +31,7 @@ class View implements ControllerAware
     /**
      * @var \Jentin\Mvc\View\RendererInterface
      */
-    protected $view;
+    protected $renderer;
     /**
      * @var \Jentin\Mvc\Controller\ControllerInterface
      */
@@ -129,9 +130,9 @@ class View implements ControllerAware
     /**
      * initializes view
      */
-    protected function initView()
+    protected function initRenderer()
     {
-        $this->view = new Renderer($this->pluginBroker);
+        $this->setRenderer(new Renderer($this->pluginBroker));
     }
 
 
@@ -141,68 +142,68 @@ class View implements ControllerAware
      * @param  \Jentin\Mvc\View\RendererInterface $renderer
      * @return \Jentin\Mvc\Controller\Plugin\View
      */
-    public function setView(RendererInterface $renderer)
+    public function setRenderer(RendererInterface $renderer)
     {
-        $this->view = $renderer;
+        $this->renderer = $renderer;
         return $this;
     }
 
 
     /**
-     * gets view renderer
+     * gets renderer
      *
      * @return \Jentin\Mvc\View\RendererInterface
      */
-    public function getView()
+    public function getRenderer()
     {
-        if (is_null($this->view)) {
-            $this->initView();
+        if (is_null($this->renderer)) {
+            $this->initRenderer();
         }
-        return $this->view;
+        return $this->renderer;
     }
 
 
     /**
-     * sets view variable
+     * sets template variable
      * @param string $name
      * @param mixed  $value
      */
     public function __set($name, $value)
     {
-        $this->getView()->$name = $value;
+        $this->getRenderer()->$name = $value;
     }
 
 
     /**
-     * gets view variable
+     * gets escaped template variable
      * @param  string $name
      * @return mixed
      */
     public function __get($name)
     {
-        return $this->getView()->esc($name);
+        return $this->getRenderer()->esc($name);
     }
 
 
     /**
-     * gets view variable escaped
+     * gets escaped template variable
      * @param  string $name
      * @return mixed
      */
     public function esc($name)
     {
-        return $this->getView()->esc($name);
+        return $this->getRenderer()->esc($name);
     }
 
 
     /**
-     * gets raw view variable
+     * gets raw template variable
      * @param  string $name
      * @return mixed
      */
     public function raw($name)
     {
-        return $this->getView()->raw($name);
+        return $this->getRenderer()->raw($name);
     }
 
 
@@ -215,24 +216,13 @@ class View implements ControllerAware
      */
     public function render(array $vars = array(), $name = null)
     {
-        $renderer = $this->getView();
-
         if ($this->controller) {
-            $request = $this->controller->getRequest();
+            $this->setTemplatePathByRequest($this->controller->getRequest());
             if ($name === null) {
-                $name = $request->getActionName();
+                $name = $this->controller->getRequest()->getActionName();
             }
-
-            $params = array(
-                'action'        => $request->getActionName(),
-                'controller'    => $request->getControllerName(),
-                'module'        => $request->getModuleName()
-            );
-            $viewDir = Util::parsePattern($this->viewDirPattern, $params);
-            $renderer->setTemplatePath($viewDir);
         }
-
-        $content = $renderer->render($name, $vars);
+        $content = $this->getRenderer()->render($name, $vars);
 
         if ($this->layoutEnabled) {
             $content = $this->renderLayout($content);
@@ -251,13 +241,35 @@ class View implements ControllerAware
      */
     public function renderLayout($content, $layout = null)
     {
-        $renderer = $this->getView();
+        $renderer = $this->getRenderer();
+        // try to set template path, if not set
+        if (!$renderer->getTemplatePath() && $this->controller) {
+            $this->setTemplatePathByRequest($this->controller->getRequest());
+        }
         $layoutTemplate = $this->getLayoutTemplate($renderer->getTemplatePath(), $layout);
         $pathInfo = pathinfo($layoutTemplate);
         $renderer->setTemplatePath($pathInfo['dirname']);
         $vars['content'] = $content;
         $content = $renderer->render($pathInfo['filename'], $vars);
         return $content;
+    }
+
+
+    /**
+     * sets template path by request
+     *
+     * @param  \Jentin\Mvc\Request\RequestInterface $request
+     * @param  string $name
+     */
+    public function setTemplatePathByRequest(RequestInterface $request)
+    {
+        $params = array(
+            'action'        => $request->getActionName(),
+            'controller'    => $request->getControllerName(),
+            'module'        => $request->getModuleName()
+        );
+        $templatePath = Util::parsePattern($this->viewDirPattern, $params);
+        $this->getRenderer()->setTemplatePath($templatePath);
     }
 
 
@@ -274,8 +286,11 @@ class View implements ControllerAware
         if (is_null($layout)) {
             $layout = $this->layout;
         }
+        if (empty($layoutDir)) {
+            $layoutDir = '.';
+        }
 
-        $templateExtension = $this->view->getFileExtension();
+        $templateExtension = $this->getRenderer()->getFileExtension();
         $templateName = $layout . ($templateExtension ? '.' . $templateExtension : '');
         $layouts = array(
             $layout,
