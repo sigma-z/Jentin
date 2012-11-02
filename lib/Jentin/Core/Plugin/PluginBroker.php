@@ -96,7 +96,8 @@ class PluginBroker implements PluginBrokerInterface
      * loads plugin by name
      *
      * @param   string  $name
-     * @return  object
+     * @throws  \DomainException
+     * @return  object|callable
      */
     public function load($name)
     {
@@ -113,7 +114,8 @@ class PluginBroker implements PluginBrokerInterface
         $instance = null;
         // create instance, if plugin has been defined as class name
         if (is_string($this->plugins[$name])) {
-            $instance = new $this->plugins[$name];
+            $class = $this->plugins[$name];
+            $instance = new $class;
         }
         // create instance, if plugin has been defined as array with keys: class name and args
         else if (is_array($this->plugins[$name])

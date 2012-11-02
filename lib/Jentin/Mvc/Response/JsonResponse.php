@@ -29,9 +29,9 @@ class JsonResponse extends Response
 
 
     /**
-     * sends respsonse - overwrites parent::sendResponse()
+     * sends response - overwrites parent::sendResponse()
      */
-    public function sendRespsonse()
+    public function sendResponse()
     {
         $this->sendHeaders();
         echo json_encode($this->content);

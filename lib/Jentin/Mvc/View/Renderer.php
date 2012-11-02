@@ -39,7 +39,7 @@ class Renderer implements RendererInterface, Pluggable
      */
     protected $pluginBroker;
     /**
-     * @var callback
+     * @var callable
      */
     protected $escapeCallback;
     /**
@@ -158,7 +158,7 @@ class Renderer implements RendererInterface, Pluggable
     /**
      * sets escape callback for template variables
      *
-     * @param  callback $escapeCallback
+     * @param  callable $escapeCallback
      * @return Renderer
      */
     public function setEscapeCallback($escapeCallback)
@@ -171,7 +171,7 @@ class Renderer implements RendererInterface, Pluggable
     /**
      * gets escape callback for template variables
      *
-     * @return callback
+     * @return array
      */
     public function getEscapeCallback()
     {
@@ -213,7 +213,7 @@ class Renderer implements RendererInterface, Pluggable
      * gets (and loads) plugin by a given name
      *
      * @param   string  $name
-     * @return  object
+     * @return  object|callable
      */
     public function plugin($name)
     {
@@ -229,7 +229,7 @@ class Renderer implements RendererInterface, Pluggable
      * execute plugin
      *
      * * If the helper does not define __invoke, it will be returned
-     * * If the helper does define __invoke, it will be called as a functor
+     * * If the helper does define __invoke, it will be called as a function
      *
      * @param  string $method
      * @param  array  $args

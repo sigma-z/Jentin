@@ -37,4 +37,9 @@ interface ResponseInterface
      */
     public function setContent($content);
 
+    /**
+     * sends response
+     */
+    public function sendResponse();
+
 }

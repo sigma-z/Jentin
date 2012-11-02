@@ -15,6 +15,20 @@ namespace Jentin\Mvc\Controller;
  */
 interface ControllerAware
 {
+
+    /**
+     * sets controller
+     *
+     * @param  \Jentin\Mvc\Controller\ControllerInterface $controller
+     * @return ControllerAware
+     */
     public function setController(ControllerInterface $controller);
+
+    /**
+     * gets controller
+     *
+     * @return \Jentin\Mvc\Controller\ControllerInterface
+     */
     public function getController();
+
 }

@@ -156,7 +156,7 @@ class Route implements RouteInterface
     /**
      * gets url for route by given params
      *
-     * @param array $params
+     * @param array  $params
      * @param string $query
      * @param string $asterisk
      * @return string
@@ -164,6 +164,7 @@ class Route implements RouteInterface
      */
     public function getUrl(array $params = array(), $query = '', $asterisk = '')
     {
+        $url = '';
         // parse for placeholders in pattern
         $placeHolders = array();
         if (preg_match_all('|' . self::PLACEHOLDER_PATTERN . '|', $this->pattern, $matches)) {

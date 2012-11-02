@@ -181,7 +181,7 @@ class Response implements ResponseInterface
 
 
     /**
-     * sends response to browser and halts php execution
+     * sends response to browser
      */
     public function sendResponse()
     {

@@ -38,7 +38,7 @@ class Util
      * @param   string  $pattern
      * @param   array   $params
      * @param   string  $delimiter
-     * @param   bool    $camelcased
+     * @param   bool    $camelCased
      * @return  string
      */
     public static function parsePattern($pattern, array $params, $delimiter = '%', $camelCased = true)

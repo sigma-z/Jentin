@@ -1,7 +1,7 @@
 Jentin MVC Framework
 ===
 
-It's lightweight and object orientend programmed.
+It's lightweight and object orientated programmed.
 It components are loose coupled, introduced by interfaces, clean, maintainable and extensible.
 
 Requires

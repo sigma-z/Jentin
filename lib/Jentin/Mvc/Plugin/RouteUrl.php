@@ -19,10 +19,22 @@ use Jentin\Mvc\Request\RequestInterface;
 class RouteUrl
 {
 
+    /**
+     * @var \Jentin\Mvc\Router\RouterInterface
+     */
     protected $router;
+    /**
+     * @var \Jentin\Mvc\Request\RequestInterface
+     */
     protected $request;
 
 
+    /**
+     * constructor
+     *
+     * @param \Jentin\Mvc\Router\RouterInterface $router
+     * @param \Jentin\Mvc\Request\RequestInterface $request
+     */
     public function __construct(RouterInterface $router, RequestInterface $request)
     {
         $this->router = $router;
@@ -30,33 +42,47 @@ class RouteUrl
     }
 
 
+    /**
+     * sets router
+     *
+     * @param \Jentin\Mvc\Router\RouterInterface $router
+     */
     public function setRouter(RouterInterface $router)
     {
         $this->router = $router;
     }
 
 
+    /**
+     * gets router
+     *
+     * @return \Jentin\Mvc\Router\RouterInterface
+     */
     public function getRouter()
     {
         return $this->router;
     }
 
 
+    /**
+     * sets request
+     *
+     * @param \Jentin\Mvc\Request\RequestInterface $request
+     */
     public function setRequest(RequestInterface $request)
     {
         $this->request = $request;
     }
 
 
+    /**
+     * gets router
+     *
+     * @return \Jentin\Mvc\Request\RequestInterface
+     */
     public function getRequest()
     {
         return $this->request;
-    }
-
-
-    public function url($name = null, array $params = array())
-    {
-        $this->router->getUrl();
     }
 
 }

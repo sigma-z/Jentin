@@ -16,10 +16,27 @@ namespace Jentin\Core\Plugin;
 interface Pluggable
 {
 
+    /**
+     * sets plugin broker
+     *
+     * @param \Jentin\Core\Plugin\PluginBrokerInterface $pluginBroker
+     * @return Pluggable
+     */
     public function setPluginBroker(PluginBrokerInterface $broker);
 
+    /**
+     * gets plugin broker
+     *
+     * @return \Jentin\Core\Plugin\PluginBrokerInterface
+     */
     public function getPluginBroker();
 
+    /**
+     * gets (and loads) plugin by a given name
+     *
+     * @param   string  $name
+     * @return  object|callable
+     */
     public function plugin($name);
 
 }

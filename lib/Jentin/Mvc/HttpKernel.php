@@ -155,6 +155,12 @@ class HttpKernel
     }
 
 
+    /**
+     * sets event dispatcher
+     *
+     * @param  EventDispatcherInterface $eventDispatcher
+     * @return HttpKernel
+     */
     public function setEventDispatcher(EventDispatcherInterface $eventDispatcher)
     {
         $this->eventDispatcher = $eventDispatcher;
@@ -162,6 +168,11 @@ class HttpKernel
     }
 
 
+    /**
+     * gets event dispatcher
+     *
+     * @return EventDispatcherInterface
+     */
     public function getEventDispatcher()
     {
         if (is_null($this->eventDispatcher)) {
@@ -175,6 +186,7 @@ class HttpKernel
      * handles request
      *
      * @param   \Jentin\Mvc\Request\RequestInterface    $request
+     * @throws  \DomainException
      * @return  \Jentin\Mvc\Response\ResponseInterface  $response
      */
     public function handleRequest(RequestInterface $request)

@@ -20,6 +20,12 @@ use Jentin\Mvc\Response\JsonResponse;
 class HtmlJsonControllerResultListener
 {
 
+    /**
+     * gets response
+     *
+     * @param  \Jentin\Mvc\Event\ControllerResultEvent $event
+     * @return \Jentin\Mvc\Response\ResponseInterface
+     */
     public function getResponse(ControllerResultEvent $event)
     {
         $controllerResult = $event->getControllerResult();
@@ -33,6 +39,7 @@ class HtmlJsonControllerResultListener
             $response->setContent($controllerResult);
             $event->setResponse($response);
         }
+        return $event->getResponse();
     }
 
 }

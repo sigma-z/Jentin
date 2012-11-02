@@ -23,7 +23,7 @@ interface RouterInterface
      * gets route by name
      *
      * @param  string $name
-     * @return Route
+     * @return \Jentin\Mvc\Route\Route
      */
     public function getRoute($name);
 

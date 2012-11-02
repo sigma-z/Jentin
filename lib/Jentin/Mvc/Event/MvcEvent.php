@@ -47,7 +47,7 @@ abstract class MvcEvent extends \Symfony\Component\EventDispatcher\Event
     /**
      * gets response
      *
-     * @return Jentin\Mvc\Response\ResponseInterface
+     * @return \Jentin\Mvc\Response\ResponseInterface
      */
     public function getResponse()
     {

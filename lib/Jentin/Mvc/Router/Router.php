@@ -21,7 +21,7 @@ class Router implements RouterInterface
 {
 
     /**
-     * @var array
+     * @var \Jentin\Mvc\Route\RouteInterface[]
      */
     protected $routes = array();
 
@@ -32,14 +32,14 @@ class Router implements RouterInterface
      * gets route by name
      *
      * @param   string  $name
-     * @return  array
+     * @return  \Jentin\Mvc\Route\RouteInterface
      */
     public function getRoute($name)
     {
         if (!empty($this->routes[$name])) {
             return $this->routes[$name];
         }
-        return null;
+        return false;
     }
 
 
@@ -122,6 +122,7 @@ class Router implements RouterInterface
         if (empty($routeName) && is_null($this->routedRoute)) {
             throw new \DomainException('No route has been routed, yet!');
         }
+
         $route = $this->getRoute($routeName);
         if (is_null($route)) {
             throw new \DomainException("Route $routeName is not defined!");

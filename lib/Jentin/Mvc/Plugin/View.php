@@ -140,7 +140,7 @@ class View implements ControllerAware
      * sets view renderer
      *
      * @param  \Jentin\Mvc\View\RendererInterface $renderer
-     * @return \Jentin\Mvc\Controller\Plugin\View
+     * @return \Jentin\Mvc\Plugin\View
      */
     public function setRenderer(RendererInterface $renderer)
     {

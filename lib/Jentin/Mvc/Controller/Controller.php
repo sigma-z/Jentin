@@ -11,8 +11,6 @@ namespace Jentin\Mvc\Controller;
 
 use Jentin\Mvc\Request\RequestInterface;
 use Jentin\Mvc\Response\ResponseInterface;
-use Jentin\Mvc\Response\Response;
-use Jentin\Mvc\Response\JsonResponse;
 use Jentin\Core\Util;
 use Jentin\Core\Plugin\PluginBrokerInterface;
 use Jentin\Core\Plugin\Pluggable;
@@ -134,7 +132,7 @@ class Controller implements ControllerInterface, Pluggable
      * gets (and loads) plugin by a given name
      *
      * @param   string  $name
-     * @return  object
+     * @return  object|callable
      */
     public function plugin($name)
     {
@@ -161,12 +159,7 @@ class Controller implements ControllerInterface, Pluggable
         }
 
         $actionMethod = $this->getActionMethod();
-        //if (method_exists($this, $actionMethod) && !method_exists($this, '__call')) {
-            return call_user_func(array($this, $actionMethod));
-//        }
-//        else {
-//            throw new ControllerException("Action '$actionMethod' not found!");
-//        }
+        return call_user_func(array($this, $actionMethod));
     }
 
 

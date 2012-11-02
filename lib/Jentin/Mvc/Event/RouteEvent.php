@@ -10,7 +10,6 @@
 namespace Jentin\Mvc\Event;
 
 use Jentin\Mvc\Request\RequestInterface;
-use Jentin\Mvc\Response\ResponseInterface;
 
 /**
  * RouteEvent.php

@@ -89,11 +89,15 @@ class NamespaceClassLoader implements ClassLoaderInterface
      *
      * @param   string  $namespace
      * @param   array   $directory
+     * @throws  \InvalidArgumentException
      */
     public function setNamespace($namespace, $directory)
     {
         if (!is_readable($directory)) {
             throw new \InvalidArgumentException("Directory: '$directory' does not exist or is not readable!");
+        }
+        if ($namespace[0] === $this->namespaceSeparator) {
+            $namespace = substr($namespace, 1);
         }
         $this->namespaces[$namespace] = $directory;
     }
@@ -106,6 +110,11 @@ class NamespaceClassLoader implements ClassLoaderInterface
      */
     public function setNamespaceOmissions(array $omissions)
     {
+        foreach ($omissions as &$namespace) {
+            if ($namespace[0] === $this->namespaceSeparator) {
+                $namespace = substr($namespace, 1);
+            }
+        }
         $this->namespaceOmissions = $omissions;
     }
 
@@ -117,6 +126,9 @@ class NamespaceClassLoader implements ClassLoaderInterface
      */
     public function setNamespaceOmission($omittedNamespace)
     {
+        if ($omittedNamespace[0] === $this->namespaceSeparator) {
+            $omittedNamespace = substr($omittedNamespace, 1);
+        }
         if (!in_array($omittedNamespace, $this->namespaceOmissions)) {
             $this->namespaceOmissions[] = $omittedNamespace;
         }
@@ -176,6 +188,7 @@ class NamespaceClassLoader implements ClassLoaderInterface
     public function loadClass($class)
     {
         if (($classFile = $this->getClassFile($class))) {
+            /** @noinspection PhpIncludeInspection */
             require $classFile;
             return class_exists($class, false);
         }
@@ -197,7 +210,7 @@ class NamespaceClassLoader implements ClassLoaderInterface
 
         $pos = strrpos($class, $this->namespaceSeparator);
         if ($pos === false) {
-            return;
+            return false;
         }
 
         // namespace of class
@@ -207,16 +220,17 @@ class NamespaceClassLoader implements ClassLoaderInterface
 
         foreach ($this->namespaces as $namespace => $directory) {
             if (0 === strpos($classNamespace, $namespace)) {
-                $path = $this->getClassPath($classNamespace, $namespace);
+                $path = $this->getClassPath($classNamespace);
                 $file = $directory . DIRECTORY_SEPARATOR . $path
                       . $className . $this->fileExtension;
 
                 if (file_exists($file)) {
                     return $file;
                 }
-                return;
+                return false;
             }
         }
+        return false;
     }
 
 
@@ -224,10 +238,9 @@ class NamespaceClassLoader implements ClassLoaderInterface
      * gets relative path to class by class namespace
      *
      * @param   string  $classNamespace
-     * @param   string  $namespace
      * @return  string
      */
-    private function getClassPath($classNamespace, $namespace)
+    private function getClassPath($classNamespace)
     {
         $path = $classNamespace;
         // if namespace should be omitted, remove it from class namespace
