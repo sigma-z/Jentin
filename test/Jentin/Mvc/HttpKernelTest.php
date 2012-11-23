@@ -18,9 +18,9 @@ class HttpKernelTest extends \PHPUnit_Framework_TestCase
 
     protected function setUp()
     {
-        $pathArr = array(FIXTURE_DIR, 'modules', '%Module%', '%Controller%', 'Controller');
+        $pathArr = array(FIXTURE_DIR, 'modules', '%Module%', 'controllers');
         $controllerDirs = implode(DIRECTORY_SEPARATOR, $pathArr);
-        $modules = array('Default', 'Blog');
+        $modules = array('Default', 'Test', 'Blog');
         $router = new \Jentin\Mvc\Router\Router();
 
         $this->httpKernel = new \Jentin\Mvc\HttpKernel($controllerDirs, $modules, $router);
@@ -29,9 +29,9 @@ class HttpKernelTest extends \PHPUnit_Framework_TestCase
 
     public function testGetControllerPath()
     {
-        $pathArr = array(FIXTURE_DIR, 'modules', 'Default', 'Test', 'Controller');
+        $pathArr = array(FIXTURE_DIR, 'modules', 'Test', 'controllers');
         $expectedControllerPath = implode(DIRECTORY_SEPARATOR, $pathArr);
-        $controllerPath = $this->httpKernel->getControllerPath('Default', 'Test');
+        $controllerPath = $this->httpKernel->getControllerPath('Test', 'Default');
         $this->assertEquals($expectedControllerPath, $controllerPath);
     }
 

@@ -209,7 +209,7 @@ class RouteTest extends \PHPUnit_Framework_TestCase
             'doesMatch'             => false
         );
 
-        // 10 test test default route without specifying action
+        // 10 test default route without specifying action
         $testData[] = array(
             'requestUrl'            => '/module/controller',
             'pattern'              => '/%module%(/%controller%)(/%action%)',
@@ -221,17 +221,41 @@ class RouteTest extends \PHPUnit_Framework_TestCase
             'doesMatch'             => true
         );
 
+        // 11 test urls with query string
+        // NOTE: Query string will not be parsed for request parameters by routing.
+        //   To make the test successful, routeParams are equal expectedParams.
+        $testData[] = array(
+            'requestUrl'            => '/module/controller/index?_dc=123654789',
+            'pattern'              => '/%module%(/%controller%)(/%action%)',
+            'routeParams'           => array('_dc' => '123654789'),
+            'expectedParams'        => array('_dc' => '123654789'),
+            'expectedModule'        => 'module',
+            'expectedController'    => 'controller',
+            'expectedAction'        => 'index',
+            'doesMatch'             => true
+        );
+
+        // 12 test urls end with slash
+        $testData[] = array(
+            'requestUrl'            => '/module/controller/index/',
+            'pattern'              => '/%module%(/%controller%)(/%action%)',
+            'routeParams'           => array('_dc' => '123654789'),
+            'expectedParams'        => array('_dc' => '123654789'),
+            'expectedModule'        => 'module',
+            'expectedController'    => 'controller',
+            'expectedAction'        => 'index',
+            'doesMatch'             => true
+        );
+
         return $testData;
     }
 
 
     /**
      * @dataProvider provideGetUrl
-     * @param $pattern
-     * @param $params
-     * @param $query
-     * @param $asterisk
-     * @param $expected
+     * @param string $pattern
+     * @param array  $params
+     * @param string $expected
      */
     public function testGetUrl($pattern, $params, $expected)
     {

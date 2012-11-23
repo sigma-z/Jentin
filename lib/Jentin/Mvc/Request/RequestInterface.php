@@ -131,4 +131,20 @@ interface RequestInterface
      */
     public function getBasePath();
 
+
+    /**
+     * gets url query
+     *
+     * @return string
+     */
+    public function getQuery();
+
+
+    /**
+     * gets url fragment
+     *
+     * @return string
+     */
+    public function getFragment();
+
 }

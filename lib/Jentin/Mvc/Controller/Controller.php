@@ -159,7 +159,14 @@ class Controller implements ControllerInterface, Pluggable
         }
 
         $actionMethod = $this->getActionMethod();
-        return call_user_func(array($this, $actionMethod));
+        if (method_exists($this, $actionMethod)) {
+            return call_user_func(array($this, $actionMethod));
+        }
+        $moduleName = $this->request->getModuleName();
+        $controllerName = $this->request->getControllerName();
+        throw new ControllerException(
+            "The controller $controllerName (module: $moduleName) does not implement method $actionMethod!"
+        );
     }
 
 

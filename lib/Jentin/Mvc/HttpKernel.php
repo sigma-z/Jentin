@@ -48,9 +48,9 @@ class HttpKernel
     protected $router;
     /**
      * controller pattern (could look like ../%module%/%controller%/controllers)
-     * @var array
+     * @var string
      */
-    protected $controllerDirPattern = array();
+    protected $controllerDirPattern = '';
     /**
      * modules, that are active for the dispatching process
      * @var array
@@ -334,6 +334,7 @@ class HttpKernel
             throw new ControllerException(
                     "Controller path for module '$moduleNameCamelCased' and"
                     . " controller '$controllerNameCamelCased' is not defined!"
+                    . ' Expected to be: ' . $controllerDir
             );
         }
 

@@ -1,7 +1,8 @@
 <?php
 
 $libDir = __DIR__ . '/../lib';
-$extLibDir = __DIR__ . '/../../ext_libraries/';
+/** @noinspection PhpUndefinedConstantInspection */
+$extLibDir = __DIR__ . '/../' . VENDOR_DIR;
 
 require $libDir . '/Jentin/ClassLoader/NamespaceClassLoader.php';
 

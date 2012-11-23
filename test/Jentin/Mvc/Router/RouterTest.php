@@ -10,6 +10,9 @@ use Jentin\Mvc\Request\Request;
 class RouterTest extends \PHPUnit_Framework_TestCase
 {
 
+    /**
+     * @var \Jentin\Mvc\Router\Router
+     */
     private $router;
 
 
@@ -57,6 +60,11 @@ class RouterTest extends \PHPUnit_Framework_TestCase
         $request = new \Jentin\Mvc\Request\Request(array(), $server);
         $request->setBaseUrl('');
         $testData[] = array($request, false, 'default', 'index', 'index');
+
+        $server = array('REQUEST_URI' => '/some/action?_dc=123654789');
+        $request = new \Jentin\Mvc\Request\Request(array(), $server);
+        $request->setBaseUrl('/');
+        $testData[] = array($request, true, 'some', 'action', 'index');
 
         return $testData;
     }

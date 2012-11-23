@@ -460,4 +460,36 @@ class Request implements RequestInterface
         return $this->getHeader('X_REQUESTED_WITH') == 'XMLHttpRequest';
     }
 
+
+    /**
+     * gets url query
+     *
+     * @return string
+     */
+    public function getQuery()
+    {
+        $requestUri = $this->getRequestUri();
+        $urlParts = parse_url($requestUri);
+        if (isset($urlParts['query'])) {
+            return $urlParts['query'];
+        }
+        return '';
+    }
+
+
+    /**
+     * gets url fragment
+     *
+     * @return string
+     */
+    public function getFragment()
+    {
+        $requestUri = $this->getRequestUri();
+        $urlParts = parse_url($requestUri);
+        if (isset($urlParts['fragment'])) {
+            return $urlParts['fragment'];
+        }
+        return '';
+    }
+
 }

@@ -40,8 +40,23 @@ class HttpKernelEndToEndTest extends \PHPUnit_Framework_TestCase
     }
 
 
-    public function testHandleRequest()
+    /**
+     * @dataProvider provideHandleRequest
+     *
+     * @param \Jentin\Mvc\Request\Request$request
+     * @param string $expectedResponseContent
+     */
+    public function testHandleRequest(\Jentin\Mvc\Request\Request $request, $expectedResponseContent)
     {
+        $response = $this->httpKernel->handleRequest($request);
+        $this->assertEquals($expectedResponseContent, $response->getContent());
+    }
+
+
+    public function provideHandleRequest()
+    {
+        $testCases = array();
+
         $request = new \Jentin\Mvc\Request\Request();
         $request->setBaseUrl('/');
         $request->setRequestUri('/');
@@ -49,8 +64,36 @@ class HttpKernelEndToEndTest extends \PHPUnit_Framework_TestCase
         $request->setControllerName('default');
         $request->setActionName('home');
 
-        $response = $this->httpKernel->handleRequest($request);
-        $this->assertEquals('It works!', $response->getContent());
+        $testCases[] = array(
+            'request' => $request,
+            'expectedResponseContent' => 'It works!'
+        );
+
+        $request = new \Jentin\Mvc\Request\Request();
+        $request->setBaseUrl('/');
+        $request->setRequestUri('/test/default/home?_dc=321456987');
+        $testCases[] = array(
+            'request' => $request,
+            'expectedResponseContent' => 'It works!'
+        );
+
+        $request = new \Jentin\Mvc\Request\Request();
+        $request->setBaseUrl('/');
+        $request->setRequestUri('/test/default/home?_dc=321456987#_dv12321');
+        $testCases[] = array(
+            'request' => $request,
+            'expectedResponseContent' => 'It works!'
+        );
+
+        $request = new \Jentin\Mvc\Request\Request();
+        $request->setBaseUrl('/');
+        $request->setRequestUri('/test/default/home/?_dc=321456987#_dv12321');
+        $testCases[] = array(
+            'request' => $request,
+            'expectedResponseContent' => 'It works!'
+        );
+
+        return $testCases;
     }
 
 
@@ -62,7 +105,7 @@ class HttpKernelEndToEndTest extends \PHPUnit_Framework_TestCase
         $request->setModuleName('test');
         $request->setControllerName('default');
         $request->setActionName('redirect');
-
+        /** @var \Jentin\Mvc\Response\RedirectResponse $response */
         $response = $this->httpKernel->handleRequest($request);
         $this->assertInstanceOf('\Jentin\Mvc\Response\RedirectResponse', $response);
         $this->assertEquals('http://example.com/', $response->getRedirectUrl());

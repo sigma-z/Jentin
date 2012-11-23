@@ -116,4 +116,96 @@ class RequestTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('https', $request->getScheme());
     }
 
+
+    /**
+     * @dataProvider provideRequestUrls
+     *
+     * @param string $url
+     * @param array  $expected
+     */
+    public function testGetQuery($url, $expected)
+    {
+        $server = array('REQUEST_URI' => $url);
+        $request = new \Jentin\Mvc\Request\Request(array(), $server);
+        $this->assertEquals($expected['query'], $request->getQuery());
+    }
+
+
+    /**
+     * @dataProvider provideRequestUrls
+     *
+     * @param string $url
+     * @param array  $expected
+     */
+    public function testGetFragment($url, $expected)
+    {
+        $server = array('REQUEST_URI' => $url);
+        $request = new \Jentin\Mvc\Request\Request(array(), $server);
+        $this->assertEquals($expected['fragment'], $request->getFragment());
+    }
+
+
+    public function provideRequestUrls()
+    {
+        $testCases = array();
+
+        $testCases[] = array(
+            '/test/abc/action?hello=world#?_de=123',
+            array(
+                'query' => 'hello=world',
+                'fragment' => '?_de=123'
+            )
+        );
+
+        $testCases[] = array(
+            '/test/abc/action',
+            array(
+                'query' => '',
+                'fragment' => ''
+            )
+        );
+
+        $testCases[] = array(
+            '/test/abc/action#_dc=123',
+            array(
+                'query' => '',
+                'fragment' => '_dc=123'
+            )
+        );
+
+        $testCases[] = array(
+            '/test/abc/action#_dc=123?hello=world',
+            array(
+                'query' => '',
+                'fragment' => '_dc=123?hello=world'
+            )
+        );
+
+        $testCases[] = array(
+            '/test/abc/action?hello=world',
+            array(
+                'query' => 'hello=world',
+                'fragment' => ''
+            )
+        );
+
+        $testCases[] = array(
+            '/test/abc/action?##hello=world',
+            array(
+                'query' => '',
+                'fragment' => '#hello=world'
+            )
+        );
+
+        $testCases[] = array(
+            '/test/abc/action??##hello=world',
+            array(
+                'query' => '?',
+                'fragment' => '#hello=world'
+            )
+        );
+
+        return $testCases;
+    }
+
 }

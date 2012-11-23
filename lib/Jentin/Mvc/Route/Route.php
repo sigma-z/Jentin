@@ -89,7 +89,8 @@ class Route implements RouteInterface
      */
     public function parse(RequestInterface $request)
     {
-        $requestUrl = $request->getRequestUri();
+        $requestUrl = $this->getRequestUriWithoutQueryString($request);
+
         $baseUrl    = $request->getBaseUrl();
         if ($baseUrl != substr($requestUrl, 0, strlen($baseUrl))) {
             throw new RouteException(
@@ -125,6 +126,16 @@ class Route implements RouteInterface
     }
 
 
+    protected function getRequestUriWithoutQueryString(RequestInterface $request)
+    {
+        $requestUri = $request->getRequestUri();
+        if (false !== ($pos = strpos($requestUri, '?'))) {
+            $requestUri = substr($requestUri, 0, $pos);
+        }
+        return $requestUri;
+    }
+
+
     /**
      * parses route params
      *
@@ -144,7 +155,7 @@ class Route implements RouteInterface
         if (preg_match('|^' . $routePattern . '$|', $url, $matches)) {
             foreach ($matches as $name => $value) {
                 if ($name[0] == 'P') {
-                    $params[substr($name, 1)] = $value;
+                    $params[substr($name, 1)] = rtrim($value, '/');
                 }
             }
             return $params;
