@@ -17,7 +17,22 @@ interface ControllerInterface
 {
 
     /**
-     * dispatches action
+     * Should be executed before dispatching the controller action through HttpKernel::dispatch()
+     */
+    public function preDispatch();
+
+
+    /**
+     * Should be executed after dispatching the controller action through HttpKernel::dispatch()
+     *
+     * @param  mixed $response
+     * @return mixed
+     */
+    public function postDispatch($response);
+
+
+    /**
+     * Dispatches action
      */
     public function dispatch();
 }

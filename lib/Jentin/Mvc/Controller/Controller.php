@@ -145,6 +145,26 @@ class Controller implements ControllerInterface, Pluggable
 
 
     /**
+     * Executed before Controller::dispatch()
+     */
+    public function preDispatch()
+    {
+    }
+
+
+    /**
+     * Executed after Controller::dispatch()
+     *
+     * @param  mixed $response
+     * @return mixed
+     */
+    public function postDispatch($response)
+    {
+        return $response;
+    }
+
+
+    /**
      * dispatches
      *
      * @return  ResponseInterface

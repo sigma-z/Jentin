@@ -216,7 +216,9 @@ class HttpKernel
             else {
                 $controller = $controllerEvent->getController();
                 // controller dispatch
+                $controller->preDispatch();
                 $response = $controller->dispatch();
+                $response = $controller->postDispatch($response);
 
                 if (!($response instanceof ResponseInterface)) {
                     $controllerResultEvent = new ControllerResultEvent($controller, $response);
