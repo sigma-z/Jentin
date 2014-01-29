@@ -21,6 +21,7 @@ Features
    * View - helper for rendering view templates
  * Event handling
    * onRoute - dispatched on routing the request
+   * onRouteCallback - dispatched on routing when route is using a callback
    * onController - dispatched creating corresponding controller
    * onControllerDispatch - dispatched on controller dispatch
    * onControllerResult - dispatched after controller has been dispatched
