@@ -148,7 +148,7 @@ class HttpKernel
      */
     public function getControllerPluginBroker()
     {
-        if (is_null($this->controllerPluginBroker)) {
+        if ($this->controllerPluginBroker === null) {
             $this->controllerPluginBroker = new PluginBroker();
         }
         return $this->controllerPluginBroker;
@@ -175,7 +175,7 @@ class HttpKernel
      */
     public function getEventDispatcher()
     {
-        if (is_null($this->eventDispatcher)) {
+        if ($this->eventDispatcher === null) {
             $this->eventDispatcher = new EventDispatcher();
         }
         return $this->eventDispatcher;

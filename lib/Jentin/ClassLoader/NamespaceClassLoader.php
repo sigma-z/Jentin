@@ -9,15 +9,11 @@
 
 namespace Jentin\ClassLoader;
 
-if (!class_exists('\Jentin\ClassLoader\ClassLoaderInterface', false)) {
-    require_once __DIR__ . '/ClassLoaderInterface.php';
-}
-
 /**
  * ClassLoader using namespaces
  * @author Steffen Zeidler <sigma_z@sigma-scripts.de>
  */
-class NamespaceClassLoader implements ClassLoaderInterface
+class NamespaceClassLoader
 {
 
     /**

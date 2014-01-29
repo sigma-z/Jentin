@@ -9,8 +9,6 @@
 
 namespace Jentin\Mvc\Request;
 
-use Jentin\Mvc\Request\RequestInterface;
-
 /**
  * Request
  * @author Steffen Zeidler <sigma_z@sigma-scripts.de>
@@ -297,7 +295,7 @@ class Request implements RequestInterface
      */
     public function setBasePath($basePath = null)
     {
-        if (is_null($basePath)) {
+        if ($basePath === null) {
             $basePath = dirname($this->server['SCRIPT_NAME']);
         }
         $this->basePath = $basePath;
@@ -311,7 +309,7 @@ class Request implements RequestInterface
      */
     public function getBasePath()
     {
-        if (is_null($this->basePath)) {
+        if ($this->basePath === null) {
             $this->setBasePath();
         }
         return $this->basePath;
@@ -325,7 +323,7 @@ class Request implements RequestInterface
      */
     public function setBaseUrl($baseUrl = null)
     {
-        if (is_null($baseUrl)) {
+        if ($baseUrl === null) {
             $basePath = $this->getBasePath();
             $baseUrl = $this->getRequestUri();
 
@@ -352,7 +350,7 @@ class Request implements RequestInterface
      */
     public function getBaseUrl()
     {
-        if (is_null($this->baseUrl)) {
+        if ($this->baseUrl === null) {
             $this->setBaseUrl();
         }
         return $this->baseUrl;
@@ -366,7 +364,7 @@ class Request implements RequestInterface
      */
     public function setHost($host = null)
     {
-        if (is_null($host)) {
+        if ($host === null) {
             if (isset($this->server['HTTP_HOST'])) {
                 $host = $this->server['HTTP_HOST'];
             }
@@ -386,7 +384,7 @@ class Request implements RequestInterface
      */
     public function getHost()
     {
-        if (is_null($this->host)) {
+        if ($this->host === null) {
             $this->setHost();
         }
         return $this->host;
@@ -400,7 +398,7 @@ class Request implements RequestInterface
      */
     public function setScheme($scheme = null)
     {
-        if (is_null($scheme)) {
+        if ($scheme === null) {
             $scheme = isset($this->server['HTTPS']) && $this->server['HTTPS'] == 'on'
                     ? 'https'
                     : 'http';

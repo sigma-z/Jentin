@@ -353,7 +353,7 @@ class Renderer implements RendererInterface, Pluggable
             throw new RendererException('Could not read view template at: ' . $file);
         }
 
-        if (!is_null($vars)) {
+        if ($vars) {
             $this->vars = array_merge($this->vars, $vars);
         }
 

@@ -29,7 +29,7 @@ class HtmlJsonControllerResultListener
     public function getResponse(ControllerResultEvent $event)
     {
         $controllerResult = $event->getControllerResult();
-        if (is_string($controllerResult) || is_null($controllerResult)) {
+        if (is_string($controllerResult) || $controllerResult === null) {
             $response = new Response();
             $response->setContent((string)$controllerResult);
             $event->setResponse($response);

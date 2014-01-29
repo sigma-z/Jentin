@@ -1,0 +1,20 @@
+{
+    "name": "sigma-z/jentin",
+    "description": "Jentin MVC Framework",
+    "license": "BSD-3-Clause",
+    "authors": [
+        {
+            "name": "Steffen Zeidler",
+            "email": "sigma_z@sigma-scripts.de"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {
+        "symfony/event-dispatcher": "~2"
+    },
+    "autoload": {
+        "psr-0": {
+            "Jentin": "lib"
+        }
+    }
+}

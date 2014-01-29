@@ -156,7 +156,7 @@ class View implements ControllerAware
      */
     public function getRenderer()
     {
-        if (is_null($this->renderer)) {
+        if ($this->renderer === null) {
             $this->initRenderer();
         }
         return $this->renderer;
@@ -283,7 +283,7 @@ class View implements ControllerAware
      */
     protected function getLayoutTemplate($layoutDir, $layout = null)
     {
-        if (is_null($layout)) {
+        if ($layout === null) {
             $layout = $this->layout;
         }
         if (empty($layoutDir)) {

@@ -91,7 +91,7 @@ class Route implements RouteInterface
     {
         $requestUrl = $this->getRequestUriWithoutQueryString($request);
 
-        $baseUrl    = $request->getBaseUrl();
+        $baseUrl = $request->getBaseUrl();
         if ($baseUrl != substr($requestUrl, 0, strlen($baseUrl))) {
             throw new RouteException(
                 "Request url does not match base url! Request url: '$requestUrl' Base url: $baseUrl"

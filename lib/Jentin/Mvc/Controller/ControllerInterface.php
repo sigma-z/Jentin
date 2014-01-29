@@ -35,4 +35,11 @@ interface ControllerInterface
      * Dispatches action
      */
     public function dispatch();
+
+
+    /**
+     * @return \Jentin\Mvc\Request\RequestInterface
+     */
+    public function getRequest();
+
 }
