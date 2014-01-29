@@ -23,7 +23,7 @@ interface RouterInterface
      * gets route by name
      *
      * @param  string $name
-     * @return \Jentin\Mvc\Route\Route
+     * @return \Jentin\Mvc\Route\RouteInterface
      */
     public function getRoute($name);
 
@@ -41,18 +41,19 @@ interface RouterInterface
      * routes the request
      *
      * @param   \Jentin\Mvc\Request\RequestInterface    $request
-     * @param   array                                   $defaultParams  optional
-     * @return  boolean
+     * @param   array                                   $defaultParams  default: array()
+     * @return  \Jentin\Mvc\Route\RouteInterface
      */
     public function route(RequestInterface $request, array $defaultParams = array());
 
     /**
      * gets url
      *
-     * @param string $routeName
-     * @param array  $params
-     * @param string $query
-     * @param string $asterisk
+     * @param  string  $routeName  default: ''
+     * @param  array   $params     default: array()
+     * @param  string  $query      default: ''
+     * @param  string  $asterisk   default: ''
+     * @return string
      */
     public function getUrl($routeName = '', array $params = array(), $query = '', $asterisk = '');
 

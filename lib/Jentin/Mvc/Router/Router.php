@@ -20,6 +20,9 @@ use Jentin\Mvc\Request\RequestInterface;
 class Router implements RouterInterface
 {
 
+    const DEFAULT_ROUTE = 'default';
+
+
     /**
      * @var RouteInterface[]
      */
@@ -49,7 +52,7 @@ class Router implements RouterInterface
     /**
      * sets route
      *
-     * @param string $name
+     * @param string         $name
      * @param RouteInterface $route
      */
     public function setRoute($name, RouteInterface $route)
@@ -72,7 +75,7 @@ class Router implements RouterInterface
     /**
      * sets routes
      *
-     * @param array $routes
+     * @param RouteInterface[] $routes
      */
     public function setRoutes(array $routes)
     {
@@ -83,54 +86,48 @@ class Router implements RouterInterface
     /**
      * parses routes
      *
-     * @param   \Jentin\Mvc\Request\RequestInterface    $request
-     * @param   array                                   $defaultParams optional
+     * @param  RequestInterface $request
+     * @param  array            $defaultParams default: array()
      *
-     * @return  boolean
+     * @return RouteInterface
      */
     public function route(RequestInterface $request, array $defaultParams = array())
     {
         foreach ($this->routes as $name => $route) {
-            if ($name === 'default') {
+            if ($name === self::DEFAULT_ROUTE) {
                 continue;
             }
             if ($route->parse($request, $defaultParams)) {
-                $this->routedRoute = $route;
-                return true;
+                return $route;
             }
         }
-
-        $defaultRoute = $this->getRoute('default');
+        $defaultRoute = $this->getRoute(self::DEFAULT_ROUTE);
         if ($defaultRoute && $defaultRoute->parse($request, $defaultParams)) {
-            $this->routedRoute = $defaultRoute;
-            return true;
+            return $defaultRoute;
         }
-
-        return false;
+        return null;
     }
 
 
     /**
      * gets url of route
      *
-     * @param   string  $routeName
-     * @param   array   $params
-     * @param   string  $query
-     * @param   string  $asterisk
-     * @return  string
-     * @throws  \DomainException
+     * @param  string  $routeName  default: ''
+     * @param  array   $params     default: array()
+     * @param  string  $query      default: ''
+     * @param  string  $asterisk   default: ''
+     * @return string
+     * @throws \DomainException
      */
     public function getUrl($routeName = '', array $params = array(), $query = '', $asterisk = '')
     {
-        if (empty($routeName) && $this->routedRoute === null) {
-            throw new \DomainException('No route has been routed, yet!');
+        if (empty($routeName)) {
+            $routeName = self::DEFAULT_ROUTE;
         }
-
         $route = $this->getRoute($routeName);
-        if ($route === null) {
+        if (!$route) {
             throw new \DomainException("Route $routeName is not defined!");
         }
-
         return $route->getUrl($params, $query, $asterisk);
     }
 

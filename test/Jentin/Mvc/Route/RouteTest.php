@@ -2,6 +2,9 @@
 
 namespace Test\Jentin\Mvc;
 
+use Jentin\Mvc\Request\Request;
+use Jentin\Mvc\Route\Route;
+
 /**
  * RouteTest
  * @author Steffen Zeidler <sigma_z@sigma-scripts.de>
@@ -16,11 +19,11 @@ class RouteTest extends \PHPUnit_Framework_TestCase
     {
         // request object
         $server = array('REQUEST_URI' => '/abc');
-        $request = new \Jentin\Mvc\Request\Request(array(), $server);
+        $request = new Request(array(), $server);
         $request->setBaseUrl('/test');
 
         // route
-        $route = new \Jentin\Mvc\Route\Route('/');
+        $route = new Route('/');
         // parse route
         $route->parse($request);
     }
@@ -29,32 +32,32 @@ class RouteTest extends \PHPUnit_Framework_TestCase
     /**
      * @dataProvider provideParse
      *
-     * @param   string  $requestUrl
-     * @param   string  $pattern
-     * @param   array   $routeParams
-     * @param   array   $expectedParams
-     * @param   string  $expectedModule
-     * @param   string  $expectedController
-     * @param   string  $expectedAction
-     * @param   boolean $doesMatch
+     * @param string  $requestUrl
+     * @param string  $pattern
+     * @param array   $routeParams
+     * @param array   $expectedParams
+     * @param string  $expectedModule
+     * @param string  $expectedController
+     * @param string  $expectedAction
+     * @param boolean $doesMatch
      */
     public function testParse(
-            $requestUrl,
-            $pattern,
-            array $routeParams,
-            array $expectedParams,
-            $expectedModule,
-            $expectedController,
-            $expectedAction,
-            $doesMatch)
-    {
+        $requestUrl,
+        $pattern,
+        array $routeParams,
+        array $expectedParams,
+        $expectedModule,
+        $expectedController,
+        $expectedAction,
+        $doesMatch
+    ) {
         // request object
-        $server= array('REQUEST_URI' => $requestUrl);
-        $request = new \Jentin\Mvc\Request\Request(array(), $server);
+        $server = array('REQUEST_URI' => $requestUrl);
+        $request = new Request(array(), $server);
         $request->setBaseUrl('/');
 
         // route
-        $route = new \Jentin\Mvc\Route\Route($pattern, $routeParams);
+        $route = new Route($pattern, $routeParams);
         // parse route
         $actual = $route->parse($request);
 
@@ -76,17 +79,17 @@ class RouteTest extends \PHPUnit_Framework_TestCase
      */
     public function provideParse()
     {
-        $request = new \Jentin\Mvc\Request\Request();
+        $request = new Request();
         $defaultModule      = $request->getModuleName();
         $defaultController  = $request->getControllerName();
         $defaultAction      = $request->getActionName();
 
         $testData = array();
 
-        // 0 tests defaults
+        // tests defaults
         $testData[] = array(
             'requestUrl'            => '/',
-            'pattern'              => '/',
+            'pattern'               => '/',
             'routeParams'           => array(),
             'expectedParams'        => array(),
             'expectedModule'        => $defaultModule,
@@ -95,10 +98,10 @@ class RouteTest extends \PHPUnit_Framework_TestCase
             'doesMatch'             => true
         );
 
-        // 1 test path matches
+        // test path matches
         $testData[] = array(
             'requestUrl'            => '/',
-            'pattern'              => '/(%module%)(/%controller%)(/%action%)',
+            'pattern'               => '/(%module%)(/%controller%)(/%action%)',
             'routeParams'           => array(),
             'expectedParams'        => array(),
             'expectedModule'        => $defaultModule,
@@ -107,10 +110,10 @@ class RouteTest extends \PHPUnit_Framework_TestCase
             'doesMatch'             => true
         );
 
-        // 2 test path matches
+        // test with callback
         $testData[] = array(
-            'requestUrl'            => '/news',
-            'pattern'              => '/news(/%action%)(/%id%)(.%format%)',
+            'requestUrl'            => '/',
+            'pattern'               => '/(%module%)(/%controller%)(/%action%)',
             'routeParams'           => array(),
             'expectedParams'        => array(),
             'expectedModule'        => $defaultModule,
@@ -119,10 +122,22 @@ class RouteTest extends \PHPUnit_Framework_TestCase
             'doesMatch'             => true
         );
 
-        // 3 tests route params are used for the request
+        // test path matches
         $testData[] = array(
             'requestUrl'            => '/news',
-            'pattern'              => '/%module%(/%controller%)(/%action%)',
+            'pattern'               => '/news(/%action%)(/%id%)(.%format%)',
+            'routeParams'           => array(),
+            'expectedParams'        => array(),
+            'expectedModule'        => $defaultModule,
+            'expectedController'    => $defaultController,
+            'expectedAction'        => $defaultAction,
+            'doesMatch'             => true
+        );
+
+        // tests route params are used for the request
+        $testData[] = array(
+            'requestUrl'            => '/news',
+            'pattern'               => '/%module%(/%controller%)(/%action%)',
             'routeParams'           => array('controller' => 'news123'),
             'expectedParams'        => array(),
             'expectedModule'        => 'news',
@@ -131,10 +146,10 @@ class RouteTest extends \PHPUnit_Framework_TestCase
             'doesMatch'             => true
         );
 
-        // 4 tests special characters in url
+        // tests special characters in url
         $testData[] = array(
             'requestUrl'            => '/!/test/index/index',
-            'pattern'              => '/!/%module%(/%controller%)(/%action%)',
+            'pattern'               => '/!/%module%(/%controller%)(/%action%)',
             'routeParams'           => array(),
             'expectedParams'        => array(),
             'expectedModule'        => 'test',
@@ -146,7 +161,7 @@ class RouteTest extends \PHPUnit_Framework_TestCase
         // 5 tests route params are used and overwrite url parsed params
         $testData[] = array(
             'requestUrl'            => '/news/test',
-            'pattern'              => '/%module%(/%controller%)(/%action%)',
+            'pattern'               => '/%module%(/%controller%)(/%action%)',
             'routeParams'           => array('controller' => 'news'),
             'expectedParams'        => array(),
             'expectedModule'        => 'news',
@@ -155,10 +170,10 @@ class RouteTest extends \PHPUnit_Framework_TestCase
             'doesMatch'             => true
         );
 
-        // 6 tests route params are used and overwrites url parsed params
+        // tests route params are used and overwrites url parsed params
         $testData[] = array(
             'requestUrl'            => '/news/test/index',
-            'pattern'              => '/%module%(/%controller%)(/%action%)',
+            'pattern'               => '/%module%(/%controller%)(/%action%)',
             'routeParams'           => array(
                 'controller'    => 'news',
                 'id'            => '123'
@@ -170,10 +185,10 @@ class RouteTest extends \PHPUnit_Framework_TestCase
             'doesMatch'             => true
         );
 
-        // 7 test that routeParams are stronger than url parsed parameters
+        // test that routeParams are stronger than url parsed parameters
         $testData[] = array(
             'requestUrl'            => '/news/test/action/xyz',
-            'pattern'              => '/%module%(/%controller%)(/%action%)(/%id%)',
+            'pattern'               => '/%module%(/%controller%)(/%action%)(/%id%)',
             'routeParams'           => array(
                 'controller'    => 'news',
                 'id'            => '123'
@@ -185,10 +200,10 @@ class RouteTest extends \PHPUnit_Framework_TestCase
             'doesMatch'             => true
         );
 
-        // 8 test url does not match
+        // test url does not match
         $testData[] = array(
             'requestUrl'            => '/news',
-            'pattern'              => '/module(/%controller%)(/%action%)(/%id%)',
+            'pattern'               => '/module(/%controller%)(/%action%)(/%id%)',
             'routeParams'           => array(),
             'expectedParams'        => array(),
             'expectedModule'        => $defaultModule,
@@ -197,10 +212,10 @@ class RouteTest extends \PHPUnit_Framework_TestCase
             'doesMatch'             => false
         );
 
-        // 9 test url does not match, because of non optional parameter
+        // test url does not match, because of non optional parameter
         $testData[] = array(
             'requestUrl'            => '/module',
-            'pattern'              => '/module/%controller%',
+            'pattern'               => '/module/%controller%',
             'routeParams'           => array(),
             'expectedParams'        => array(),
             'expectedModule'        => $defaultModule,
@@ -209,10 +224,10 @@ class RouteTest extends \PHPUnit_Framework_TestCase
             'doesMatch'             => false
         );
 
-        // 10 test default route without specifying action
+        // test default route without specifying action
         $testData[] = array(
             'requestUrl'            => '/module/controller',
-            'pattern'              => '/%module%(/%controller%)(/%action%)',
+            'pattern'               => '/%module%(/%controller%)(/%action%)',
             'routeParams'           => array(),
             'expectedParams'        => array(),
             'expectedModule'        => 'module',
@@ -221,12 +236,12 @@ class RouteTest extends \PHPUnit_Framework_TestCase
             'doesMatch'             => true
         );
 
-        // 11 test urls with query string
+        // test urls with query string
         // NOTE: Query string will not be parsed for request parameters by routing.
         //   To make the test successful, routeParams are equal expectedParams.
         $testData[] = array(
             'requestUrl'            => '/module/controller/index?_dc=123654789',
-            'pattern'              => '/%module%(/%controller%)(/%action%)',
+            'pattern'               => '/%module%(/%controller%)(/%action%)',
             'routeParams'           => array('_dc' => '123654789'),
             'expectedParams'        => array('_dc' => '123654789'),
             'expectedModule'        => 'module',
@@ -235,10 +250,10 @@ class RouteTest extends \PHPUnit_Framework_TestCase
             'doesMatch'             => true
         );
 
-        // 12 test urls end with slash
+        // test urls end with slash
         $testData[] = array(
             'requestUrl'            => '/module/controller/index/',
-            'pattern'              => '/%module%(/%controller%)(/%action%)',
+            'pattern'               => '/%module%(/%controller%)(/%action%)',
             'routeParams'           => array('_dc' => '123654789'),
             'expectedParams'        => array('_dc' => '123654789'),
             'expectedModule'        => 'module',
@@ -259,7 +274,7 @@ class RouteTest extends \PHPUnit_Framework_TestCase
      */
     public function testGetUrl($pattern, $params, $expected)
     {
-        $route = new \Jentin\Mvc\Route\Route($pattern);
+        $route = new Route($pattern);
         $actual = $route->getUrl($params);
         $this->assertEquals($expected, $actual);
     }
