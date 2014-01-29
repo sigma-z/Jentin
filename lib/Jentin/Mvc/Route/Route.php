@@ -24,26 +24,28 @@ class Route implements RouteInterface
      */
     const PLACEHOLDER_PATTERN = '%([\w:\.\-]+?)%';
 
-    /**
-     * @var string
-     */
+
+    /** @var string */
     protected $pattern = '';
-    /**
-     * @var array
-     */
+
+    /** @var array */
     protected $routeParams = array();
+
+    protected $callback;
 
 
     /**
      * constructor
      *
-     * @param   string  $pattern
-     * @param   array   $routeParams
+     * @param string        $pattern
+     * @param array         $routeParams
+     * @param callable|null $callback
      */
-    public function __construct($pattern, array $routeParams = array())
+    public function __construct($pattern, array $routeParams = array(), $callback = null)
     {
-        $this->pattern     = $pattern;
+        $this->pattern = $pattern;
         $this->routeParams = $routeParams;
+        $this->callback = $callback;
     }
 
     /**
@@ -126,6 +128,28 @@ class Route implements RouteInterface
     }
 
 
+    /**
+     * @return bool
+     */
+    public function hasCallback()
+    {
+        return $this->callback !== null;
+    }
+
+
+    /**
+     * @return \Jentin\Mvc\Response\ResponseInterface
+     */
+    public function callback()
+    {
+        return call_user_func($this->callback);
+    }
+
+
+    /**
+     * @param  RequestInterface $request
+     * @return string
+     */
     protected function getRequestUriWithoutQueryString(RequestInterface $request)
     {
         $requestUri = $request->getRequestUri();

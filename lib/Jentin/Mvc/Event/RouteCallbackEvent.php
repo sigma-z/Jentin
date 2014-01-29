@@ -10,38 +10,47 @@
 namespace Jentin\Mvc\Event;
 
 use Jentin\Mvc\Request\RequestInterface;
+use Jentin\Mvc\Route\RouteInterface;
 
 /**
- * RouteEvent.php
  * @author Steffen Zeidler <sigma_z@sigma-scripts.de>
  */
-class RouteEvent extends MvcEvent
+class RouteCallbackEvent extends MvcEvent
 {
 
-    /**
-     * @var RequestInterface
-     */
+    /** @var RequestInterface */
     protected $request;
 
+    /** @var RouteInterface */
+    protected $route;
+
 
     /**
-     * constructor
      * @param RequestInterface $request
+     * @param RouteInterface   $route
      */
-    public function __construct(RequestInterface $request)
+    public function __construct(RequestInterface $request, RouteInterface $route)
     {
         $this->request = $request;
+        $this->route = $route;
     }
 
 
     /**
-     * gets request
-     *
      * @return RequestInterface
      */
     public function getRequest()
     {
         return $this->request;
+    }
+
+
+    /**
+     * @return RouteInterface
+     */
+    public function getRoute()
+    {
+        return $this->route;
     }
 
 }

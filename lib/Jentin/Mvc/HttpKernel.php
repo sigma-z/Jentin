@@ -9,6 +9,7 @@
 
 namespace Jentin\Mvc;
 
+use Jentin\Mvc\Event\RouteCallbackEvent;
 use Jentin\Mvc\Router\RouterInterface;
 use Jentin\Mvc\Request\RequestInterface;
 use Jentin\Mvc\Response\ResponseInterface;
@@ -185,49 +186,15 @@ class HttpKernel
     /**
      * handles request
      *
-     * @param   \Jentin\Mvc\Request\RequestInterface    $request
+     * @param   RequestInterface $request
      * @throws  \DomainException
-     * @return  \Jentin\Mvc\Response\ResponseInterface  $response
+     * @return  ResponseInterface  $response
      */
     public function handleRequest(RequestInterface $request)
     {
         $eventDispatcher = $this->getEventDispatcher();
 
-        // EVENT onRoute
-        $routeEvent = new RouteEvent($request);
-        $eventDispatcher->dispatch(MvcEvent::ON_ROUTE, $routeEvent);
-        if ($routeEvent->hasResponse()) {
-            $response = $routeEvent->getResponse();
-        }
-        else {
-            // routes the request
-            $this->router->route($request);
-
-            // create controller
-            $controller = $this->newController($request);
-
-            // EVENT onController
-            $controllerEvent = new ControllerEvent($controller);
-            $eventDispatcher->dispatch(MvcEvent::ON_CONTROLLER, $controllerEvent);
-
-            if ($controllerEvent->hasResponse()) {
-                $response = $controllerEvent->getResponse();
-            }
-            else {
-                $controller = $controllerEvent->getController();
-                // controller dispatch
-                $controller->preDispatch();
-                $response = $controller->dispatch();
-                $response = $controller->postDispatch($response);
-
-                if (!($response instanceof ResponseInterface)) {
-                    $controllerResultEvent = new ControllerResultEvent($controller, $response);
-                    $eventDispatcher->dispatch(MvcEvent::ON_CONTROLLER_RESULT, $controllerResultEvent);
-                    $response = $controllerResultEvent->getResponse();
-                }
-            }
-        }
-
+        $response = $this->route($request);
         if (!($response instanceof ResponseInterface)) {
             throw new \DomainException(
                 'Response type is not valid! You gave: '
@@ -245,9 +212,60 @@ class HttpKernel
 
 
     /**
+     * @param  RequestInterface $request
+     * @return ResponseInterface
+     */
+    private function route(RequestInterface $request)
+    {
+        $eventDispatcher = $this->getEventDispatcher();
+
+        // EVENT onRoute
+        $routeEvent = new RouteEvent($request);
+        $eventDispatcher->dispatch(MvcEvent::ON_ROUTE, $routeEvent);
+        if ($routeEvent->hasResponse()) {
+            return $routeEvent->getResponse();
+        }
+
+        // routes the request
+        $route = $this->router->route($request);
+        if ($route && $route->hasCallback()) {
+            $callbackEvent = new RouteCallbackEvent($request, $route);
+            $eventDispatcher->dispatch(MvcEvent::ON_ROUTE_CALLBACK, $callbackEvent);
+            if ($callbackEvent->hasResponse()) {
+                return $callbackEvent->getResponse();
+            }
+            return $route->callback();
+        }
+
+        // create controller
+        $controller = $this->newController($request);
+
+        // EVENT onController
+        $controllerEvent = new ControllerEvent($controller);
+        $eventDispatcher->dispatch(MvcEvent::ON_CONTROLLER, $controllerEvent);
+        if ($controllerEvent->hasResponse()) {
+            return $controllerEvent->getResponse();
+        }
+
+        $controller = $controllerEvent->getController();
+        // controller dispatch
+        $controller->preDispatch();
+        $response = $controller->dispatch();
+        $response = $controller->postDispatch($response);
+
+        if (!($response instanceof ResponseInterface)) {
+            $controllerResultEvent = new ControllerResultEvent($controller, $response);
+            $eventDispatcher->dispatch(MvcEvent::ON_CONTROLLER_RESULT, $controllerResultEvent);
+            $response = $controllerResultEvent->getResponse();
+        }
+        return $response;
+    }
+
+
+    /**
      * creates controller instance
      *
-     * @param   \Jentin\Mvc\Request\RequestInterface $request
+     * @param   RequestInterface $request
      * @return  ControllerInterface
      */
     public function newController(RequestInterface $request)
@@ -262,7 +280,7 @@ class HttpKernel
     /**
      * loads controller class
      *
-     * @param   \Jentin\Mvc\Request\RequestInterface $request
+     * @param   RequestInterface $request
      * @return  string
      */
     protected function loadControllerClass(RequestInterface $request)

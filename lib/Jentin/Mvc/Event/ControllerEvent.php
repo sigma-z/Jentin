@@ -19,7 +19,7 @@ class ControllerEvent extends MvcEvent
 {
 
     /**
-     * @var \Jentin\Mvc\Controller\ControllerInterface
+     * @var ControllerInterface
      */
     protected $controller;
 
@@ -27,7 +27,7 @@ class ControllerEvent extends MvcEvent
     /**
      * constructor
      *
-     * @param \Jentin\Mvc\Controller\ControllerInterface    $controller
+     * @param ControllerInterface $controller
      */
     public function __construct(ControllerInterface $controller)
     {
@@ -38,7 +38,7 @@ class ControllerEvent extends MvcEvent
     /**
      * sets controller
      *
-     * @param \Jentin\Mvc\Controller\ControllerInterface $controller
+     * @param ControllerInterface $controller
      */
     public function setController(ControllerInterface $controller)
     {
@@ -49,7 +49,7 @@ class ControllerEvent extends MvcEvent
     /**
      * gets controller
      *
-     * @return \Jentin\Mvc\Controller\ControllerInterface
+     * @return ControllerInterface
      */
     public function getController()
     {

@@ -13,7 +13,6 @@ namespace Jentin\Mvc\Controller;
  * ControllerException
  * @author Steffen Zeidler <sigma_z@sigma-scripts.de>
  */
-
 class ControllerException extends \Exception
 {
 }

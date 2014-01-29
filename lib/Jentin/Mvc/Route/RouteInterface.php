@@ -58,4 +58,16 @@ interface RouteInterface
      */
     public function parse(RequestInterface $request);
 
+
+    /**
+     * @return bool
+     */
+    public function hasCallback();
+
+
+    /**
+     * @return \Jentin\Mvc\Response\ResponseInterface
+     */
+    public function callback();
+
 }

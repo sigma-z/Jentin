@@ -10,15 +10,17 @@
 namespace Jentin\Mvc\Event;
 
 use Jentin\Mvc\Response\ResponseInterface;
+use Symfony\Component\EventDispatcher\Event;
 
 /**
  * Static class, that defines Mvc events as class constants
  * @author Steffen Zeidler <sigma_z@sigma-scripts.de>
  */
-abstract class MvcEvent extends \Symfony\Component\EventDispatcher\Event
+abstract class MvcEvent extends Event
 {
 
     const ON_ROUTE                  = 'jentin.mvc.onRoute';
+    const ON_ROUTE_CALLBACK         = 'jentin.mvc.onRouteCallback';
     const ON_CONTROLLER             = 'jentin.mvc.onController';
     const ON_CONTROLLER_RESULT      = 'jentin.mvc.onControllerResult';
     const ON_FILTER_RESPONSE        = 'jentin.mvc.onFilterResponse';
@@ -26,7 +28,7 @@ abstract class MvcEvent extends \Symfony\Component\EventDispatcher\Event
 
 
     /**
-     * @var \Jentin\Mvc\Response\ResponseInterface
+     * @var ResponseInterface
      */
     protected $response;
 
@@ -34,8 +36,8 @@ abstract class MvcEvent extends \Symfony\Component\EventDispatcher\Event
     /**
      * sets response
      *
-     * @param  \Jentin\Mvc\Response\ResponseInterface $response
-     * @return \Jentin\Mvc\Event\MvcEvent
+     * @param  ResponseInterface $response
+     * @return MvcEvent
      */
     public function setResponse(ResponseInterface $response)
     {
@@ -47,7 +49,7 @@ abstract class MvcEvent extends \Symfony\Component\EventDispatcher\Event
     /**
      * gets response
      *
-     * @return \Jentin\Mvc\Response\ResponseInterface
+     * @return ResponseInterface
      */
     public function getResponse()
     {

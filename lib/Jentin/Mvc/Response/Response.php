@@ -9,13 +9,10 @@
 
 namespace Jentin\Mvc\Response;
 
-use Jentin\Mvc\Response\ResponseInterface;
-
 /**
  * Response
  * @author Steffen Zeidler <sigma_z@sigma-scripts.de>
  */
-
 class Response implements ResponseInterface
 {
 

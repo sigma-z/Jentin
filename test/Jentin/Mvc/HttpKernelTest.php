@@ -2,6 +2,9 @@
 
 namespace Test\Jentin\Mvc;
 
+use Jentin\Mvc\HttpKernel;
+use Jentin\Mvc\Router\Router;
+
 /**
  * DispatcherTest
  * @author Steffen Zeidler <sigma_z@sigma-scripts.de>
@@ -11,7 +14,7 @@ class HttpKernelTest extends \PHPUnit_Framework_TestCase
 
     /**
      * controller dispatcher
-     * @var \Jentin\Mvc\HttpKernel
+     * @var HttpKernel
      */
     private $httpKernel;
 
@@ -21,9 +24,9 @@ class HttpKernelTest extends \PHPUnit_Framework_TestCase
         $pathArr = array(FIXTURE_DIR, 'modules', '%Module%', 'controllers');
         $controllerDirs = implode(DIRECTORY_SEPARATOR, $pathArr);
         $modules = array('Default', 'Test', 'Blog');
-        $router = new \Jentin\Mvc\Router\Router();
+        $router = new Router();
 
-        $this->httpKernel = new \Jentin\Mvc\HttpKernel($controllerDirs, $modules, $router);
+        $this->httpKernel = new HttpKernel($controllerDirs, $modules, $router);
     }
 
 

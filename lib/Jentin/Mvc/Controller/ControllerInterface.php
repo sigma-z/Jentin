@@ -33,6 +33,7 @@ interface ControllerInterface
 
     /**
      * Dispatches action
+     * @return \Jentin\Mvc\Response\ResponseInterface
      */
     public function dispatch();
 

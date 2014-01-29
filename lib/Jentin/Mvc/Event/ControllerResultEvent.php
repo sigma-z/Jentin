@@ -20,7 +20,7 @@ class ControllerResultEvent extends MvcEvent
 {
 
     /**
-     * @var \Jentin\Mvc\Controller\ControllerInterface
+     * @var ControllerInterface
      */
     private $controller;
     /**
@@ -31,7 +31,8 @@ class ControllerResultEvent extends MvcEvent
 
     /**
      * constructor
-     * @param \Jentin\Mvc\Controller\ControllerInterface $controller
+     *
+     * @param ControllerInterface $controller
      * @param mixed $controllerResult
      */
     public function __construct(ControllerInterface $controller, $controllerResult)
@@ -44,7 +45,7 @@ class ControllerResultEvent extends MvcEvent
     /**
      * gets controller
      *
-     * @return \Jentin\Mvc\Controller\ControllerInterface
+     * @return ControllerInterface
      */
     public function getController()
     {
@@ -55,8 +56,8 @@ class ControllerResultEvent extends MvcEvent
     /**
      * sets controller result
      *
-     * @param $controllerResult
-     * @return \Jentin\Mvc\Event\ControllerResultEvent
+     * @param  mixed $controllerResult
+     * @return $this
      */
     public function setControllerResult($controllerResult)
     {
@@ -79,7 +80,7 @@ class ControllerResultEvent extends MvcEvent
     /**
      * sets response
      *
-     * @param  \Jentin\Mvc\Response\ResponseInterface $response
+     * @param  ResponseInterface $response
      * @return \Jentin\Mvc\Event\RouteEvent
      */
     public function setResponse(ResponseInterface $response)
