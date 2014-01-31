@@ -10,6 +10,7 @@
 namespace Jentin\Mvc;
 
 use Jentin\Mvc\Event\RouteCallbackEvent;
+use Jentin\Mvc\Route\RouteInterface;
 use Jentin\Mvc\Router\RouterInterface;
 use Jentin\Mvc\Request\RequestInterface;
 use Jentin\Mvc\Response\ResponseInterface;
@@ -217,9 +218,8 @@ class HttpKernel
      */
     private function route(RequestInterface $request)
     {
-        $eventDispatcher = $this->getEventDispatcher();
-
         // EVENT onRoute
+        $eventDispatcher = $this->getEventDispatcher();
         $routeEvent = new RouteEvent($request);
         $eventDispatcher->dispatch(MvcEvent::ON_ROUTE, $routeEvent);
         if ($routeEvent->hasResponse()) {
@@ -229,19 +229,38 @@ class HttpKernel
         // routes the request
         $route = $this->router->route($request);
         if ($route && $route->hasCallback()) {
-            $callbackEvent = new RouteCallbackEvent($request, $route);
-            $eventDispatcher->dispatch(MvcEvent::ON_ROUTE_CALLBACK, $callbackEvent);
-            if ($callbackEvent->hasResponse()) {
-                return $callbackEvent->getResponse();
-            }
-            return $route->callback();
+            return $this->dispatchRouteCallback($request, $route);
         }
 
+        return $this->dispatchController($request);
+    }
+
+
+    /**
+     * @param  RequestInterface     $request
+     * @param  Route\RouteInterface $route
+     * @return bool|ResponseInterface
+     */
+    private function dispatchRouteCallback(RequestInterface $request, RouteInterface $route)
+    {
+        $callbackEvent = new RouteCallbackEvent($request, $route);
+        $eventDispatcher = $this->getEventDispatcher();
+        $eventDispatcher->dispatch(MvcEvent::ON_ROUTE_CALLBACK, $callbackEvent);
+        if ($callbackEvent->hasResponse()) {
+            return $callbackEvent->getResponse();
+        }
+        return $route->callback();
+    }
+
+
+    private function dispatchController(RequestInterface $request)
+    {
         // create controller
         $controller = $this->newController($request);
 
         // EVENT onController
         $controllerEvent = new ControllerEvent($controller);
+        $eventDispatcher = $this->getEventDispatcher();
         $eventDispatcher->dispatch(MvcEvent::ON_CONTROLLER, $controllerEvent);
         if ($controllerEvent->hasResponse()) {
             return $controllerEvent->getResponse();
