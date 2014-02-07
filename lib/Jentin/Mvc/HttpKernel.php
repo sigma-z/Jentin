@@ -252,6 +252,10 @@ class HttpKernel
     }
 
 
+    /**
+     * @param  RequestInterface $request
+     * @return ResponseInterface
+     */
     private function dispatchController(RequestInterface $request)
     {
         // create controller
