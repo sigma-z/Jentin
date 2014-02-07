@@ -12,6 +12,7 @@ use \Jentin\Mvc\View\Renderer,
 class RendererTest extends \PHPUnit_Framework_TestCase
 {
 
+    /** @var Renderer */
     private $renderer;
 
     protected function setUp()
@@ -86,8 +87,15 @@ class RendererTest extends \PHPUnit_Framework_TestCase
 }
 
 
+/**
+ * helper class for unit test
+ */
 class MyViewHelper
 {
+
+    /**
+     * @return string
+     */
     public function __invoke()
     {
         return 'MyViewHelper has been invoked!';

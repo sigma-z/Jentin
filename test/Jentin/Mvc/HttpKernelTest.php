@@ -41,7 +41,7 @@ class HttpKernelTest extends \PHPUnit_Framework_TestCase
 
     /**
      * tests that a not existing module cannot be called
-     * @expectedException \Jentin\Mvc\Controller\ControllerException
+     * @expectedException \Jentin\Mvc\HttpKernelException
      */
     public function testNotExistingModuleThrowsException()
     {
@@ -51,7 +51,7 @@ class HttpKernelTest extends \PHPUnit_Framework_TestCase
 
     /**
      * tests that a not existing controller cannot be called
-     * @expectedException \Jentin\Mvc\Controller\ControllerException
+     * @expectedException \Jentin\Mvc\HttpKernelException
      */
     public function testNotExistingControllerThrowsException()
     {
@@ -61,7 +61,7 @@ class HttpKernelTest extends \PHPUnit_Framework_TestCase
 
     /**
      * tests that an existing module cannot be called, because it wasn't defined for the dispatcher
-     * @expectedException \Jentin\Mvc\Controller\ControllerException
+     * @expectedException \Jentin\Mvc\HttpKernelException
      */
     public function testNotDefinedModuleThrowsException()
     {

@@ -15,7 +15,6 @@ use Jentin\Mvc\Router\RouterInterface;
 use Jentin\Mvc\Request\RequestInterface;
 use Jentin\Mvc\Response\ResponseInterface;
 use Jentin\Mvc\Controller\ControllerInterface;
-use Jentin\Mvc\Controller\ControllerException;
 use Jentin\Core\Util;
 use Jentin\Core\Plugin\PluginBrokerInterface;
 use Jentin\Core\Plugin\PluginBroker;
@@ -299,26 +298,32 @@ class HttpKernel
     /**
      * loads controller class
      *
-     * @param   RequestInterface $request
-     * @return  string
+     * @param  RequestInterface $request
+     * @throws HttpKernelException
+     * @return string
      */
     protected function loadControllerClass(RequestInterface $request)
     {
         $moduleName     = $request->getModuleName();
         $controllerName = $request->getControllerName();
-        // path to controller classes for that module
-        $controllerPath = $this->getControllerPath($moduleName, $controllerName);
         // fully qualified controller class name
         $fullQualifiedClassName = $this->getControllerClassName($moduleName, $controllerName);
-        // relative controller class name (without namespace)
-        $posLastBackslash = strrpos($fullQualifiedClassName, '\\');
-        // class name
-        $className = substr($fullQualifiedClassName, $posLastBackslash + 1);
-        // controller class file
-        $classFile = $controllerPath . DIRECTORY_SEPARATOR . $className . '.php';
 
         // load controller class
         if (!class_exists($fullQualifiedClassName, false)) {
+            // relative controller class name (without namespace)
+            $posLastBackslash = strrpos($fullQualifiedClassName, '\\');
+            // class name
+            $className = substr($fullQualifiedClassName, $posLastBackslash + 1);
+            // path to controller classes for that module
+            $controllerPath = $this->getControllerPath($moduleName, $controllerName);
+            // controller class file
+            $classFile = $controllerPath . DIRECTORY_SEPARATOR . $className . '.php';
+
+            if (!is_file($classFile)) {
+                throw new HttpKernelException("Could not find file '$classFile' for class '$fullQualifiedClassName'!");
+            }
+            /** @noinspection PhpIncludeInspection */
             require_once $classFile;
         }
 
@@ -342,7 +347,6 @@ class HttpKernel
         if ($fullQualifiedClassName[0] != '\\') {
             $fullQualifiedClassName = '\\' . $fullQualifiedClassName;
         }
-
         return $fullQualifiedClassName;
     }
 
@@ -354,13 +358,13 @@ class HttpKernel
      * @param   string  $controllerName
      * @return  string
      *
-     * @throws  ControllerException if controller directory is not a directory
+     * @throws  HttpKernelException if controller directory is not a directory
      */
     public function getControllerPath($moduleName, $controllerName)
     {
         $moduleNameCamelCased = Util::getCamelcased($moduleName);
         if (!in_array($moduleNameCamelCased, $this->modules)) {
-            throw new ControllerException("Module '$moduleNameCamelCased' is not defined!");
+            throw new HttpKernelException("Module '$moduleNameCamelCased' is not defined!");
         }
 
         $params = array(
@@ -370,7 +374,7 @@ class HttpKernel
         $controllerDir = Util::parsePattern($this->controllerDirPattern, $params);
         if (!is_dir($controllerDir)) {
             $controllerNameCamelCased = Util::getCamelcased($controllerName);
-            throw new ControllerException(
+            throw new HttpKernelException(
                     "Controller path for module '$moduleNameCamelCased' and"
                     . " controller '$controllerNameCamelCased' is not defined!"
                     . ' Expected to be: ' . $controllerDir

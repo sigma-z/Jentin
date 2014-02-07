@@ -23,6 +23,9 @@ class UtilTest extends \PHPUnit_Framework_TestCase
     }
 
 
+    /**
+     * @return array[]
+     */
     public function provideGetCamelcased()
     {
         $testData = array();
@@ -43,7 +46,7 @@ class UtilTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @dataProvider getParsePattern
-     * @param   string  $string
+     * @param           $pattern
      * @param   array   $params
      * @param   string  $delimiter
      * @param   boolean $camelCased
