@@ -15,16 +15,10 @@ namespace Jentin\Mvc\Request;
  */
 class Request implements RequestInterface
 {
-    /**
-     * files
-     * @var array
-     */
+    /** @var array */
     protected $files        = array();
 
-    /**
-     * server
-     * @var array
-     */
+    /** @var array */
     protected $server       = array(
         'REQUEST_URI'   => '',
         'SCRIPT_NAME'   => '',
@@ -33,54 +27,31 @@ class Request implements RequestInterface
         'HTTPS'         => ''
     );
 
-    /**
-     * cookie
-     * @var array
-     */
+    /** @var array */
     protected $cookie       = array();
 
-    /**
-     * module name
-     * @var string
-     */
+    /** @var string */
     protected $moduleName   = 'default';
 
-    /**
-     * controller name
-     * @var string
-     */
+    /** @var string */
     protected $controllerName = 'index';
 
-    /**
-     * action name
-     * @var string
-     */
+    /** @var string */
     protected $actionName   = 'index';
 
-    /**
-     * params
-     * @var array
-     */
+    /** @var array */
     protected $params       = array();
 
-    /**
-     * @var string
-     */
+    /** @var string */
     protected $baseUrl;
 
-    /**
-     * @var string
-     */
+    /** @var string */
     protected $basePath;
 
-    /**
-     * @var string
-     */
+    /** @var string */
     protected $host;
 
-    /**
-     * @var string
-     */
+    /** @var string */
     protected $scheme;
 
 
@@ -172,7 +143,7 @@ class Request implements RequestInterface
      */
     public function getParams()
     {
-    	return $this->params;
+        return $this->params;
     }
 
 

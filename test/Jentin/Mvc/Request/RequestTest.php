@@ -2,6 +2,8 @@
 
 namespace Test\Jentin\Mvc;
 
+use Jentin\Mvc\Request\Request;
+
 /**
  * RequestTest
  * @author Steffen Zeidler <sigma_z@sigma-scripts.de>
@@ -17,11 +19,14 @@ class RequestTest extends \PHPUnit_Framework_TestCase
      */
     public function testGetBaseUrl(array $server, $expectedBaseUrl)
     {
-        $request = new \Jentin\Mvc\Request\Request(array(), $server);
+        $request = new Request(array(), $server);
         $this->assertEquals($expectedBaseUrl, $request->getBaseUrl());
     }
 
 
+    /**
+     * @return array[]
+     */
     public function provideGetBaseUrl()
     {
         $testData = array();
@@ -82,11 +87,14 @@ class RequestTest extends \PHPUnit_Framework_TestCase
      */
     public function testGetHost(array $server, $expectedHost)
     {
-        $request = new \Jentin\Mvc\Request\Request(array(), $server);
+        $request = new Request(array(), $server);
         $this->assertEquals($expectedHost, $request->getHost());
     }
 
 
+    /**
+     * @return array[]
+     */
     public function provideGetHost()
     {
         $testData = array();
@@ -106,13 +114,10 @@ class RequestTest extends \PHPUnit_Framework_TestCase
     }
 
 
-    /**
-     *
-     */
     public function testGetScheme()
     {
         $server = array('HTTPS' => 'on');
-        $request = new \Jentin\Mvc\Request\Request(array(), $server);
+        $request = new Request(array(), $server);
         $this->assertEquals('https', $request->getScheme());
     }
 
@@ -126,7 +131,7 @@ class RequestTest extends \PHPUnit_Framework_TestCase
     public function testGetQuery($url, $expected)
     {
         $server = array('REQUEST_URI' => $url);
-        $request = new \Jentin\Mvc\Request\Request(array(), $server);
+        $request = new Request(array(), $server);
         $this->assertEquals($expected['query'], $request->getQuery());
     }
 
@@ -140,11 +145,14 @@ class RequestTest extends \PHPUnit_Framework_TestCase
     public function testGetFragment($url, $expected)
     {
         $server = array('REQUEST_URI' => $url);
-        $request = new \Jentin\Mvc\Request\Request(array(), $server);
+        $request = new Request(array(), $server);
         $this->assertEquals($expected['fragment'], $request->getFragment());
     }
 
 
+    /**
+     * @return array[]
+     */
     public function provideRequestUrls()
     {
         $testCases = array();

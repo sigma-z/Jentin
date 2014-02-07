@@ -31,6 +31,7 @@ class Route implements RouteInterface
     /** @var array */
     protected $routeParams = array();
 
+    /** @var callable */
     protected $callback;
 
 
