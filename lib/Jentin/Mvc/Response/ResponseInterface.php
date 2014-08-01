@@ -19,25 +19,19 @@ interface ResponseInterface
     /**
      * sets header
      *
-     * @param   string  $name
-     * @param   string  $value
+     * @param string $name
+     * @param string $value
+     * @param bool   $replace
      */
-    public function setHeader($name, $value = '');
+    public function setHeader($name, $value = '', $replace = true);
 
     /**
      * gets header
      *
-     * @param   string  $name
-     * @return  string
+     * @param  string  $name
+     * @return string|array|null
      */
     public function getHeader($name);
-
-    /**
-     * Checks, if headers are set for this response
-     *
-     * @return bool
-     */
-    public function hasHeaders();
 
     /**
      * append content

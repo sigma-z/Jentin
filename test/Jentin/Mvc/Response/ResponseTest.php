@@ -16,7 +16,7 @@ class ResponseTest extends \PHPUnit_Framework_TestCase
         $response = new Response();
         $response->setHeader('My-Test-Header', 'hello world');
         $this->assertEquals('hello world', $response->getHeader('My-Test-Header'));
-        $response->setHeader('My-Test-Header', null);
+        $response->unsetHeader('My-Test-Header', null);
         $this->assertEquals(null, $response->getHeader('My-Test-Header'));
     }
 

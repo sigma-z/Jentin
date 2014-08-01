@@ -21,7 +21,7 @@ class ResponseFlushTest extends \PHPUnit_Framework_TestCase
     private $response;
 
 
-    public function testFlushSendsHeader()
+    public function testFlushResponseSendsHeader()
     {
         $this->givenIHaveAResponse();
         $this->whenISetHeaderName_withValue('X-My-Custom-Header', 'test');
@@ -30,7 +30,19 @@ class ResponseFlushTest extends \PHPUnit_Framework_TestCase
         $this->thenTheHeadersShouldBeSent();
         $this->thenTheSentResponseContentShouldBeEquals('Lorem ipsum!');
         $this->thenTheResponseContentShouldBeEquals('');
-        $this->thenTheResponseHeadersShouldBeEmpty();
+        $this->thenTheResponseHaveSentTheHeader('X-My-Custom-Header: test');
+    }
+
+
+    public function testFlushResponseDoesNotThrowHeadersAlreadySentException()
+    {
+        $this->givenIHaveAResponse();
+        $this->whenISetHeaderName_withValue('X-My-Custom-Header', 'test');
+        $this->whenIAppendTheResponseContentWith("Lorem ipsum!\n");
+        $this->whenIFlushTheResponse();
+        $this->whenIAppendTheResponseContentWith("Lorem ipsum!\n");
+        $this->whenIFlushTheResponse();
+        $this->thenTheSentResponseContentShouldBeEquals("Lorem ipsum!\nLorem ipsum!\n");
     }
 
 
@@ -89,9 +101,13 @@ class ResponseFlushTest extends \PHPUnit_Framework_TestCase
     }
 
 
-    private function thenTheResponseHeadersShouldBeEmpty()
+    /**
+     * @param string $header
+     */
+    private function thenTheResponseHaveSentTheHeader($header)
     {
-        $this->assertFalse($this->response->hasHeaders());
+        $headerSent = $this->response->getHeaderSent();
+        $this->assertContains($header, $headerSent);
     }
 
 }
@@ -104,26 +120,12 @@ class ResponseFlushTest extends \PHPUnit_Framework_TestCase
 class MockResponseFlush extends Response
 {
 
-    /** @var array */
-    public $headersSent = array();
-
     /** @var string */
     public $contentSent = '';
 
 
-    /**
-     * @param string $header
-     * @param bool   $overwrite
-     */
-    protected function sendHeader($header, $overwrite = true)
+    public function sendContent()
     {
-        $this->headersSent[] = $header;
-    }
-
-
-    public function sendResponse()
-    {
-        $this->sendHeaders();
         $this->contentSent .= $this->content;
     }
 
