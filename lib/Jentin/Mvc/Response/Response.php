@@ -189,7 +189,7 @@ class Response implements ResponseInterface
      */
     public function sendResponse()
     {
-        $this->sendHeaders(false);
+        $this->sendHeaders();
         echo $this->content;
     }
 

@@ -123,7 +123,7 @@ class MockResponseFlush extends Response
 
     public function sendResponse()
     {
-        $this->sendHeaders(false);
+        $this->sendHeaders();
         $this->contentSent .= $this->content;
     }
 
