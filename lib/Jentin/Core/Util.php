@@ -25,7 +25,13 @@ class Util
     public static function getCamelcased($string)
     {
         $string = strtolower($string);
-        $string = preg_replace('/\W+?(\w)/e', 'ucfirst(\'\1\')', $string);
+        $string = preg_replace_callback(
+            '/\W+?(\w)/',
+            function ($matches) {
+                return ucfirst($matches[1]);
+            },
+            $string
+        );
         $string = ucfirst($string);
         return $string;
     }

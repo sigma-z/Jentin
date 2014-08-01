@@ -124,6 +124,21 @@ class MockResponseFlush extends Response
     public $contentSent = '';
 
 
+    /**
+     * @param  bool $throwExceptionOnHeadersSent
+     * @return bool
+     */
+    public function canSendHeaders($throwExceptionOnHeadersSent = true)
+    {
+        return true;
+    }
+
+
+    protected function sendHeader($header, $replace = true)
+    {
+    }
+
+
     public function sendContent()
     {
         $this->contentSent .= $this->content;
