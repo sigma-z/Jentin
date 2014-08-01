@@ -1,4 +1,4 @@
-Jentin MVC Framework
+Jentin MVC Framework [![Build Status](https://travis-ci.org/sigma-z/Jentin.png)](https://travis-ci.org/sigma-z/Jentin)
 ===
 
 It's lightweight and object orientated programmed.
