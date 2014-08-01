@@ -23,7 +23,7 @@ class RedirectResponse extends Response
      */
     public function __construct($url = '')
     {
-    	$this->setStatus('301', 'Moved Permanently');
+        $this->setStatus('301', 'Moved Permanently');
         if (!empty($url)) {
             $this->setRedirectUrl($url);
         }

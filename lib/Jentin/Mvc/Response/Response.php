@@ -78,6 +78,17 @@ class Response implements ResponseInterface
 
 
     /**
+     * Checks, if headers are set for this response
+     *
+     * @return bool
+     */
+    public function hasHeaders()
+    {
+        return !empty($this->headers);
+    }
+
+
+    /**
      * sets content type
      *
      * @param  string   $contentType
@@ -90,32 +101,28 @@ class Response implements ResponseInterface
 
     /**
      * sends response headers
+     *
+     * @param  bool $throwExceptionOnHeadersSent
+     * @throws ResponseException
      */
-    public function sendHeaders()
+    public function sendHeaders($throwExceptionOnHeadersSent = true)
     {
-        if (headers_sent($file, $line)) {
-            throw new ResponseException(
-                    "Headers has been already sent! (file: $file in line $file)"
-            );
-        }
+        // throws exception when headers already sent
+        $this->canSendHeaders($throwExceptionOnHeadersSent);
 
-        header('HTTP/1.0 ' . $this->statusCode . ' ' . $this->statusMessage);
+        $this->sendHeader("HTTP/1.1 $this->statusCode $this->statusMessage");
         $contentType = $this->getHeader('Content-Type');
         if (!$contentType) {
             $contentType = 'text/html; charset=utf-8';
         }
-        header('Content-Type: ' . $contentType, true);
+        $this->sendHeader("Content-Type: $contentType");
 
-        foreach ($this->headers as $name => $header) {
+        foreach ($this->headers as $name => $value) {
             if ($name == 'Content-Type') {
                 continue;
             }
-            if ($header === true) {
-                header($name, true);
-            }
-            else {
-                header($name . ': ' . $header, true);
-            }
+            $header = $value === true ? $name : "$name: $value";
+            $this->sendHeader($header);
         }
     }
 
@@ -127,7 +134,7 @@ class Response implements ResponseInterface
      */
     public function appendContent($content)
     {
-    	$this->content .= $content;
+        $this->content .= $content;
     }
 
 
@@ -149,7 +156,7 @@ class Response implements ResponseInterface
      */
     public function setContent($content)
     {
-    	$this->content = $content;
+        $this->content = $content;
     }
 
 
@@ -182,8 +189,41 @@ class Response implements ResponseInterface
      */
     public function sendResponse()
     {
-        $this->sendHeaders();
+        $this->sendHeaders(false);
         echo $this->content;
+    }
+
+
+    public function flushResponse()
+    {
+        $this->sendResponse();
+        $this->headers = array();
+        $this->content = '';
+    }
+
+
+    /**
+     * @param  bool $throwExceptionOnHeadersSent
+     * @return bool
+     * @throws ResponseException
+     */
+    public function canSendHeaders($throwExceptionOnHeadersSent = true)
+    {
+        $headersSent = headers_sent($file, $line);
+        if ($headersSent && $throwExceptionOnHeadersSent) {
+            throw new ResponseException("Headers has been already sent! (file: $file in line $file)");
+        }
+        return $headersSent === false;
+    }
+
+
+    /**
+     * @param string $header
+     * @param bool   $overwrite
+     */
+    protected function sendHeader($header, $overwrite = true)
+    {
+        header($header, $overwrite);
     }
 
 }

@@ -17,6 +17,29 @@ interface ResponseInterface
 {
 
     /**
+     * sets header
+     *
+     * @param   string  $name
+     * @param   string  $value
+     */
+    public function setHeader($name, $value = '');
+
+    /**
+     * gets header
+     *
+     * @param   string  $name
+     * @return  string
+     */
+    public function getHeader($name);
+
+    /**
+     * Checks, if headers are set for this response
+     *
+     * @return bool
+     */
+    public function hasHeaders();
+
+    /**
      * append content
      *
      * @param string $content
@@ -36,6 +59,11 @@ interface ResponseInterface
      * @param string $content
      */
     public function setContent($content);
+
+    /**
+     * send response headers
+     */
+    public function sendHeaders();
 
     /**
      * sends response

@@ -1,6 +1,6 @@
 <?php
 
-namespace Test\Jentin\Mvc;
+namespace Test\Jentin\Mvc\Response;
 
 use Jentin\Mvc\Response\Response;
 
@@ -19,26 +19,5 @@ class ResponseTest extends \PHPUnit_Framework_TestCase
         $response->setHeader('My-Test-Header', null);
         $this->assertEquals(null, $response->getHeader('My-Test-Header'));
     }
-
-
-//    public function testSetContentAsJson()
-//    {
-//        $data = array(
-//            'success'   => true,
-//            'recordId'  => 5
-//        );
-//        $response = new \Jentin\Mvc\Response\Response();
-//        $response->setContentAsJson($data);
-//        $this->assertEquals('text/x-json', $response->getHeader('Content-Type'));
-//
-//        $decodedContent = @json_decode($response->getContent(), true);
-//        $this->assertEquals($data, $decodedContent);
-//    }
-//
-//
-//    public function sendResponse()
-//    {
-//
-//    }
 
 }

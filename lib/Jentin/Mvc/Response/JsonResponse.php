@@ -33,7 +33,7 @@ class JsonResponse extends Response
      */
     public function sendResponse()
     {
-        $this->sendHeaders();
+        $this->sendHeaders(false);
         echo json_encode($this->content);
     }
 
