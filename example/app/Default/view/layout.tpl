@@ -7,12 +7,12 @@
 </head>
 <body>
 
-<h1><?php echo $this->framework?></h1>
+<h1><?php echo $this->framework; ?></h1>
 
-<?php echo $this->raw('content') ?>
+<?php echo $this->raw('content'); ?>
 
 <div class="copy">
-    &copy; 2012 <?php if (date('Y') > 2012) ' - ' . date('Y') ?>&nbsp;sigma-scripts.de
+    &copy; 2012 - <?php echo date('Y'); ?>&nbsp;sigma-scripts.de
 </div>
 
 </body>

@@ -20,6 +20,7 @@ class IndexController extends \Jentin\Mvc\Controller\Controller
     {
         $view = $this->plugin('view');
         $view->framework = 'Jentin MVC framework';
+        $view->readme = file_get_contents(__DIR__ . '/../../../../README.md');
         return $view->render();
     }
 

@@ -1,4 +1,6 @@
 RewriteEngine on
-
-# redirect all requests to script index.php
-RewriteRule !\.(js|ico|gif|jpg|png|css|php5|php|pdf)$	index.php [L]
+RewriteCond %{REQUEST_FILENAME} -s [OR]
+RewriteCond %{REQUEST_FILENAME} -l [OR]
+RewriteCond %{REQUEST_FILENAME} -d
+RewriteRule ^.*$ - [L]
+RewriteRule ^.*$ index.php [NC]

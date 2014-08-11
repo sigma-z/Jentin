@@ -14,7 +14,7 @@ Requires
 
 Features
 ---
- * Template rendering with plugins
+ * Template rendering with the view plugin
  * Request routing
  * Plugins (for controller and view renderer)
    * RouteUrl - creates url for by given route name and route params
