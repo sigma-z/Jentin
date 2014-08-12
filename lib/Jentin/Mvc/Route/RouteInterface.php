@@ -66,8 +66,9 @@ interface RouteInterface
 
 
     /**
+     * @param RequestInterface $request
      * @return \Jentin\Mvc\Response\ResponseInterface
      */
-    public function callback();
+    public function callback(RequestInterface $request);
 
 }

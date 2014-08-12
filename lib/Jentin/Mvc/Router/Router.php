@@ -9,6 +9,7 @@
 
 namespace Jentin\Mvc\Router;
 
+use Jentin\Mvc\Route\Route;
 use Jentin\Mvc\Route\RouteInterface;
 use Jentin\Mvc\Request\RequestInterface;
 
@@ -22,15 +23,13 @@ class Router implements RouterInterface
 
     const DEFAULT_ROUTE = 'default';
 
+    const DEFAULT_ROUTE_PATTERN = '(/%module%)(/%controller%)(/%action%)';
 
-    /**
-     * @var RouteInterface[]
-     */
+
+    /** @var RouteInterface[] */
     protected $routes = array();
 
-    /**
-     * @var RouteInterface
-     */
+    /** @var RouteInterface */
     protected $routedRoute;
 
 
@@ -44,6 +43,9 @@ class Router implements RouterInterface
     {
         if (!empty($this->routes[$name])) {
             return $this->routes[$name];
+        }
+        if ($name === self::DEFAULT_ROUTE) {
+            return new Route(self::DEFAULT_ROUTE_PATTERN);
         }
         return false;
     }

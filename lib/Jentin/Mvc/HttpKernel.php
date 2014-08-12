@@ -248,7 +248,7 @@ class HttpKernel
         if ($callbackEvent->hasResponse()) {
             return $callbackEvent->getResponse();
         }
-        return $route->callback();
+        return $route->callback($request);
     }
 
 

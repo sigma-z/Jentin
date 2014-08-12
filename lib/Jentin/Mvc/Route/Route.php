@@ -139,11 +139,12 @@ class Route implements RouteInterface
 
 
     /**
+     * @param RequestInterface $request
      * @return \Jentin\Mvc\Response\ResponseInterface
      */
-    public function callback()
+    public function callback(RequestInterface $request)
     {
-        return call_user_func($this->callback);
+        return call_user_func($this->callback, $request);
     }
 
 

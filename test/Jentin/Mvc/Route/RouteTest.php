@@ -4,6 +4,7 @@ namespace Test\Jentin\Mvc;
 
 use Jentin\Mvc\Request\Request;
 use Jentin\Mvc\Route\Route;
+use Jentin\Mvc\Router\Router;
 
 /**
  * RouteTest
@@ -12,20 +13,24 @@ use Jentin\Mvc\Route\Route;
 class RouteTest extends \PHPUnit_Framework_TestCase
 {
 
+    /** @var Request */
+    private $request;
+
+    /** @var Route */
+    private $route;
+
+    /** @var bool */
+    private $routeParseResult;
+
+
     /**
      * @expectedException \Jentin\Mvc\Route\RouteException
      */
     public function testParseException()
     {
-        // request object
-        $server = array('REQUEST_URI' => '/abc');
-        $request = new Request(array(), $server);
-        $request->setBaseUrl('/test');
-
-        // route
-        $route = new Route('/');
-        // parse route
-        $route->parse($request);
+        $this->givenIHaveARequestWithUri_andBaseUrl('/abc', '/test');
+        $this->givenIHaveARouteWithPattern_andRouteParams('/', array());
+        $this->whenIParseTheRoute();
     }
 
 
@@ -51,24 +56,15 @@ class RouteTest extends \PHPUnit_Framework_TestCase
         $expectedAction,
         $doesMatch
     ) {
-        // request object
-        $server = array('REQUEST_URI' => $requestUrl);
-        $request = new Request(array(), $server);
-        $request->setBaseUrl('/');
-
-        // route
-        $route = new Route($pattern, $routeParams);
-        // parse route
-        $actual = $route->parse($request);
-
-        // check, if route did match
-        $this->assertEquals($doesMatch, $actual);
+        $this->givenIHaveARequestWithUri_andBaseUrl($requestUrl, '/');
+        $this->givenIHaveARouteWithPattern_andRouteParams($pattern, $routeParams);
+        $this->whenIParseTheRoute();
+        $this->thenTheRouteParseResultShouldBeEquals($doesMatch);
         if ($doesMatch) {
-            // check params in request object
-            $this->assertEquals($expectedParams, $request->getParams(), 'Params mismatches');
-            $this->assertEquals($expectedModule, $request->getModuleName(), 'Module mismatches');
-            $this->assertEquals($expectedController, $request->getControllerName(), 'Controller mismatches');
-            $this->assertEquals($expectedAction, $request->getActionName(), 'Action mismatches');
+            $this->thenTheRequestParamsShouldBeEquals($expectedParams);
+            $this->thenTheRequestModuleShouldBeEquals($expectedModule);
+            $this->thenTheRequestControllerShouldBeEquals($expectedController);
+            $this->thenTheRequestActionShouldBeEquals($expectedAction);
         }
     }
 
@@ -99,18 +95,6 @@ class RouteTest extends \PHPUnit_Framework_TestCase
         );
 
         // test path matches
-        $testData[] = array(
-            'requestUrl'            => '/',
-            'pattern'               => '/(%module%)(/%controller%)(/%action%)',
-            'routeParams'           => array(),
-            'expectedParams'        => array(),
-            'expectedModule'        => $defaultModule,
-            'expectedController'    => $defaultController,
-            'expectedAction'        => $defaultAction,
-            'doesMatch'             => true
-        );
-
-        // test with callback
         $testData[] = array(
             'requestUrl'            => '/',
             'pattern'               => '/(%module%)(/%controller%)(/%action%)',
@@ -309,6 +293,113 @@ class RouteTest extends \PHPUnit_Framework_TestCase
         );
 
         return $testData;
+    }
+
+
+    /**
+     * TODO $route->parse() should call the callback and add params defined by the route
+     */
+    public function testRouteWithCallback()
+    {
+        $this->givenIHaveARequestWithUri_andBaseUrl('/abc/test', '/');
+        $this->givenIHaveARouteWithPattern_andRouteParams_andCallback(
+            Router::DEFAULT_ROUTE_PATTERN,
+            array('id' => '123'),
+            function (Request $request) {
+                $request->setParam('callbackParam', 'abc');
+            }
+        );
+        $this->whenICallTheRouteCallback();
+        $this->thenTheRequestParamsShouldBeEquals(array('callbackParam' => 'abc'));
+        $this->markTestIncomplete('$route->parse() should call the callback and add params defined by the route');
+        $this->thenTheRequestModuleShouldBeEquals('abc');
+        $this->thenTheRequestControllerShouldBeEquals('test');
+        $this->thenTheRequestActionShouldBeEquals('index');
+    }
+
+
+
+    /**
+     * @param string $requestUrl
+     * @param string $baseUrl
+     */
+    private function givenIHaveARequestWithUri_andBaseUrl($requestUrl, $baseUrl)
+    {
+        $this->request = new Request(array(), array('REQUEST_URI' => $requestUrl));
+        $this->request->setBaseUrl($baseUrl);
+    }
+
+
+    /**
+     * @param string $pattern
+     * @param array  $routeParams
+     */
+    private function givenIHaveARouteWithPattern_andRouteParams($pattern, array $routeParams)
+    {
+        $this->route = new Route($pattern, $routeParams);
+    }
+
+
+    private function whenIParseTheRoute()
+    {
+        $this->routeParseResult = $this->route->parse($this->request);
+    }
+
+
+    /**
+     * @param bool $doesMatch
+     */
+    private function thenTheRouteParseResultShouldBeEquals($doesMatch)
+    {
+        $this->assertEquals($doesMatch, $this->routeParseResult);
+    }
+
+
+    private function givenIHaveARouteWithPattern_andRouteParams_andCallback($pattern, $routeParams, $callback)
+    {
+        $this->route = new Route($pattern, $routeParams, $callback);
+    }
+
+
+    private function whenICallTheRouteCallback()
+    {
+        $this->route->callback($this->request);
+    }
+
+
+    /**
+     * @param array $expectedParams
+     */
+    private function thenTheRequestParamsShouldBeEquals(array $expectedParams)
+    {
+        $this->assertEquals($expectedParams, $this->request->getParams(), 'Params mismatches');
+    }
+
+
+    /**
+     * @param string $expectedModule
+     */
+    private function thenTheRequestModuleShouldBeEquals($expectedModule)
+    {
+        $this->assertEquals($expectedModule, $this->request->getModuleName(), 'Module mismatches');
+    }
+
+
+    /**
+     * @param string $expectedController
+     */
+    private function thenTheRequestControllerShouldBeEquals($expectedController)
+    {
+        $this->assertEquals($expectedController, $this->request->getControllerName(), 'Controller mismatches');
+    }
+
+
+    /**
+     * @param string $expectedAction
+     */
+    private function thenTheRequestActionShouldBeEquals($expectedAction)
+    {
+        $this->assertEquals($expectedAction, $this->request->getActionName(), 'Action mismatches');
     }
 
 }
