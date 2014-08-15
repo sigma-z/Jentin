@@ -296,9 +296,6 @@ class RouteTest extends \PHPUnit_Framework_TestCase
     }
 
 
-    /**
-     * TODO $route->parse() should call the callback and add params defined by the route
-     */
     public function testRouteWithCallback()
     {
         $this->givenIHaveARequestWithUri_andBaseUrl('/abc/test', '/');
@@ -309,14 +306,13 @@ class RouteTest extends \PHPUnit_Framework_TestCase
                 $request->setParam('callbackParam', 'abc');
             }
         );
+        $this->whenIParseTheRoute();
         $this->whenICallTheRouteCallback();
-        $this->thenTheRequestParamsShouldBeEquals(array('callbackParam' => 'abc'));
-        $this->markTestIncomplete('$route->parse() should call the callback and add params defined by the route');
+        $this->thenTheRequestParamsShouldBeEquals(array('callbackParam' => 'abc', 'id' => '123'));
         $this->thenTheRequestModuleShouldBeEquals('abc');
         $this->thenTheRequestControllerShouldBeEquals('test');
         $this->thenTheRequestActionShouldBeEquals('index');
     }
-
 
 
     /**
