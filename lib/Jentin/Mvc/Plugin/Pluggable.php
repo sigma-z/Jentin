@@ -7,7 +7,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Jentin\Core\Plugin;
+namespace Jentin\Mvc\Plugin;
 
 /**
  * PluginAwareInterface
@@ -19,7 +19,7 @@ interface Pluggable
     /**
      * sets plugin broker
      *
-     * @param \Jentin\Core\Plugin\PluginBrokerInterface $pluginBroker
+     * @param  PluginBrokerInterface $broker
      * @return Pluggable
      */
     public function setPluginBroker(PluginBrokerInterface $broker);
@@ -27,7 +27,7 @@ interface Pluggable
     /**
      * gets plugin broker
      *
-     * @return \Jentin\Core\Plugin\PluginBrokerInterface
+     * @return \Jentin\Mvc\Plugin\PluginBrokerInterface
      */
     public function getPluginBroker();
 

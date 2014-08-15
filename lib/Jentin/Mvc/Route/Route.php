@@ -10,6 +10,7 @@
 namespace Jentin\Mvc\Route;
 
 use Jentin\Mvc\Request\RequestInterface;
+use Jentin\Mvc\Util\Util;
 
 /**
  * routes for routing a request
@@ -209,7 +210,7 @@ class Route implements RouteInterface
         }
 
         if ($placeHolders) {
-            $url = \Jentin\Core\Util::parsePattern($this->pattern, $params, '%', false);
+            $url = Util::parsePattern($this->pattern, $params, '%', false);
             // check if optional placeholders are not replaced through parse
             $placeHoldersSubPattern = implode('|', $placeHolders);
             $regExpr = '\([^\(]?%(' . $placeHoldersSubPattern . ')%.*?\)';

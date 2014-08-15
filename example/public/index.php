@@ -12,13 +12,13 @@ $router = new \Jentin\Mvc\Router\Router();
 //$routePlugin = new \Jentin\Mvc\Plugin\RouteUrl($router, $request);
 
 // plugin broker for view renderer
-$viewPluginBroker = new \Jentin\Core\Plugin\PluginBroker();
+$viewPluginBroker = new \Jentin\Mvc\Plugin\PluginBroker();
 //$viewPluginBroker->register('route', array($routePlugin));
 // enable layout?
 $layoutEnabled = true;
 
 // controller plugin broker
-$controllerPluginBroker = new \Jentin\Core\Plugin\PluginBroker();
+$controllerPluginBroker = new \Jentin\Mvc\Plugin\PluginBroker();
 //$controllerPluginBroker->register('route', $routePlugin);
 // view directory pattern
 $viewDirPattern = __DIR__ . '/../app/%module%/view/%controller%';

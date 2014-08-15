@@ -11,9 +11,9 @@ namespace Jentin\Mvc\Controller;
 
 use Jentin\Mvc\Request\RequestInterface;
 use Jentin\Mvc\Response\ResponseInterface;
-use Jentin\Core\Util;
-use Jentin\Core\Plugin\PluginBrokerInterface;
-use Jentin\Core\Plugin\Pluggable;
+use Jentin\Mvc\Util\Util;
+use Jentin\Mvc\Plugin\PluginBrokerInterface;
+use Jentin\Mvc\Plugin\Pluggable;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**
@@ -32,7 +32,7 @@ class Controller implements ControllerInterface, Pluggable
      */
     protected $eventDispatcher;
     /**
-     * @var \Jentin\Core\Plugin\PluginBrokerInterface
+     * @var \Jentin\Mvc\Plugin\PluginBrokerInterface
      */
     protected $pluginBroker;
 
@@ -42,7 +42,7 @@ class Controller implements ControllerInterface, Pluggable
      *
      * @param \Jentin\Mvc\Request\RequestInterface                          $request
      * @param \Symfony\Component\EventDispatcher\EventDispatcherInterface   $eventDispatcher
-     * @param \Jentin\Core\Plugin\PluginBrokerInterface                     $pluginBroker
+     * @param \Jentin\Mvc\Plugin\PluginBrokerInterface                     $pluginBroker
      */
     public function __construct(
             RequestInterface $request,
@@ -83,7 +83,7 @@ class Controller implements ControllerInterface, Pluggable
     /**
      * sets plugin broker
      *
-     * @param \Jentin\Core\Plugin\PluginBrokerInterface $pluginBroker
+     * @param \Jentin\Mvc\Plugin\PluginBrokerInterface $pluginBroker
      * @return Controller
      */
     public function setPluginBroker(PluginBrokerInterface $pluginBroker)
@@ -96,7 +96,7 @@ class Controller implements ControllerInterface, Pluggable
     /**
      * gets plugin broker
      *
-     * @return \Jentin\Core\Plugin\PluginBrokerInterface
+     * @return \Jentin\Mvc\Plugin\PluginBrokerInterface
      */
     public function getPluginBroker()
     {
@@ -197,7 +197,7 @@ class Controller implements ControllerInterface, Pluggable
      */
     public function getActionMethod()
     {
-        $actionMethod = Util::getCamelcased($this->request->getActionName()) . 'Action';
+        $actionMethod = Util::getCamelCased($this->request->getActionName()) . 'Action';
         $actionMethod = lcfirst($actionMethod);
         return $actionMethod;
     }

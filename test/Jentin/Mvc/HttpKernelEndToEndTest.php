@@ -2,7 +2,7 @@
 
 namespace Test\Jentin\Mvc;
 
-use Jentin\Core\Plugin\PluginBroker;
+use Jentin\Mvc\Plugin\PluginBroker;
 use Jentin\Mvc\Event\MvcEvent;
 use Jentin\Mvc\EventListener\HtmlJsonControllerResultListener;
 use Jentin\Mvc\HttpKernel;

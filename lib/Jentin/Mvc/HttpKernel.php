@@ -15,9 +15,9 @@ use Jentin\Mvc\Router\RouterInterface;
 use Jentin\Mvc\Request\RequestInterface;
 use Jentin\Mvc\Response\ResponseInterface;
 use Jentin\Mvc\Controller\ControllerInterface;
-use Jentin\Core\Util;
-use Jentin\Core\Plugin\PluginBrokerInterface;
-use Jentin\Core\Plugin\PluginBroker;
+use Jentin\Mvc\Util\Util;
+use Jentin\Mvc\Plugin\PluginBrokerInterface;
+use Jentin\Mvc\Plugin\PluginBroker;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Jentin\Mvc\Event\MvcEvent;
@@ -76,7 +76,7 @@ class HttpKernel
      * @param   array                                                               $modules
      * @param   \Jentin\Mvc\Router\RouterInterface                                  $router
      * @param   null|\Symfony\Component\EventDispatcher\EventDispatcherInterface    $eventDispatcher
-     * @param   null|\Jentin\Core\Plugin\PluginBrokerInterface                      $controllerPluginBroker
+     * @param   null|\Jentin\Mvc\Plugin\PluginBrokerInterface                       $controllerPluginBroker
      */
     public function __construct(
             $controllerDirPattern,
@@ -132,7 +132,7 @@ class HttpKernel
     /**
      * sets controller plugin broker
      *
-     * @param \Jentin\Core\Plugin\PluginBrokerInterface $pluginBroker
+     * @param \Jentin\Mvc\Plugin\PluginBrokerInterface $pluginBroker
      * @return HttpKernel
      */
     public function setControllerPluginBroker(PluginBrokerInterface $pluginBroker)
@@ -366,7 +366,7 @@ class HttpKernel
      */
     public function getControllerPath($moduleName, $controllerName)
     {
-        $moduleNameCamelCased = Util::getCamelcased($moduleName);
+        $moduleNameCamelCased = Util::getCamelCased($moduleName);
         if (!in_array($moduleNameCamelCased, $this->modules)) {
             throw new HttpKernelException("Module '$moduleNameCamelCased' is not defined!");
         }
@@ -377,7 +377,7 @@ class HttpKernel
         );
         $controllerDir = Util::parsePattern($this->controllerDirPattern, $params);
         if (!is_dir($controllerDir)) {
-            $controllerNameCamelCased = Util::getCamelcased($controllerName);
+            $controllerNameCamelCased = Util::getCamelCased($controllerName);
             throw new HttpKernelException(
                     "Controller path for module '$moduleNameCamelCased' and"
                     . " controller '$controllerNameCamelCased' is not defined!"

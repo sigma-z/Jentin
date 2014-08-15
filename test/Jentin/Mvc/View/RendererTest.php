@@ -2,8 +2,8 @@
 
 namespace Test\Jentin\Mvc\View;
 
-use \Jentin\Mvc\View\Renderer,
-    \Jentin\Core\Plugin\PluginBroker;
+use Jentin\Mvc\View\Renderer,
+    Jentin\Mvc\Plugin\PluginBroker;
 
 /**
  * RendererTest

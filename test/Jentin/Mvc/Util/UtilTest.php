@@ -1,8 +1,8 @@
 <?php
 
-namespace Test\Jentin\Core;
+namespace Test\Jentin\Mvc;
 
-use Jentin\Core\Util;
+use Jentin\Mvc\Util\Util;
 
 /**
  * UtilTest
@@ -12,13 +12,13 @@ class UtilTest extends \PHPUnit_Framework_TestCase
 {
 
     /**
-     * @dataProvider provideGetCamelcased
+     * @dataProvider provideGetCamelCased
      * @param string $string
      * @param string $expected
      */
-    public function testGetCamelcased($string, $expected)
+    public function testGetCamelCased($string, $expected)
     {
-        $actual = Util::getCamelcased($string);
+        $actual = Util::getCamelCased($string);
         $this->assertEquals($expected, $actual);
     }
 
@@ -26,7 +26,7 @@ class UtilTest extends \PHPUnit_Framework_TestCase
     /**
      * @return array[]
      */
-    public function provideGetCamelcased()
+    public function provideGetCamelCased()
     {
         $testData = array();
         $testData[] = array('',             '');

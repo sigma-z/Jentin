@@ -9,8 +9,8 @@
 
 namespace Jentin\Mvc\View;
 
-use Jentin\Core\Plugin\PluginBrokerInterface;
-use Jentin\Core\Plugin\Pluggable;
+use Jentin\Mvc\Plugin\PluginBrokerInterface;
+use Jentin\Mvc\Plugin\Pluggable;
 
 /**
  * Renderer
@@ -51,7 +51,7 @@ class Renderer implements RendererInterface, Pluggable
     /**
      * constructor
      *
-     * @param  \Jentin\Core\Plugin\PluginBrokerInterface $pluginBroker
+     * @param \Jentin\Mvc\Plugin\PluginBrokerInterface $pluginBroker
      */
     public function __construct(PluginBrokerInterface $pluginBroker = null)
     {
@@ -188,8 +188,8 @@ class Renderer implements RendererInterface, Pluggable
     /**
      * sets plugin broker
      *
-     * @param   \Jentin\Core\Plugin\PluginBrokerInterface $pluginBroker
-     * @return  Renderer
+     * @param  \Jentin\Mvc\Plugin\PluginBrokerInterface $pluginBroker
+     * @return Renderer
      */
     public function setPluginBroker(PluginBrokerInterface $pluginBroker)
     {
@@ -358,6 +358,7 @@ class Renderer implements RendererInterface, Pluggable
         }
 
         ob_start();
+        /** @noinspection PhpIncludeInspection */
         include $file;
         $content = ob_get_contents();
         ob_end_clean();

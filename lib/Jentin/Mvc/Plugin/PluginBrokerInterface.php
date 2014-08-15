@@ -7,7 +7,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Jentin\Core\Plugin;
+namespace Jentin\Mvc\Plugin;
 
 /**
  * PluginBrokerInterface

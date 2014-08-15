@@ -11,11 +11,10 @@ namespace Jentin\Mvc\Plugin;
 
 use Jentin\Mvc\Controller\ControllerAware;
 use Jentin\Mvc\Controller\ControllerInterface;
-use Jentin\Core\Plugin\PluginBrokerInterface;
-use \Jentin\Mvc\Request\RequestInterface;
+use Jentin\Mvc\Request\RequestInterface;
 use Jentin\Mvc\View\RendererInterface;
 use Jentin\Mvc\View\Renderer;
-use Jentin\Core\Util;
+use Jentin\Mvc\Util\Util;
 
 /**
  * ViewRenderer
@@ -25,7 +24,7 @@ class View implements ControllerAware
 {
 
     /**
-     * @var \Jentin\Core\Plugin\PluginBrokerInterface
+     * @var \Jentin\Mvc\Plugin\PluginBrokerInterface
      */
     protected $pluginBroker;
     /**
@@ -54,7 +53,7 @@ class View implements ControllerAware
      * constructor
      *
      * @param string                                    $viewDirPattern
-     * @param \Jentin\Core\Plugin\PluginBrokerInterface $pluginBroker
+     * @param \Jentin\Mvc\Plugin\PluginBrokerInterface $pluginBroker
      * @param bool                                      $layoutEnabled
      */
     public function __construct($viewDirPattern, PluginBrokerInterface $pluginBroker, $layoutEnabled = false)

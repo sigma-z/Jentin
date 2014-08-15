@@ -7,7 +7,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Jentin\Core;
+namespace Jentin\Mvc\Util;
 
 /**
  * Util
@@ -17,12 +17,12 @@ class Util
 {
 
     /**
-     * gets camelcased string
+     * gets camel-cased string
      *
      * @param   string  $string
      * @return  string
      */
-    public static function getCamelcased($string)
+    public static function getCamelCased($string)
     {
         $string = strtolower($string);
         $string = preg_replace_callback(
@@ -59,7 +59,7 @@ class Util
 
             if ($camelCased) {
                 $searchFor[] = $delimiter . ucfirst($key) . $delimiter;
-                $replaceWith[] = self::getCamelcased($values[$index]);
+                $replaceWith[] = self::getCamelCased($values[$index]);
             }
         }
         return str_replace($searchFor, $replaceWith, $pattern);
