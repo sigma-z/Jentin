@@ -160,10 +160,122 @@ $route = new Route('(/%module%)(/%controller%)(/%action%)', array(), function() 
 This routes will create a response with 'hello world!' as content.
 
 
-Creating and sending a response
+Controllers and responses
 ===
 
+A controller is a piece of code, often a class, that is called to create a response. It processes the request
+and uses models and views to create the response.
 
+
+HTML and JSON responses
+---
+
+Controller that creates a simple 'hello world' response as json and html:
+
+```php
+namespace DefaultModule;
+
+use Jentin\Mvc\Controller\Controller;
+use Jentin\Mvc\Response\Response;
+use Jentin\Mvc\Response\JsonResponse;
+
+class HelloWorldController extends Controller
+{
+    public function jsonAction()
+    {
+        return new JsonResponse(array('message' => 'hello world'));
+    }
+
+    public function htmlAction()
+    {
+        return new Response('hello world');
+    }
+}
+
+```
+
+The url http://your-domain/default/hello-world/json will output '{"message": "hello world"}".
+
+The url http://your-domain/default/hello-world/html will output 'hello world'.
+
+
+If you like to have it much more easier, then try out the ``HtmlJsonControllerResultListener`` class.
+Just let the listener listen to the event ``\Jentin\Mvc\Event\MvcEvent::ON_CONTROLLER_RESULT``.
+It will create the response automatically by converting an array to a
+json response and all the other to an html response.
+
+```php
+$htmlJsonControllerResultListener = new \Jentin\Mvc\EventListener\HtmlJsonControllerResultListener();
+$eventDispatcher = new \Symfony\Component\EventDispatcher\EventDispatcher();
+$eventDispatcher->addListener(
+    \Jentin\Mvc\Event\MvcEvent::ON_CONTROLLER_RESULT,
+    array($htmlJsonControllerResultListener, 'getResponse')
+);
+```
+
+This enables you to simplify your controllers with the same result.
+
+```php
+use Jentin\Mvc\Controller\Controller;
+
+class HelloWorldController extends Controller
+{
+    public function jsonAction()
+    {
+        return array('message' => 'hello world');
+    }
+
+    public function htmlAction()
+    {
+        return 'hello world';
+    }
+}
+```
+
+Redirect responses
+---
+
+```php
+use Jentin\Mvc\Controller\Controller;
+use Jentin\Mvc\Response\RedirectResponse;
+
+class SomeController extends Controller
+{
+    public function redirectAction()
+    {
+        return new RedirectResponse('http://your-domain/');
+    }
+}
+```
+
+
+Flush responses
+---
+
+A conventional response sends its data after the whole response data has been collected to the client.
+Flush responses are used to send there output immediately.
+
+```php
+use Jentin\Mvc\Controller\Controller;
+use Jentin\Mvc\Response\RedirectResponse;
+
+class SomeController extends Controller
+{
+    public function redirectAction()
+    {
+        $response = new Response();
+        $response->setContent('hello world');
+        $response->flushResponse();
+        $response->setContent('hello world a second time');
+        $response->flushResponse();
+        return $response;
+    }
+}
+```
+
+The method ``flushResponse()`` sends its buffered output immediately.
+
+**Note:** that you normally can not set headers to your response once you flushed the response.
 
 
 Plugins
@@ -180,5 +292,5 @@ Caching
 ---
 
 
-Events to hook
+Events to hook in
 ===

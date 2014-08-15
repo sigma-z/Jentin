@@ -29,17 +29,16 @@ class HtmlJsonControllerResultListener
     public function getResponse(ControllerResultEvent $event)
     {
         $controllerResult = $event->getControllerResult();
-        if (is_string($controllerResult) || $controllerResult === null) {
-            $response = new Response();
-            $response->setContent((string)$controllerResult);
-            $event->setResponse($response);
-        }
-        else if (is_array($controllerResult)) {
+        if (is_array($controllerResult)) {
             $response = new JsonResponse();
             $response->setContent($controllerResult);
-            $event->setResponse($response);
         }
-        return $event->getResponse();
+        else {
+            $response = new Response();
+            $response->setContent((string)$controllerResult);
+        }
+        $event->setResponse($response);
+        return $response;
     }
 
 }

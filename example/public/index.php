@@ -1,4 +1,11 @@
 <?php
+/*
+ * This file is part of the Jentin framework.
+ * (c) Steffen Zeidler <sigma_z@sigma-scripts.de>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
 
 $start = microtime(true);
 
@@ -6,20 +13,18 @@ require __DIR__  . '/../../vendor/autoload.php';
 
 $request = new \Jentin\Mvc\Request\Request();
 $router = new \Jentin\Mvc\Router\Router();
-// defining the default route
-//$router->setRoute('default', new \Jentin\Mvc\Route\Route('(/%module%)(/%controller%)(/%action%)'));
 // router plugin (for controllers and views, where you can call $this->plugin('route')->getUrl())
-//$routePlugin = new \Jentin\Mvc\Plugin\RouteUrl($router, $request);
+$routePlugin = new \Jentin\Mvc\Plugin\RouteUrl($router, $request);
 
 // plugin broker for view renderer
 $viewPluginBroker = new \Jentin\Mvc\Plugin\PluginBroker();
-//$viewPluginBroker->register('route', array($routePlugin));
+$viewPluginBroker->register('route', array($routePlugin));
 // enable layout?
 $layoutEnabled = true;
 
 // controller plugin broker
 $controllerPluginBroker = new \Jentin\Mvc\Plugin\PluginBroker();
-//$controllerPluginBroker->register('route', $routePlugin);
+$controllerPluginBroker->register('route', $routePlugin);
 // view directory pattern
 $viewDirPattern = __DIR__ . '/../app/%module%/view/%controller%';
 $viewPluginArgs = array($viewDirPattern, $viewPluginBroker, $layoutEnabled);
@@ -47,4 +52,6 @@ $response = $httpKernel->handleRequest($request);
 // sending the response
 $response->sendResponse();
 
-echo '<span style="font-size: 10px;">Execution time: ' . number_format(microtime(true) - $start, 4) . 's</span>';
+if (0 === strpos($response->getHeader('Content-Type'), 'text/html')) {
+    echo '<span style="font-size: 10px;">Execution time: ' . number_format(microtime(true) - $start, 4) . 's</span>';
+}
