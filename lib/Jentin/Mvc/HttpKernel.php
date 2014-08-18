@@ -42,50 +42,51 @@ class HttpKernel
      * @var string
      */
     protected $controllerClassNamePattern = '\%Module%Module\%Controller%Controller';
-    /**
-     * router
-     * @var RouterInterface
-     */
+
+    /** @var RouterInterface */
     protected $router;
+
     /**
      * controller pattern (could look like ../%module%/%controller%/controllers)
      * @var string
      */
     protected $controllerDirPattern = '';
+
     /**
      * modules, that are active for the dispatching process
      * @var array
      */
     protected $modules = array();
-    /**
-     * event dispatcher
-     * @var EventDispatcher
-     */
+
+    /** @var EventDispatcher */
     protected $eventDispatcher;
-    /**
-     * plugin broker for controllers
-     * @var PluginBrokerInterface
-     */
+
+    /** @var PluginBrokerInterface */
     protected $controllerPluginBroker;
+
+    /** @var RequestInterface */
+    protected $request;
+
+    /** @var ResponseInterface|mixed */
+    protected $response;
 
 
     /**
      * constructor
      *
-     * @param   string                                                              $controllerDirPattern
-     * @param   array                                                               $modules
-     * @param   \Jentin\Mvc\Router\RouterInterface                                  $router
-     * @param   null|\Symfony\Component\EventDispatcher\EventDispatcherInterface    $eventDispatcher
-     * @param   null|\Jentin\Mvc\Plugin\PluginBrokerInterface                       $controllerPluginBroker
+     * @param   string                        $controllerDirPattern
+     * @param   array                         $modules
+     * @param   RouterInterface               $router
+     * @param   null|EventDispatcherInterface $eventDispatcher
+     * @param   null|PluginBrokerInterface    $controllerPluginBroker
      */
     public function __construct(
-            $controllerDirPattern,
-            array $modules,
-            RouterInterface $router,
-            EventDispatcherInterface $eventDispatcher = null,
-            PluginBrokerInterface $controllerPluginBroker = null
-        )
-    {
+        $controllerDirPattern,
+        array $modules,
+        RouterInterface $router,
+        EventDispatcherInterface $eventDispatcher = null,
+        PluginBrokerInterface $controllerPluginBroker = null
+    ) {
         $this->controllerDirPattern = $controllerDirPattern;
         $this->modules = $modules;
         $this->router = $router;
@@ -132,7 +133,7 @@ class HttpKernel
     /**
      * sets controller plugin broker
      *
-     * @param \Jentin\Mvc\Plugin\PluginBrokerInterface $pluginBroker
+     * @param  PluginBrokerInterface $pluginBroker
      * @return HttpKernel
      */
     public function setControllerPluginBroker(PluginBrokerInterface $pluginBroker)
@@ -188,128 +189,136 @@ class HttpKernel
      *
      * @param   RequestInterface $request
      * @throws  \DomainException
-     * @return  ResponseInterface  $response
+     * @return  ResponseInterface
      */
     public function handleRequest(RequestInterface $request)
     {
-        $eventDispatcher = $this->getEventDispatcher();
+        $this->request = $request;
+        $this->route($request);
 
-        $response = $this->route($request);
-        if (!($response instanceof ResponseInterface)) {
+        if (!($this->response instanceof ResponseInterface)) {
             throw new \DomainException(
                 'Response type is not valid! You gave: '
-                . (is_object($response) ? get_class($response) : gettype($response))
+                . (is_object($this->response) ? get_class($this->response) : gettype($this->response))
             );
         }
 
         // EVENT onResponse
-        $responseFilterEvent = new ResponseFilterEvent($response);
+        $responseFilterEvent = new ResponseFilterEvent($this->response);
+        $eventDispatcher = $this->getEventDispatcher();
         $eventDispatcher->dispatch(MvcEvent::ON_FILTER_RESPONSE, $responseFilterEvent);
 
-        // return response
         return $responseFilterEvent->getResponse();
     }
 
 
-    /**
-     * @param  RequestInterface $request
-     * @return ResponseInterface
-     */
-    private function route(RequestInterface $request)
+    private function route()
     {
         // EVENT onRoute
+        $routeEvent = new RouteEvent($this->request);
         $eventDispatcher = $this->getEventDispatcher();
-        $routeEvent = new RouteEvent($request);
         $eventDispatcher->dispatch(MvcEvent::ON_ROUTE, $routeEvent);
         if ($routeEvent->hasResponse()) {
-            return $routeEvent->getResponse();
+            $this->response = $routeEvent->getResponse();
+            if ($this->request->isDispatched()) {
+                return;
+            }
         }
 
         // routes the request
-        $route = $this->router->route($request);
+        $route = $this->router->route($this->request);
         if ($route && $route->hasCallback()) {
-            return $this->dispatchRouteCallback($request, $route);
+            $this->dispatchRouteCallback($route);
+            $this->request->setDispatched(true);
+            return;
         }
 
-        return $this->dispatchController($request);
+        $this->dispatchController();
     }
 
 
     /**
-     * @param  RequestInterface     $request
      * @param  Route\RouteInterface $route
      * @return bool|ResponseInterface
      */
-    private function dispatchRouteCallback(RequestInterface $request, RouteInterface $route)
+    private function dispatchRouteCallback(RouteInterface $route)
     {
-        $callbackEvent = new RouteCallbackEvent($request, $route);
+        $callbackEvent = new RouteCallbackEvent($this->request, $route, $this->response);
         $eventDispatcher = $this->getEventDispatcher();
         $eventDispatcher->dispatch(MvcEvent::ON_ROUTE_CALLBACK, $callbackEvent);
         if ($callbackEvent->hasResponse()) {
-            return $callbackEvent->getResponse();
+            $this->response = $callbackEvent->getResponse();
+            if ($this->request->isDispatched()) {
+                return;
+            }
         }
-        return $route->callback($request);
+        $response = $route->callback($this->request);
+        if ($response) {
+            $this->response = $response;
+        }
     }
 
 
-    /**
-     * @param  RequestInterface $request
-     * @return ResponseInterface
-     */
-    private function dispatchController(RequestInterface $request)
+    private function dispatchController()
     {
         // create controller
-        $controller = $this->newController($request);
+        $controller = $this->newController();
 
         // EVENT onController
         $controllerEvent = new ControllerEvent($controller);
         $eventDispatcher = $this->getEventDispatcher();
         $eventDispatcher->dispatch(MvcEvent::ON_CONTROLLER, $controllerEvent);
         if ($controllerEvent->hasResponse()) {
-            return $controllerEvent->getResponse();
+            $this->response = $controllerEvent->getResponse();
+            if ($this->request->isDispatched()) {
+                return;
+            }
         }
 
         $controller = $controllerEvent->getController();
+
+        $this->request->setDispatched(true);
+
         // controller dispatch
         $controller->preDispatch();
-        $response = $controller->dispatch();
-        $response = $controller->postDispatch($response);
+        $controller->dispatch();
+        $controller->postDispatch();
 
-        if (!($response instanceof ResponseInterface)) {
-            $controllerResultEvent = new ControllerResultEvent($controller, $response);
+        $this->response = $controller->getResponse();
+
+        if (!($this->response instanceof ResponseInterface)) {
+            $controllerResultEvent = new ControllerResultEvent($controller, $this->response);
             $eventDispatcher->dispatch(MvcEvent::ON_CONTROLLER_RESULT, $controllerResultEvent);
-            $response = $controllerResultEvent->getResponse();
+            $this->response = $controllerResultEvent->getResponse();
         }
-        return $response;
     }
 
 
     /**
      * creates controller instance
      *
-     * @param   RequestInterface $request
-     * @return  ControllerInterface
+     * @throws HttpKernelException
+     * @return ControllerInterface
      */
-    public function newController(RequestInterface $request)
+    public function newController()
     {
-        $controllerClass = $this->loadControllerClass($request);
+        $controllerClass = $this->loadControllerClass();
         $eventDispatcher = $this->getEventDispatcher();
         $pluginBroker = $this->getControllerPluginBroker();
-        return new $controllerClass($request, $eventDispatcher, $pluginBroker);
+        return new $controllerClass($this->request, $eventDispatcher, $pluginBroker, $this->response);
     }
 
 
     /**
      * loads controller class
      *
-     * @param  RequestInterface $request
      * @throws HttpKernelException
      * @return string
      */
-    protected function loadControllerClass(RequestInterface $request)
+    protected function loadControllerClass()
     {
-        $moduleName     = $request->getModuleName();
-        $controllerName = $request->getControllerName();
+        $moduleName     = $this->request->getModuleName();
+        $controllerName = $this->request->getControllerName();
         // fully qualified controller class name
         $fullQualifiedClassName = $this->getControllerClassName($moduleName, $controllerName);
 

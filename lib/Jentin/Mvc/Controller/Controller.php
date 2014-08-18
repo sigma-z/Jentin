@@ -9,6 +9,8 @@
 
 namespace Jentin\Mvc\Controller;
 
+use Jentin\Mvc\Event\ControllerEvent;
+use Jentin\Mvc\Event\MvcEvent;
 use Jentin\Mvc\Request\RequestInterface;
 use Jentin\Mvc\Response\ResponseInterface;
 use Jentin\Mvc\Util\Util;
@@ -23,44 +25,45 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 class Controller implements ControllerInterface, Pluggable
 {
 
-    /**
-     * @var RequestInterface
-     */
+    /** @var RequestInterface */
     protected $request;
-    /**
-     * @var \Symfony\Component\EventDispatcher\EventDispatcherInterface
-     */
+
+    /** @var ResponseInterface|mixed */
+    protected $response;
+
+    /** @var EventDispatcherInterface */
     protected $eventDispatcher;
-    /**
-     * @var \Jentin\Mvc\Plugin\PluginBrokerInterface
-     */
+
+    /** @var PluginBrokerInterface */
     protected $pluginBroker;
 
 
     /**
      * constructor
      *
-     * @param \Jentin\Mvc\Request\RequestInterface                          $request
-     * @param \Symfony\Component\EventDispatcher\EventDispatcherInterface   $eventDispatcher
-     * @param \Jentin\Mvc\Plugin\PluginBrokerInterface                     $pluginBroker
+     * @param RequestInterface         $request
+     * @param EventDispatcherInterface $eventDispatcher
+     * @param PluginBrokerInterface    $pluginBroker
+     * @param ResponseInterface        $response
      */
     public function __construct(
-            RequestInterface $request,
-            EventDispatcherInterface $eventDispatcher,
-            PluginBrokerInterface $pluginBroker
-        )
-    {
+        RequestInterface $request,
+        EventDispatcherInterface $eventDispatcher,
+        PluginBrokerInterface $pluginBroker,
+        ResponseInterface $response = null
+    ) {
         $this->request = $request;
         $this->eventDispatcher = $eventDispatcher;
         $this->pluginBroker = $pluginBroker;
+        $this->response = $response;
     }
 
 
     /**
      * sets request
      *
-     * @param   \Jentin\Mvc\Request\RequestInterface $request
-     * @return  Controller
+     * @param   RequestInterface $request
+     * @return  $this
      */
     public function setRequest(RequestInterface $request)
     {
@@ -72,7 +75,7 @@ class Controller implements ControllerInterface, Pluggable
     /**
      * gets request
      *
-     * @return  \Jentin\Mvc\Request\RequestInterface
+     * @return  RequestInterface
      */
     public function getRequest()
     {
@@ -81,10 +84,32 @@ class Controller implements ControllerInterface, Pluggable
 
 
     /**
+     * @param  ResponseInterface $response
+     * @return $this
+     */
+    public function setResponse(ResponseInterface $response)
+    {
+        $this->response = $response;
+        return $this;
+    }
+
+
+    /**
+     * Returns the response, which can be a response object or a mixed type (eg. string for HTML or array for JSON)
+     *
+     * @return ResponseInterface|mixed
+     */
+    public function getResponse()
+    {
+        return $this->response;
+    }
+
+
+    /**
      * sets plugin broker
      *
-     * @param \Jentin\Mvc\Plugin\PluginBrokerInterface $pluginBroker
-     * @return Controller
+     * @param  PluginBrokerInterface $pluginBroker
+     * @return $this
      */
     public function setPluginBroker(PluginBrokerInterface $pluginBroker)
     {
@@ -96,7 +121,7 @@ class Controller implements ControllerInterface, Pluggable
     /**
      * gets plugin broker
      *
-     * @return \Jentin\Mvc\Plugin\PluginBrokerInterface
+     * @return PluginBrokerInterface
      */
     public function getPluginBroker()
     {
@@ -107,8 +132,8 @@ class Controller implements ControllerInterface, Pluggable
     /**
      * sets event dispatcher
      *
-     * @param \Symfony\Component\EventDispatcher\EventDispatcherInterface $eventDispatcher
-     * @return Controller
+     * @param  EventDispatcherInterface $eventDispatcher
+     * @return $this
      */
     public function setEventDispatcher(EventDispatcherInterface $eventDispatcher)
     {
@@ -120,7 +145,7 @@ class Controller implements ControllerInterface, Pluggable
     /**
      * gets event dispatcher
      *
-     * @return \Symfony\Component\EventDispatcher\EventDispatcherInterface
+     * @return EventDispatcherInterface
      */
     public function getEventDispatcher()
     {
@@ -154,34 +179,35 @@ class Controller implements ControllerInterface, Pluggable
 
     /**
      * Executed after Controller::dispatch()
-     *
-     * @param  mixed $response
-     * @return mixed
      */
-    public function postDispatch($response)
+    public function postDispatch()
     {
-        return $response;
     }
 
 
     /**
-     * dispatches
+     * dispatches the action
      *
-     * @return  ResponseInterface
-     * @throws  ControllerException if action method is not found
+     * @throws ControllerException if action method is not found
      */
     public function dispatch()
     {
-        $controllerEvent = new \Jentin\Mvc\Event\ControllerEvent($this);
-        $this->eventDispatcher->dispatch(\Jentin\Mvc\Event\MvcEvent::ON_CONTROLLER_DISPATCH, $controllerEvent);
-        if ($controllerEvent->isPropagationStopped()) {
-            return $controllerEvent->getResponse();
+        $controllerEvent = new ControllerEvent($this);
+        $this->eventDispatcher->dispatch(MvcEvent::ON_CONTROLLER_DISPATCH, $controllerEvent);
+        if ($controllerEvent->hasResponse()) {
+            $this->response = $controllerEvent->getResponse();
+            return;
         }
 
         $actionMethod = $this->getActionMethod();
         if (method_exists($this, $actionMethod)) {
-            return call_user_func(array($this, $actionMethod));
+            $response = call_user_func(array($this, $actionMethod));
+            if ($response) {
+                $this->response = $response;
+            }
+            return;
         }
+
         $moduleName = $this->request->getModuleName();
         $controllerName = $this->request->getControllerName();
         throw new ControllerException(

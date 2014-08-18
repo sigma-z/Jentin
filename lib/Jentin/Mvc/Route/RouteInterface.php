@@ -10,6 +10,7 @@
 namespace Jentin\Mvc\Route;
 
 use Jentin\Mvc\Request\RequestInterface;
+use Jentin\Mvc\Response\ResponseInterface;
 
 /**
  * RouteInterface
@@ -53,7 +54,7 @@ interface RouteInterface
     /**
      * parses the route
      *
-     * @param  \Jentin\Mvc\Request\RequestInterface $request
+     * @param  RequestInterface $request
      * @return boolean
      */
     public function parse(RequestInterface $request);
@@ -66,8 +67,8 @@ interface RouteInterface
 
 
     /**
-     * @param RequestInterface $request
-     * @return \Jentin\Mvc\Response\ResponseInterface
+     * @param  RequestInterface $request
+     * @return ResponseInterface
      */
     public function callback(RequestInterface $request);
 

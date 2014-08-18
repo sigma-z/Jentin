@@ -9,13 +9,16 @@
 
 namespace Test\Jentin\Mvc;
 
+use Jentin\Mvc\Event\RouteEvent;
 use Jentin\Mvc\Plugin\PluginBroker;
 use Jentin\Mvc\Event\MvcEvent;
 use Jentin\Mvc\EventListener\HtmlJsonControllerResultListener;
 use Jentin\Mvc\HttpKernel;
 use Jentin\Mvc\Request\Request;
 use Jentin\Mvc\Request\RequestInterface;
+use Jentin\Mvc\Response\RedirectResponse;
 use Jentin\Mvc\Response\Response;
+use Jentin\Mvc\Response\ResponseInterface;
 use Jentin\Mvc\Route\Route;
 use Jentin\Mvc\Router\Router;
 use Symfony\Component\EventDispatcher\EventDispatcher;
@@ -26,36 +29,11 @@ use Symfony\Component\EventDispatcher\EventDispatcher;
 class HttpKernelEndToEndTest extends \PHPUnit_Framework_TestCase
 {
 
-    /**
-     * @var HttpKernel
-     */
+    /** @var HttpKernel */
     private $httpKernel;
 
-
-    protected function setUp()
-    {
-        $controllerDirs = FIXTURE_DIR . '/modules/%Module%/controllers';
-        $viewDirPattern = FIXTURE_DIR . '/modules/%Module%/views';
-        $viewPluginBroker = new PluginBroker();
-        $viewPlugin = array('\Jentin\Mvc\Plugin\View', array($viewDirPattern, $viewPluginBroker));
-
-        $pluginBroker = new PluginBroker();
-        $pluginBroker->register('view', $viewPlugin);
-
-        $router = new Router();
-        $router->setRoute('default', new Route('/(%module%)(/%controller%)(/%action%)'));
-
-        $htmlJsonControllerResultListener = new HtmlJsonControllerResultListener();
-        $eventDispatcher = new EventDispatcher();
-        $eventDispatcher->addListener(
-            MvcEvent::ON_CONTROLLER_RESULT,
-            array($htmlJsonControllerResultListener, 'getResponse')
-        );
-
-        $this->httpKernel = new HttpKernel($controllerDirs, array('Test'), $router, $eventDispatcher);
-        $this->httpKernel->setControllerPluginBroker($pluginBroker);
-        $this->httpKernel->setControllerClassNamePattern('\%Module%Module\%Controller%Controller');
-    }
+    /** @var ResponseInterface */
+    private $response;
 
 
     /**
@@ -66,8 +44,9 @@ class HttpKernelEndToEndTest extends \PHPUnit_Framework_TestCase
      */
     public function testHandleRequest(RequestInterface $request, $expectedResponseContent)
     {
-        $response = $this->httpKernel->handleRequest($request);
-        $this->assertEquals($expectedResponseContent, $response->getContent());
+        $this->givenIHaveAHttpKernel();
+        $this->whenIHandleTheRequest($request);
+        $this->thenTheResponseContentShouldBeEquals($expectedResponseContent);
     }
 
 
@@ -100,10 +79,10 @@ class HttpKernelEndToEndTest extends \PHPUnit_Framework_TestCase
     public function testRedirect()
     {
         $request = $this->getRequest('/', 'test', 'default', 'redirect');
-        /** @var \Jentin\Mvc\Response\RedirectResponse $response */
-        $response = $this->httpKernel->handleRequest($request);
-        $this->assertInstanceOf('\Jentin\Mvc\Response\RedirectResponse', $response);
-        $this->assertEquals('http://example.com/', $response->getRedirectUrl());
+
+        $this->givenIHaveAHttpKernel();
+        $this->whenIHandleTheRequest($request);
+        $this->thenTheResponseShouldBeARedirectTo('http://example.com/');
     }
 
 
@@ -111,26 +90,41 @@ class HttpKernelEndToEndTest extends \PHPUnit_Framework_TestCase
     {
         $request = $this->getRequest('/', 'test', 'default', 'test-layout');
 
-        $this->httpKernel->getControllerPluginBroker()->load('view')->setLayoutEnabled();
-
-        $response = $this->httpKernel->handleRequest($request);
-        $this->assertEquals('Layout works! Content is: Hello world!', $response->getContent());
+        $this->givenIHaveAHttpKernel();
+        $this->givenIHaveLayoutEnabled();
+        $this->whenIHandleTheRequest($request);
+        $this->thenTheResponseContentShouldBeEquals('Layout works! Content is: Hello world!');
     }
 
 
     public function testCallback()
     {
-        $responseContent = 'It works with callbacks, too!';
         $request = $this->getRequest('/', 'test', 'default', 'index');
-
+        $responseContent = 'It works with callbacks, too!';
         $callback = function() use($responseContent) {
             return new Response($responseContent);
         };
-        $callbackRoute = new Route('/(%module%)(/%controller%)(/%action%)', array(), $callback);
-        $this->httpKernel->getRouter()->setRoutes(array('callback' => $callbackRoute));
 
-        $response = $this->httpKernel->handleRequest($request);
-        $this->assertEquals($responseContent, $response->getContent());
+        $this->givenIHaveAHttpKernel();
+        $this->givenIDefinedARouteWithCallback('callback', '/(%module%)(/%controller%)(/%action%)', $callback);
+        $this->whenIHandleTheRequest($request);
+        $this->thenTheResponseContentShouldBeEquals($responseContent);
+    }
+
+
+    public function testSetResponseByOnRouteEvent()
+    {
+        $request = $this->getRequest('/', 'test', 'default', 'no-return-response');
+
+        $this->givenIHaveAHttpKernel();
+        $this->givenIHaveDefinedAnOnRouteEvent(function (RouteEvent $routeEvent) {
+            $response = new Response();
+            $response->setHeader('X-On-Route-Event', '1');
+            $routeEvent->setResponse($response);
+        });
+        $this->whenIHandleTheRequest($request);
+        $this->thenTheResponseContentShouldBeEquals('It works!');
+        $this->thenTheResponseShouldHaveAHeaderWithName_andValue('X-On-Route-Event', '1');
     }
 
 
@@ -153,4 +147,94 @@ class HttpKernelEndToEndTest extends \PHPUnit_Framework_TestCase
         return $request;
     }
 
+
+    private function givenIHaveAHttpKernel()
+    {
+        $controllerDirs = FIXTURE_DIR . '/modules/%Module%/controllers';
+        $viewDirPattern = FIXTURE_DIR . '/modules/%Module%/views';
+        $viewPluginBroker = new PluginBroker();
+        $viewPlugin = array('\Jentin\Mvc\Plugin\View', array($viewDirPattern, $viewPluginBroker));
+
+        $pluginBroker = new PluginBroker();
+        $pluginBroker->register('view', $viewPlugin);
+
+        $htmlJsonControllerResultListener = new HtmlJsonControllerResultListener();
+        $eventDispatcher = new EventDispatcher();
+        $eventDispatcher->addListener(
+            MvcEvent::ON_CONTROLLER_RESULT,
+            array($htmlJsonControllerResultListener, 'getResponse')
+        );
+
+        $this->httpKernel = new HttpKernel($controllerDirs, array('Test'), new Router(), $eventDispatcher);
+        $this->httpKernel->setControllerPluginBroker($pluginBroker);
+        $this->httpKernel->setControllerClassNamePattern('\%Module%Module\%Controller%Controller');
+    }
+
+
+    /**
+     * @param RequestInterface $request
+     */
+    private function whenIHandleTheRequest(RequestInterface $request)
+    {
+        $this->response = $this->httpKernel->handleRequest($request);
+    }
+
+
+    /**
+     * @param $expectedResponseContent
+     */
+    private function thenTheResponseContentShouldBeEquals($expectedResponseContent)
+    {
+        $this->assertEquals($expectedResponseContent, $this->response->getContent());
+    }
+
+
+    /**
+     * @param string $redirectUrl
+     */
+    private function thenTheResponseShouldBeARedirectTo($redirectUrl)
+    {
+        /** @var RedirectResponse $response */
+        $response = $this->response;
+        $this->assertInstanceOf('\Jentin\Mvc\Response\RedirectResponse', $response);
+        $this->assertEquals($redirectUrl, $response->getRedirectUrl());
+    }
+
+
+    private function givenIHaveLayoutEnabled()
+    {
+        $this->httpKernel->getControllerPluginBroker()->load('view')->setLayoutEnabled();
+    }
+
+
+    /**
+     * @param string   $name
+     * @param string   $pattern
+     * @param callable $callback
+     */
+    private function givenIDefinedARouteWithCallback($name, $pattern, $callback)
+    {
+        $callbackRoute = new Route($pattern, array(), $callback);
+        $this->httpKernel->getRouter()->setRoute($name, $callbackRoute);
+    }
+
+
+    /**
+     * @param callable $listener
+     */
+    private function givenIHaveDefinedAnOnRouteEvent($listener)
+    {
+        $this->httpKernel->getEventDispatcher()->addListener(MvcEvent::ON_ROUTE, $listener);
+    }
+
+
+    /**
+     * @param string $headerName
+     * @param string $headerValue
+     */
+    private function thenTheResponseShouldHaveAHeaderWithName_andValue($headerName, $headerValue)
+    {
+        $actualValue = $this->response->getHeader($headerName);
+        $this->assertEquals($headerValue, $actualValue);
+    }
 }

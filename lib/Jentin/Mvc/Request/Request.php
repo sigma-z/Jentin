@@ -54,6 +54,9 @@ class Request implements RequestInterface
     /** @var string */
     protected $scheme;
 
+    /** @var bool */
+    protected $isDispatched = false;
+
 
     /**
      * constructor
@@ -459,6 +462,28 @@ class Request implements RequestInterface
             return $urlParts['fragment'];
         }
         return '';
+    }
+
+
+    /**
+     *
+     *
+     * @param  bool $isDispatched
+     */
+    public function setDispatched($isDispatched = true)
+    {
+        $this->isDispatched = $isDispatched;
+    }
+
+
+    /**
+     * If the request has not been dispatched, yet, it returns false
+     *
+     * @return bool
+     */
+    public function isDispatched()
+    {
+        return $this->isDispatched;
     }
 
 }

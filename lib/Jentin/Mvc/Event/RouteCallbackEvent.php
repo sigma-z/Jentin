@@ -10,6 +10,7 @@
 namespace Jentin\Mvc\Event;
 
 use Jentin\Mvc\Request\RequestInterface;
+use Jentin\Mvc\Response\ResponseInterface;
 use Jentin\Mvc\Route\RouteInterface;
 
 /**
@@ -26,13 +27,15 @@ class RouteCallbackEvent extends MvcEvent
 
 
     /**
-     * @param RequestInterface $request
-     * @param RouteInterface   $route
+     * @param RequestInterface  $request
+     * @param RouteInterface    $route
+     * @param ResponseInterface $response
      */
-    public function __construct(RequestInterface $request, RouteInterface $route)
+    public function __construct(RequestInterface $request, RouteInterface $route, ResponseInterface $response = null)
     {
         $this->request = $request;
         $this->route = $route;
+        $this->response = $response;
     }
 
 

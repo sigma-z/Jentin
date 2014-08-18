@@ -278,6 +278,17 @@ The method ``flushResponse()`` sends its buffered output immediately.
 **Note:** that you normally can not set headers to your response once you flushed the response.
 
 
+Events to hook in
+===
+
+onRoute event
+---
+
+This event is called before the request is processed by the router to find the corresponding route.
+Useful if you want to manipulate the request before the router is using it for routing. You can create a response
+
+
+
 Plugins
 ===
 
@@ -291,6 +302,3 @@ RouteUrl
 Caching
 ---
 
-
-Events to hook in
-===

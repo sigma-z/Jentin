@@ -147,4 +147,20 @@ interface RequestInterface
      */
     public function getFragment();
 
+
+    /**
+     * Sets the request as dispatched, set by the controller
+     *
+     * @param  bool $isDispatched
+     */
+    public function setDispatched($isDispatched = true);
+
+
+    /**
+     * If the request has not been dispatched, yet, it returns false
+     *
+     * @return bool
+     */
+    public function isDispatched();
+
 }

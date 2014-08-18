@@ -1,12 +1,22 @@
 <?php
+/*
+ * This file is part of the Jentin framework.
+ * (c) Steffen Zeidler <sigma_z@sigma-scripts.de>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
 
 namespace TestModule;
 
+use Jentin\Mvc\Controller\Controller;
+use Jentin\Mvc\Response\RedirectResponse;
+
 /**
- * TestController.php
+ * DefaultController.php
  * @author Steffen Zeidler <sigma_z@sigma-scripts.de>
  */
-class DefaultController extends \Jentin\Mvc\Controller\Controller
+class DefaultController extends Controller
 {
 
     public function homeAction()
@@ -15,9 +25,16 @@ class DefaultController extends \Jentin\Mvc\Controller\Controller
     }
 
 
+    public function noReturnResponseAction()
+    {
+        $content = $this->plugin('view')->render(array(), 'home');
+        $this->response->setContent($content);
+    }
+
+
     public function redirectAction()
     {
-        return new \Jentin\Mvc\Response\RedirectResponse('http://example.com/');
+        return new RedirectResponse('http://example.com/');
     }
 
 

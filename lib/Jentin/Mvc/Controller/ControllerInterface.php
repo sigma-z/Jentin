@@ -9,6 +9,9 @@
 
 namespace Jentin\Mvc\Controller;
 
+use Jentin\Mvc\Request\RequestInterface;
+use Jentin\Mvc\Response\ResponseInterface;
+
 /**
  * ControllerInterface
  * @author Steffen Zeidler <sigma_z@sigma-scripts.de>
@@ -24,23 +27,39 @@ interface ControllerInterface
 
     /**
      * Should be executed after dispatching the controller action through HttpKernel::dispatch()
-     *
-     * @param  mixed $response
-     * @return mixed
      */
-    public function postDispatch($response);
+    public function postDispatch();
 
 
     /**
      * Dispatches action
-     * @return \Jentin\Mvc\Response\ResponseInterface
      */
     public function dispatch();
 
 
     /**
-     * @return \Jentin\Mvc\Request\RequestInterface
+     * @param RequestInterface $request
+     */
+    public function setRequest(RequestInterface $request);
+
+
+    /**
+     * @return RequestInterface
      */
     public function getRequest();
+
+
+    /**
+     * @param ResponseInterface $response
+     */
+    public function setResponse(ResponseInterface $response);
+
+
+    /**
+     * Returns the response, which can be a response object or a mixed type (eg. string for HTML or array for JSON)
+     *
+     * @return ResponseInterface|mixed
+     */
+    public function getResponse();
 
 }
