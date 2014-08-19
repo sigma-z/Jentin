@@ -24,7 +24,7 @@ class JsonResponse extends Response
     public function __construct($content = '')
     {
         parent::__construct($content);
-        $this->setContentType('text/x-json');
+        $this->setContentType('text/x-json; charset=UTF-8');
     }
 
 

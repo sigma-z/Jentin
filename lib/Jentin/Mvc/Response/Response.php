@@ -54,11 +54,17 @@ class Response implements ResponseInterface
      */
     public function setHeader($name, $value = '', $replace = true)
     {
-        $this->headers[$name][] = array(
+        $header = array(
             'value' => $value,
             'replace' => $replace,
             'sent' => false
         );
+        if ($replace) {
+            $this->headers[$name] = array($header);
+        }
+        else {
+            $this->headers[$name][] = $header;
+        }
     }
 
 
