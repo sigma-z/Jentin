@@ -67,9 +67,10 @@ interface RouteInterface
 
 
     /**
-     * @param  RequestInterface $request
+     * @param  RequestInterface  $request
+     * @param  ResponseInterface $response
      * @return ResponseInterface
      */
-    public function callback(RequestInterface $request);
+    public function callback(RequestInterface $request, ResponseInterface $response = null);
 
 }

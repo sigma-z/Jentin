@@ -35,6 +35,7 @@ class HtmlJsonControllerResultListener
         }
         else {
             $response = new Response();
+            $response->setContentType('text/html; charset=utf-8');
             $response->setContent((string)$controllerResult);
         }
         $event->setResponse($response);

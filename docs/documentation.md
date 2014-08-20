@@ -281,12 +281,131 @@ The method ``flushResponse()`` sends its buffered output immediately.
 Events to hook in
 ===
 
-onRoute event
+ON_ROUTE event
 ---
 
 This event is called before the request is processed by the router to find the corresponding route.
-Useful if you want to manipulate the request before the router is using it for routing. You can create a response
+Useful if you want to manipulate the request before routing.
+You can create a response, add headers or content to it and it will available in the controller class or the route callback.
 
+The ON_ROUTE event will be dispatched by providing a RouteEvent instance as argument.
+The event itself provides access to the request and the response.
+In this example a JsonResponse will be created which will be used for further processing in the HttpKernel class.
+
+```php
+$eventDispatcher->addListener(
+    \Jentin\Mvc\Event\MvcEvent::ON_ROUTE,
+    function (\Jentin\Mvc\Event\RouteEvent $event) {
+        $response = new JsonResponse();
+        $event->setResponse($response);
+    }
+);
+```
+
+
+ON_ROUTE_CALLBACK event
+---
+
+This event is called when a route callback is called.
+
+The ON_ROUTE_CALLBACK event will be dispatched by providing a RouteCallbackEvent instance as argument.
+The event itself provides access to the request, the route, and the response.
+
+```php
+$eventDispatcher->addListener(
+    \Jentin\Mvc\Event\MvcEvent::ON_ROUTE_CALLBACK,
+    function (\Jentin\Mvc\Event\RouteCallbackEvent $event) {
+        // .. code ..
+    }
+);
+```
+
+
+ON_CONTROLLER event
+---
+
+This event is called before the controller will be dispatched.
+
+The ON_CONTROLLER event will be dispatched by providing a ControllerEvent instance as argument.
+The event itself provides access to the controller, the request (via controller), and the response (via controller).
+
+```php
+$eventDispatcher->addListener(
+    \Jentin\Mvc\Event\MvcEvent::ON_CONTROLLER,
+    function (\Jentin\Mvc\Event\ControllerEvent $event) {
+        // .. code ..
+    }
+);
+```
+
+
+ON_CONTROLLER_DISPATCH event
+---
+
+This event is called when the controller is dispatching. It is right before the controller action method is called.
+The preDispatch() method of the controller has been called already at this time.
+
+The ON_CONTROLLER event will be dispatched by providing a ControllerEvent instance as argument.
+The event itself provides access to the controller, the request (via controller), and the response (via controller).
+
+```php
+$eventDispatcher->addListener(
+    \Jentin\Mvc\Event\MvcEvent::ON_CONTROLLER_DISPATCH,
+    function (\Jentin\Mvc\Event\ControllerEvent $event) {
+        // .. code ..
+    }
+);
+```
+
+
+ON_CONTROLLER_RESULT event
+---
+
+This event is called after the controller has been dispatched.
+
+The ON_CONTROLLER_RESULT event will be dispatched by providing a ControllerResultEvent instance as argument.
+The event itself provides access to the controller, the request (via controller), and the response.
+
+In the example the controller result must not be an instance of the ResponseInterface.
+In this case it handles an array or string as result and maps it to a json response or an html response.
+
+```php
+$eventDispatcher->addListener(
+    \Jentin\Mvc\Event\MvcEvent::ON_CONTROLLER_RESULT,
+    function (\Jentin\Mvc\Event\ControllerResultEvent $event) {
+        $controllerResult = $event->getControllerResult();
+        if (is_array($controllerResult)) {
+            $response = new JsonResponse();
+            $response->setContent($controllerResult);
+        }
+        else {
+            $response = new Response();
+            $response->setContent((string)$controllerResult);
+        }
+        $event->setResponse($response);
+        return $response;
+    }
+);
+```
+
+
+ON_FILTER_RESPONSE event
+---
+
+This event is called after the dispatch process is done.
+It can be used to manipulate the response that has been built by the controller class.
+
+The ON_FILTER_RESPONSE event will be dispatched by providing a ResponseFilterEvent instance as argument.
+The event itself provides access to the request and the response.
+
+```php
+$eventDispatcher->addListener(
+    \Jentin\Mvc\Event\MvcEvent::ON_FILTER_RESPONSE,
+    function (\Jentin\Mvc\Event\ResponseFilterEvent $event) {
+        // .. code ..
+    }
+);
+```
 
 
 Plugins

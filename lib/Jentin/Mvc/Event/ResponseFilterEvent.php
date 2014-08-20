@@ -9,6 +9,7 @@
 
 namespace Jentin\Mvc\Event;
 
+use Jentin\Mvc\Request\RequestInterface;
 use Jentin\Mvc\Response\ResponseInterface;
 
 /**
@@ -18,13 +19,31 @@ use Jentin\Mvc\Response\ResponseInterface;
 class ResponseFilterEvent extends MvcEvent
 {
 
+    /** @var RequestInterface */
+    protected $request;
+
+
     /**
      * constructor
-     * @param \Jentin\Mvc\Response\ResponseInterface    $response
+     *
+     * @param RequestInterface  $request
+     * @param ResponseInterface $response
      */
-    public function __construct(ResponseInterface $response)
+    public function __construct(RequestInterface $request, ResponseInterface $response)
     {
+        $this->request = $request;
         $this->response = $response;
+    }
+
+
+    /**
+     * Gets request
+     *
+     * @return RequestInterface
+     */
+    public function getRequest()
+    {
+        return $this->request;
     }
 
 }

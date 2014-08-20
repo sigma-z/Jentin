@@ -203,8 +203,7 @@ class HttpKernel
             );
         }
 
-        // EVENT onResponse
-        $responseFilterEvent = new ResponseFilterEvent($this->response);
+        $responseFilterEvent = new ResponseFilterEvent($this->request, $this->response);
         $eventDispatcher = $this->getEventDispatcher();
         $eventDispatcher->dispatch(MvcEvent::ON_FILTER_RESPONSE, $responseFilterEvent);
 
@@ -252,7 +251,7 @@ class HttpKernel
                 return;
             }
         }
-        $response = $route->callback($this->request);
+        $response = $route->callback($this->request, $this->response);
         if ($response) {
             $this->response = $response;
         }

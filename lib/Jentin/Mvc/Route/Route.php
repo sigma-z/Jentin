@@ -10,6 +10,7 @@
 namespace Jentin\Mvc\Route;
 
 use Jentin\Mvc\Request\RequestInterface;
+use Jentin\Mvc\Response\ResponseInterface;
 use Jentin\Mvc\Util\Util;
 
 /**
@@ -140,12 +141,13 @@ class Route implements RouteInterface
 
 
     /**
-     * @param RequestInterface $request
+     * @param RequestInterface  $request
+     * @param ResponseInterface $response
      * @return \Jentin\Mvc\Response\ResponseInterface
      */
-    public function callback(RequestInterface $request)
+    public function callback(RequestInterface $request, ResponseInterface $response = null)
     {
-        return call_user_func($this->callback, $request);
+        return call_user_func($this->callback, $request, $response);
     }
 
 
