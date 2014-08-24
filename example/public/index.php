@@ -30,12 +30,12 @@ $viewDirPattern = __DIR__ . '/../app/%module%/view/%controller%';
 $viewPluginArgs = array($viewDirPattern, $viewPluginBroker, $layoutEnabled);
 $controllerPluginBroker->register('view', array('\Jentin\Mvc\Plugin\View', $viewPluginArgs));
 
-// controller result listener converts string results into Html-Responses and array results into Json-Responses
-$htmlJsonControllerResultListener = new \Jentin\Mvc\EventListener\HtmlJsonControllerResultListener();
+// listener converts string results into Html-Responses and array results into Json-Responses
+$htmlJsonControllerResultListener = new \Jentin\Mvc\EventListener\AutoConvertResponseIntoHtmlOrJsonListener();
 
 $eventDispatcher = new \Symfony\Component\EventDispatcher\EventDispatcher();
 $eventDispatcher->addListener(
-    \Jentin\Mvc\Event\MvcEvent::ON_CONTROLLER_RESULT,
+    \Jentin\Mvc\Event\MvcEvent::ON_FILTER_RESPONSE,
     array($htmlJsonControllerResultListener, 'getResponse')
 );
 
