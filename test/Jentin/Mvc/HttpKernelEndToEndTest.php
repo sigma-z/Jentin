@@ -12,7 +12,7 @@ namespace Test\Jentin\Mvc;
 use Jentin\Mvc\Event\RouteEvent;
 use Jentin\Mvc\Plugin\PluginBroker;
 use Jentin\Mvc\Event\MvcEvent;
-use Jentin\Mvc\EventListener\HtmlJsonControllerResultListener;
+use Jentin\Mvc\EventListener\AutoConvertResponseIntoHtmlOrJsonListener;
 use Jentin\Mvc\HttpKernel;
 use Jentin\Mvc\Request\Request;
 use Jentin\Mvc\Request\RequestInterface;
@@ -158,10 +158,10 @@ class HttpKernelEndToEndTest extends \PHPUnit_Framework_TestCase
         $pluginBroker = new PluginBroker();
         $pluginBroker->register('view', $viewPlugin);
 
-        $htmlJsonControllerResultListener = new HtmlJsonControllerResultListener();
+        $htmlJsonControllerResultListener = new AutoConvertResponseIntoHtmlOrJsonListener();
         $eventDispatcher = new EventDispatcher();
         $eventDispatcher->addListener(
-            MvcEvent::ON_CONTROLLER_RESULT,
+            MvcEvent::ON_FILTER_RESPONSE,
             array($htmlJsonControllerResultListener, 'getResponse')
         );
 

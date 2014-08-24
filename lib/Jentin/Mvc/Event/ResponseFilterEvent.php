@@ -26,10 +26,10 @@ class ResponseFilterEvent extends MvcEvent
     /**
      * constructor
      *
-     * @param RequestInterface  $request
-     * @param ResponseInterface $response
+     * @param RequestInterface        $request
+     * @param ResponseInterface|mixed $response
      */
-    public function __construct(RequestInterface $request, ResponseInterface $response)
+    public function __construct(RequestInterface $request, $response)
     {
         $this->request = $request;
         $this->response = $response;

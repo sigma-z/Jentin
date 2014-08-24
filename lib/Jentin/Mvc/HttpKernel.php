@@ -23,7 +23,6 @@ use Symfony\Component\EventDispatcher\EventDispatcher;
 use Jentin\Mvc\Event\MvcEvent;
 use Jentin\Mvc\Event\RouteEvent;
 use Jentin\Mvc\Event\ControllerEvent;
-use Jentin\Mvc\Event\ControllerResultEvent;
 use Jentin\Mvc\Event\ResponseFilterEvent;
 
 /**
@@ -196,13 +195,6 @@ class HttpKernel
         $this->request = $request;
         $this->route($request);
 
-        if (!($this->response instanceof ResponseInterface)) {
-            throw new \DomainException(
-                'Response type is not valid! You gave: '
-                . (is_object($this->response) ? get_class($this->response) : gettype($this->response))
-            );
-        }
-
         $responseFilterEvent = new ResponseFilterEvent($this->request, $this->response);
         $eventDispatcher = $this->getEventDispatcher();
         $eventDispatcher->dispatch(MvcEvent::ON_FILTER_RESPONSE, $responseFilterEvent);
@@ -284,12 +276,6 @@ class HttpKernel
         $controller->postDispatch();
 
         $this->response = $controller->getResponse();
-
-        if (!($this->response instanceof ResponseInterface)) {
-            $controllerResultEvent = new ControllerResultEvent($controller, $this->response);
-            $eventDispatcher->dispatch(MvcEvent::ON_CONTROLLER_RESULT, $controllerResultEvent);
-            $this->response = $controllerResultEvent->getResponse();
-        }
     }
 
 

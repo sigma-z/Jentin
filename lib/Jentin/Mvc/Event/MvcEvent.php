@@ -22,22 +22,21 @@ abstract class MvcEvent extends Event
     const ON_ROUTE                  = 'jentin.mvc.onRoute';
     const ON_ROUTE_CALLBACK         = 'jentin.mvc.onRouteCallback';
     const ON_CONTROLLER             = 'jentin.mvc.onController';
-    const ON_CONTROLLER_RESULT      = 'jentin.mvc.onControllerResult';
     const ON_CONTROLLER_DISPATCH    = 'jentin.mvc.onControllerDispatch';
     const ON_FILTER_RESPONSE        = 'jentin.mvc.onFilterResponse';
 
 
-    /** @var ResponseInterface */
+    /** @var ResponseInterface|mixed */
     protected $response;
 
 
     /**
      * sets response
      *
-     * @param  ResponseInterface $response
+     * @param  ResponseInterface|mixed $response
      * @return MvcEvent
      */
-    public function setResponse(ResponseInterface $response)
+    public function setResponse($response)
     {
         $this->response = $response;
         return $this;
@@ -47,7 +46,7 @@ abstract class MvcEvent extends Event
     /**
      * gets response
      *
-     * @return ResponseInterface
+     * @return ResponseInterface|mixed
      */
     public function getResponse()
     {

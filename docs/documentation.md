@@ -199,13 +199,13 @@ The url http://your-domain/default/hello-world/json will output '{"message": "he
 The url http://your-domain/default/hello-world/html will output 'hello world'.
 
 
-If you like to have it much more easier, then try out the ``HtmlJsonControllerResultListener`` class.
+If you like to have it much more easier, then try out the ``AutoConvertResponseIntoHtmlOrJsonListener`` class.
 Just let the listener listen to the event ``\Jentin\Mvc\Event\MvcEvent::ON_CONTROLLER_RESULT``.
 It will create the response automatically by converting an array to a
 json response and all the other to an html response.
 
 ```php
-$htmlJsonControllerResultListener = new \Jentin\Mvc\EventListener\HtmlJsonControllerResultListener();
+$htmlJsonControllerResultListener = new \Jentin\Mvc\EventListener\AutoConvertResponseIntoHtmlOrJsonListener();
 $eventDispatcher = new \Symfony\Component\EventDispatcher\EventDispatcher();
 $eventDispatcher->addListener(
     \Jentin\Mvc\Event\MvcEvent::ON_CONTROLLER_RESULT,
@@ -366,28 +366,6 @@ This event is called after the controller has been dispatched.
 The ON_CONTROLLER_RESULT event will be dispatched by providing a ControllerResultEvent instance as argument.
 The event itself provides access to the controller, the request (via controller), and the response.
 
-In the example the controller result must not be an instance of the ResponseInterface.
-In this case it handles an array or string as result and maps it to a json response or an html response.
-
-```php
-$eventDispatcher->addListener(
-    \Jentin\Mvc\Event\MvcEvent::ON_CONTROLLER_RESULT,
-    function (\Jentin\Mvc\Event\ControllerResultEvent $event) {
-        $controllerResult = $event->getControllerResult();
-        if (is_array($controllerResult)) {
-            $response = new JsonResponse();
-            $response->setContent($controllerResult);
-        }
-        else {
-            $response = new Response();
-            $response->setContent((string)$controllerResult);
-        }
-        $event->setResponse($response);
-        return $response;
-    }
-);
-```
-
 
 ON_FILTER_RESPONSE event
 ---
@@ -398,11 +376,29 @@ It can be used to manipulate the response that has been built by the controller 
 The ON_FILTER_RESPONSE event will be dispatched by providing a ResponseFilterEvent instance as argument.
 The event itself provides access to the request and the response.
 
+In the example the controller result must not be an instance of the ResponseInterface.
+In this case it handles an array or string as result and maps it to a json response or an html response.
+
 ```php
 $eventDispatcher->addListener(
     \Jentin\Mvc\Event\MvcEvent::ON_FILTER_RESPONSE,
     function (\Jentin\Mvc\Event\ResponseFilterEvent $event) {
-        // .. code ..
+        $responseContent = $event->getResponse();
+        if ($responseContent instanceof ResponseInterface) {
+            return $responseContent;
+        }
+
+        if (is_array($responseContent)) {
+            $response = new JsonResponse();
+            $response->setContent($responseContent);
+        }
+        else {
+            $response = new Response();
+            $response->setContentType('text/html; charset=utf-8');
+            $response->setContent((string)$responseContent);
+        }
+        $event->setResponse($response);
+        return $response;
     }
 );
 ```

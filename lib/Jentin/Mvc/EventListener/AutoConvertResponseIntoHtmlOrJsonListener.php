@@ -9,34 +9,39 @@
 
 namespace Jentin\Mvc\EventListener;
 
-use Jentin\Mvc\Event\ControllerResultEvent;
+use Jentin\Mvc\Event\ResponseFilterEvent;
 use Jentin\Mvc\Response\Response;
 use Jentin\Mvc\Response\JsonResponse;
+use Jentin\Mvc\Response\ResponseInterface;
 
 /**
  * HtmlJsonControllerResultListener.php
  * @author Steffen Zeidler <sigma_z@sigma-scripts.de>
  */
-class HtmlJsonControllerResultListener
+class AutoConvertResponseIntoHtmlOrJsonListener
 {
 
     /**
      * gets response
      *
-     * @param  \Jentin\Mvc\Event\ControllerResultEvent $event
+     * @param  \Jentin\Mvc\Event\ResponseFilterEvent $event
      * @return \Jentin\Mvc\Response\ResponseInterface
      */
-    public function getResponse(ControllerResultEvent $event)
+    public function getResponse(ResponseFilterEvent $event)
     {
-        $controllerResult = $event->getControllerResult();
-        if (is_array($controllerResult)) {
+        $responseContent = $event->getResponse();
+        if ($responseContent instanceof ResponseInterface) {
+            return $responseContent;
+        }
+
+        if (is_array($responseContent)) {
             $response = new JsonResponse();
-            $response->setContent($controllerResult);
+            $response->setContent($responseContent);
         }
         else {
             $response = new Response();
             $response->setContentType('text/html; charset=utf-8');
-            $response->setContent((string)$controllerResult);
+            $response->setContent((string)$responseContent);
         }
         $event->setResponse($response);
         return $response;
