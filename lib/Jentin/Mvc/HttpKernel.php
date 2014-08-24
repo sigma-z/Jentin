@@ -186,14 +186,17 @@ class HttpKernel
     /**
      * handles request
      *
-     * @param   RequestInterface $request
-     * @throws  \DomainException
-     * @return  ResponseInterface
+     * @param  RequestInterface  $request
+     * @param  ResponseInterface $response
+     * @return ResponseInterface
      */
-    public function handleRequest(RequestInterface $request)
+    public function handleRequest(RequestInterface $request, ResponseInterface $response = null)
     {
         $this->request = $request;
-        $this->route($request);
+        if ($response) {
+            $this->response = $response;
+        }
+        $this->route();
 
         $responseFilterEvent = new ResponseFilterEvent($this->request, $this->response);
         $eventDispatcher = $this->getEventDispatcher();
