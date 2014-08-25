@@ -358,15 +358,6 @@ $eventDispatcher->addListener(
 ```
 
 
-ON_CONTROLLER_RESULT event
----
-
-This event is called after the controller has been dispatched.
-
-The ON_CONTROLLER_RESULT event will be dispatched by providing a ControllerResultEvent instance as argument.
-The event itself provides access to the controller, the request (via controller), and the response.
-
-
 ON_FILTER_RESPONSE event
 ---
 
