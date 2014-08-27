@@ -10,6 +10,8 @@
 namespace Jentin\Mvc;
 
 use Jentin\Mvc\Event\RouteCallbackEvent;
+use Jentin\Mvc\Response\JsonResponse;
+use Jentin\Mvc\Response\Response;
 use Jentin\Mvc\Route\RouteInterface;
 use Jentin\Mvc\Router\RouterInterface;
 use Jentin\Mvc\Request\RequestInterface;
@@ -202,7 +204,8 @@ class HttpKernel
         $eventDispatcher = $this->getEventDispatcher();
         $eventDispatcher->dispatch(MvcEvent::ON_FILTER_RESPONSE, $responseFilterEvent);
 
-        return $responseFilterEvent->getResponse();
+        $response = $responseFilterEvent->getResponse();
+        return $this->convertResponseIntoHtmlOrJsonResponse($response);
     }
 
 
@@ -383,6 +386,29 @@ class HttpKernel
         }
 
         return $controllerDir;
+    }
+
+
+    /**
+     * @param  ResponseInterface|mixed $responseContent
+     * @return ResponseInterface
+     */
+    private function convertResponseIntoHtmlOrJsonResponse($responseContent)
+    {
+        if ($responseContent instanceof ResponseInterface) {
+            return $responseContent;
+        }
+
+        if (is_array($responseContent)) {
+            $response = new JsonResponse();
+            $response->setContent($responseContent);
+        }
+        else {
+            $response = new Response();
+            $response->setContentType('text/html; charset=utf-8');
+            $response->setContent((string)$responseContent);
+        }
+        return $response;
     }
 
 }

@@ -9,8 +9,6 @@
 
 namespace Jentin;
 
-use Jentin\Mvc\Event\MvcEvent;
-use Jentin\Mvc\EventListener\AutoConvertResponseIntoHtmlOrJsonListener;
 use Jentin\Mvc\HttpKernel;
 use Jentin\Mvc\Plugin\PluginBroker;
 use Jentin\Mvc\Plugin\RouteUrl;
@@ -60,26 +58,12 @@ class Application
     {
         $this->initRouter();
         $this->initPlugins();
-        $this->initEventDispatcher();
     }
 
 
     protected function initRouter()
     {
         $this->router = new Router();
-    }
-
-
-    protected function initEventDispatcher()
-    {
-        // listener converts string results into Html-Responses and array results into Json-Responses
-        $htmlJsonControllerResultListener = new AutoConvertResponseIntoHtmlOrJsonListener();
-
-        $this->eventDispatcher = new EventDispatcher();
-        $this->eventDispatcher->addListener(
-            MvcEvent::ON_FILTER_RESPONSE,
-            array($htmlJsonControllerResultListener, 'getResponse')
-        );
     }
 
 

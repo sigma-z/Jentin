@@ -12,7 +12,6 @@ namespace Test\Jentin\Mvc;
 use Jentin\Mvc\Event\RouteEvent;
 use Jentin\Mvc\Plugin\PluginBroker;
 use Jentin\Mvc\Event\MvcEvent;
-use Jentin\Mvc\EventListener\AutoConvertResponseIntoHtmlOrJsonListener;
 use Jentin\Mvc\HttpKernel;
 use Jentin\Mvc\Request\Request;
 use Jentin\Mvc\Request\RequestInterface;
@@ -21,7 +20,6 @@ use Jentin\Mvc\Response\Response;
 use Jentin\Mvc\Response\ResponseInterface;
 use Jentin\Mvc\Route\Route;
 use Jentin\Mvc\Router\Router;
-use Symfony\Component\EventDispatcher\EventDispatcher;
 
 /**
  * @author Steffen Zeidler <sigma_z@sigma-scripts.de>
@@ -158,14 +156,7 @@ class HttpKernelEndToEndTest extends \PHPUnit_Framework_TestCase
         $pluginBroker = new PluginBroker();
         $pluginBroker->register('view', $viewPlugin);
 
-        $htmlJsonControllerResultListener = new AutoConvertResponseIntoHtmlOrJsonListener();
-        $eventDispatcher = new EventDispatcher();
-        $eventDispatcher->addListener(
-            MvcEvent::ON_FILTER_RESPONSE,
-            array($htmlJsonControllerResultListener, 'getResponse')
-        );
-
-        $this->httpKernel = new HttpKernel($controllerDirs, array('Test'), new Router(), $eventDispatcher);
+        $this->httpKernel = new HttpKernel($controllerDirs, array('Test'), new Router());
         $this->httpKernel->setControllerPluginBroker($pluginBroker);
         $this->httpKernel->setControllerClassNamePattern('\%Module%Module\%Controller%Controller');
     }
