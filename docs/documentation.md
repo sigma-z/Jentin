@@ -367,8 +367,11 @@ It can be used to manipulate the response that has been built by the controller 
 The ON_FILTER_RESPONSE event will be dispatched by providing a ResponseFilterEvent instance as argument.
 The event itself provides access to the request and the response.
 
-In the example the controller result must not be an instance of the ResponseInterface.
-In this case it handles an array or string as result and maps it to a json response or an html response.
+In the example the controller result can be a string or array instead of an instance of ResponseInterface.
+The event listener converts the data to a JsonResponse if it's an array, otherwise it creates a html response.
+
+**Note**: This is an example, to show how to use the `ON_FILTER_RESPONSE` event.
+By default the HttpKernel already does the conversion described above.
 
 ```php
 $eventDispatcher->addListener(

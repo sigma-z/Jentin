@@ -14,7 +14,7 @@ Requires
 
 Features
 ---
- * Template rendering with the view plugin
+ * Template rendering with the View plugin
  * Request routing
  * Plugins (for controller and view renderer)
    * RouteUrl - creates url for by given route name and route params
@@ -24,6 +24,5 @@ Features
    * onRouteCallback - dispatched on routing when route is using a callback
    * onController - dispatched creating corresponding controller
    * onControllerDispatch - dispatched on controller dispatch
-   * onControllerResult - dispatched after controller has been dispatched
    * onFilterResponse - dispatched before response is ready to sent
    * custom events may be defined
