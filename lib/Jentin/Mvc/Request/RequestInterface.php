@@ -48,6 +48,22 @@ interface RequestInterface
     public function getParams();
 
     /**
+     * Returns true, if request param is a post parameter
+     *
+     * @param  string $name
+     * @return bool
+     */
+    public function isPost($name);
+
+    /**
+     * Returns true, if request param is a get parameter
+     *
+     * @param  string $name
+     * @return bool
+     */
+    public function isGet($name);
+
+    /**
      * gets module name
      *
      * @return string

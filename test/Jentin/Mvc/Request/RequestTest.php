@@ -26,7 +26,7 @@ class RequestTest extends \PHPUnit_Framework_TestCase
      */
     public function testGetBaseUrl(array $server, $expectedBaseUrl)
     {
-        $request = new Request(array(), $server);
+        $request = new Request(array(), array(), $server);
         $this->assertEquals($expectedBaseUrl, $request->getBaseUrl());
     }
 
@@ -94,7 +94,7 @@ class RequestTest extends \PHPUnit_Framework_TestCase
      */
     public function testGetHost(array $server, $expectedHost)
     {
-        $request = new Request(array(), $server);
+        $request = new Request(array(), array(), $server);
         $this->assertEquals($expectedHost, $request->getHost());
     }
 
@@ -124,8 +124,17 @@ class RequestTest extends \PHPUnit_Framework_TestCase
     public function testGetScheme()
     {
         $server = array('HTTPS' => 'on');
-        $request = new Request(array(), $server);
+        $request = new Request(array(), array(), $server);
         $this->assertEquals('https', $request->getScheme());
+    }
+
+
+    public function testPostParamsPreferredOverGetParams()
+    {
+        $request = new Request(array('test' => 'post'), array('test' => 'get'));
+        $this->assertEquals('post', $request->getParam('test'));
+        $this->assertTrue($request->isGet('test'));
+        $this->assertTrue($request->isPost('test'));
     }
 
 
@@ -138,7 +147,7 @@ class RequestTest extends \PHPUnit_Framework_TestCase
     public function testGetQuery($url, $expected)
     {
         $server = array('REQUEST_URI' => $url);
-        $request = new Request(array(), $server);
+        $request = new Request(array(), array(), $server);
         $this->assertEquals($expected['query'], $request->getQuery());
     }
 
@@ -152,7 +161,7 @@ class RequestTest extends \PHPUnit_Framework_TestCase
     public function testGetFragment($url, $expected)
     {
         $server = array('REQUEST_URI' => $url);
-        $request = new Request(array(), $server);
+        $request = new Request(array(), array(), $server);
         $this->assertEquals($expected['fragment'], $request->getFragment());
     }
 

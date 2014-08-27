@@ -16,10 +16,10 @@ namespace Jentin\Mvc\Request;
 class Request implements RequestInterface
 {
     /** @var array */
-    protected $files        = array();
+    protected $files = array();
 
     /** @var array */
-    protected $server       = array(
+    protected $server = array(
         'REQUEST_URI'   => '',
         'SCRIPT_NAME'   => '',
         'HTTP_HOST'     => 'localhost',
@@ -28,19 +28,19 @@ class Request implements RequestInterface
     );
 
     /** @var array */
-    protected $cookie       = array();
+    protected $cookie = array();
 
     /** @var string */
-    protected $moduleName   = 'default';
+    protected $moduleName = 'default';
 
     /** @var string */
     protected $controllerName = 'index';
 
     /** @var string */
-    protected $actionName   = 'index';
+    protected $actionName = 'index';
 
     /** @var array */
-    protected $params       = array();
+    protected $params = array();
 
     /** @var string */
     protected $baseUrl;
@@ -57,22 +57,34 @@ class Request implements RequestInterface
     /** @var bool */
     protected $isDispatched = false;
 
+    /** @var array */
+    protected $paramNamesPost = array();
+
+    /** @var array */
+    protected $paramNamesGet = array();
+
 
     /**
      * constructor
      *
-     * @param array $params
+     * @param array $paramsPost
+     * @param array $paramsGet
      * @param array $server
      * @param array $cookie
      * @param array $files
      */
-    public function __construct(array $params = null, array $server = null, array $cookie = null, array $files = null)
+    public function __construct(array $paramsPost = null, array $paramsGet = null, array $server = null, array $cookie = null, array $files = null)
     {
-        $this->params   = is_array($params)  ? $params   : $_REQUEST;
-        $server         = is_array($server)  ? $server   : $_SERVER;
+        $paramsPost   = $paramsPost ?: $_POST;
+        $paramsGet    = $paramsGet  ?: $_GET;
+        $this->params = array_merge($paramsGet, $paramsPost);
+        $this->paramNamesPost = array_keys($paramsPost);
+        $this->paramNamesGet = array_keys($paramsGet);
+
+        $this->cookie = $cookie ?: $_COOKIE;
+        $this->files  = $files  ?: $_FILES;
+        $server       = $server ?: $_SERVER;
         $this->server = array_merge($this->server, $server);
-        $this->cookie   = is_array($cookie)  ? $cookie   : $_COOKIE;
-        $this->files    = is_array($files)   ? $files    : $_FILES;
     }
 
 
@@ -134,7 +146,6 @@ class Request implements RequestInterface
         if (isset($this->params[$name])) {
             return $this->params[$name];
         }
-
         return $default;
     }
 
@@ -169,6 +180,30 @@ class Request implements RequestInterface
     public function setParams(array $params)
     {
         $this->params = $params;
+    }
+
+
+    /**
+     * Returns true, if request param is a post parameter
+     *
+     * @param  string $name
+     * @return bool
+     */
+    public function isPost($name)
+    {
+        return in_array($name, $this->paramNamesPost);
+    }
+
+
+    /**
+     * Returns true, if request param is a get parameter
+     *
+     * @param  string $name
+     * @return bool
+     */
+    public function isGet($name)
+    {
+        return in_array($name, $this->paramNamesGet);
     }
 
 

@@ -328,7 +328,7 @@ class RouteTest extends \PHPUnit_Framework_TestCase
      */
     private function givenIHaveARequestWithUri_andBaseUrl($requestUrl, $baseUrl)
     {
-        $this->request = new Request(array(), array('REQUEST_URI' => $requestUrl));
+        $this->request = new Request(array(), array(), array('REQUEST_URI' => $requestUrl));
         $this->request->setBaseUrl($baseUrl);
     }
 

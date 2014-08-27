@@ -112,7 +112,7 @@ class RouterTest extends \PHPUnit_Framework_TestCase
     private function givenIHaveARequestWithUri($requestUri)
     {
         $server = array('REQUEST_URI' => $requestUri);
-        $this->request = new Request(array(), $server);
+        $this->request = new Request(array(), array(), $server);
         $this->request->setBaseUrl('/');
     }
 
