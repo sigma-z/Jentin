@@ -132,6 +132,15 @@ class Route implements RouteInterface
 
 
     /**
+     * @param callable $callback
+     */
+    public function setCallback($callback)
+    {
+        $this->callback = $callback;
+    }
+
+
+    /**
      * @return bool
      */
     public function hasCallback()

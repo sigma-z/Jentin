@@ -61,6 +61,12 @@ interface RouteInterface
 
 
     /**
+     * @param callable $callback
+     */
+    public function setCallback($callback);
+
+
+    /**
      * @return bool
      */
     public function hasCallback();
