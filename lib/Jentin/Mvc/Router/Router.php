@@ -21,9 +21,9 @@ use Jentin\Mvc\Request\RequestInterface;
 class Router implements RouterInterface
 {
 
-    const DEFAULT_ROUTE = 'default';
+    const DEFAULT_ROUTE_NAME = 'default';
 
-    const DEFAULT_ROUTE_PATTERN = '(/%module%)(/%controller%)(/%action%)';
+    const DEFAULT_ROUTE_PATTERN = '(/%module%)(/%controller%)(/%action%)(/*)';
 
 
     /** @var RouteInterface[] */
@@ -44,7 +44,7 @@ class Router implements RouterInterface
         if (!empty($this->routes[$name])) {
             return $this->routes[$name];
         }
-        if ($name === self::DEFAULT_ROUTE) {
+        if ($name === self::DEFAULT_ROUTE_NAME) {
             return new Route(self::DEFAULT_ROUTE_PATTERN);
         }
         return false;
@@ -96,14 +96,14 @@ class Router implements RouterInterface
     public function route(RequestInterface $request, array $defaultParams = array())
     {
         foreach ($this->routes as $name => $route) {
-            if ($name === self::DEFAULT_ROUTE) {
+            if ($name === self::DEFAULT_ROUTE_NAME) {
                 continue;
             }
             if ($route->parse($request, $defaultParams)) {
                 return $route;
             }
         }
-        $defaultRoute = $this->getRoute(self::DEFAULT_ROUTE);
+        $defaultRoute = $this->getRoute(self::DEFAULT_ROUTE_NAME);
         if ($defaultRoute && $defaultRoute->parse($request, $defaultParams)) {
             return $defaultRoute;
         }
@@ -124,7 +124,7 @@ class Router implements RouterInterface
     public function getUrl($routeName = '', array $params = array(), $query = '', $asterisk = '')
     {
         if (empty($routeName)) {
-            $routeName = self::DEFAULT_ROUTE;
+            $routeName = self::DEFAULT_ROUTE_NAME;
         }
         $route = $this->getRoute($routeName);
         if (!$route) {

@@ -59,6 +59,32 @@ class RouterTest extends \PHPUnit_Framework_TestCase
     }
 
 
+    public function testCustomPlaceholderToBeMappedAsRequestParameter()
+    {
+        $this->givenIHaveARouter();
+        $this->givenIHaveDefinedTheRoute_withPattern('hello', '/%module%(/%controller%)(/%action%)(/%name%)');
+        $this->givenIHaveARequestWithUri('/default/index/index/john-doe');
+        $this->whenIRouteTheRequest();
+        $this->thenItShouldHaveRoutedByTheRoute('hello');
+        $this->thenTheRequestShouldHaveTheParameter_withValue('name', 'john-doe');
+        $this->thenTheRequestShouldHaveTheModule('default');
+        $this->thenTheRequestShouldHaveTheController('index');
+        $this->thenTheRequestShouldHaveTheAction('index');
+    }
+
+
+    public function testCustomPlaceholderWithDefaultRoute()
+    {
+        $this->givenIHaveARouter();
+        $this->givenIHaveARequestWithUri('/default/index/index/john-doe');
+        $this->whenIRouteTheRequest();
+        $this->thenItShouldHaveRoutedByTheRoute('default');
+        $this->thenTheRequestShouldHaveTheModule('default');
+        $this->thenTheRequestShouldHaveTheController('index');
+        $this->thenTheRequestShouldHaveTheAction('index');
+    }
+
+
     /**
      * @return array[]
      */
@@ -148,6 +174,52 @@ class RouterTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($moduleName, $this->request->getModuleName());
         $this->assertEquals($controllerName, $this->request->getControllerName());
         $this->assertEquals($actionName, $this->request->getActionName());
+    }
+
+
+    /**
+     * @param string $paramName
+     * @param string $value
+     */
+    private function thenTheRequestShouldHaveTheParameter_withValue($paramName, $value)
+    {
+        $this->assertTrue(
+            $this->request->hasParam($paramName),
+            "Expected to have a request parameter '$paramName'!"
+        );
+
+        $this->assertEquals(
+            $value,
+            $this->request->getParam($paramName),
+            "Expected that the request parameter '$paramName' is equals $value!"
+        );
+    }
+
+
+    /**
+     * @param string $moduleName
+     */
+    private function thenTheRequestShouldHaveTheModule($moduleName)
+    {
+        $this->assertEquals($moduleName, $this->request->getModuleName(), "Expected that module is $moduleName!");
+    }
+
+
+    /**
+     * @param string $controllerName
+     */
+    private function thenTheRequestShouldHaveTheController($controllerName)
+    {
+        $this->assertEquals($controllerName, $this->request->getControllerName(), "Expected that controller is $controllerName!");
+    }
+
+
+    /**
+     * @param string $actionName
+     */
+    private function thenTheRequestShouldHaveTheAction($actionName)
+    {
+        $this->assertEquals($actionName, $this->request->getActionName(), "Expected that action is $actionName!");
     }
 
 }

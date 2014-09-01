@@ -87,7 +87,7 @@ class Route implements RouteInterface
     /**
      * parses route for given url
      *
-     * @param   \Jentin\Mvc\Request\RequestInterface $request
+     * @param   RequestInterface $request
      * @return  boolean
      *
      * @throws  RouteException if base url does not match the request uri
@@ -175,15 +175,26 @@ class Route implements RouteInterface
     protected function parseRouteParams($routePattern, $url)
     {
         $params = array();
+        $isMatchingSubParts = substr($routePattern, -4) == '(/*)';
+        if ($isMatchingSubParts) {
+            $routePattern = substr($routePattern, 0, -4);
+        }
+
         $routeQuoted = preg_quote($routePattern, '|');
         $search = array('\\(', '\\)');
         $replace = array('(', ')?');
         $routeQuoted = str_replace($search, $replace, $routeQuoted);
         $replace = '(?<P\\1>.+?)';
         $routePattern = preg_replace('|' . self::PLACEHOLDER_PATTERN . '|', $replace, $routeQuoted);
-        if (preg_match('|^' . $routePattern . '$|', $url, $matches)) {
+        $routePattern = '|^'
+            . $routePattern
+            . ($isMatchingSubParts ? '(/.*)?' : '')
+            . '$|';
+
+        if (preg_match($routePattern, $url, $matches)) {
             foreach ($matches as $name => $value) {
-                if ($name[0] == 'P') {
+                $value = rtrim($value, '/');
+                if ($name[0] == 'P' && !empty($value)) {
                     $params[substr($name, 1)] = rtrim($value, '/');
                 }
             }
