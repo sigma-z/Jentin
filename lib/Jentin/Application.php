@@ -16,6 +16,7 @@ use Jentin\Mvc\Request\Request;
 use Jentin\Mvc\Request\RequestInterface;
 use Jentin\Mvc\Response\ResponseInterface;
 use Jentin\Mvc\Router\Router;
+use Jentin\Mvc\Router\RouterInterface;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 
 /**
@@ -63,7 +64,18 @@ class Application
 
     protected function initRouter()
     {
-        $this->router = new Router();
+        if (!$this->router) {
+            $this->router = new Router();
+        }
+    }
+
+
+    /**
+     * @param RouterInterface $router
+     */
+    public function setRouter(RouterInterface $router)
+    {
+        $this->router = $router;
     }
 
 
