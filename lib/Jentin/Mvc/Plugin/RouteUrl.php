@@ -82,4 +82,18 @@ class RouteUrl
         return $this->request;
     }
 
+
+    /**
+     * @param  string $routeName
+     * @param  array  $params
+     * @param  string $query
+     * @param  string $asterisk
+     * @return string
+     */
+    public function url($routeName, array $params = array(), $query = '', $asterisk = '')
+    {
+        return $this->router->getRoute($routeName)
+            ->getUrl($params, $query, $asterisk);
+    }
+
 }

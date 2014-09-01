@@ -241,7 +241,7 @@ class Route implements RouteInterface
             }
             // check if mandatory placeholders are not replaced through parse
             if (preg_match_all(':%(' . $placeHoldersSubPattern . ')%:', $url, $matches)) {
-                throw new \DomainException(
+                throw new \InvalidArgumentException(
                     "Missing params for getting url of route '$this->pattern': " . implode(', ', $matches[1])
                 );
             }

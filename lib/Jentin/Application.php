@@ -162,7 +162,7 @@ class Application
         if (!$this->viewPluginDisabled) {
             // plugin broker for view renderer
             $viewPluginBroker = new PluginBroker();
-            $viewPluginBroker->register('route', array($this->plugins['routeUrl']));
+            $viewPluginBroker->register('route', $this->plugins['routeUrl']);
             // enable layout?
             $viewPluginArgs = array($this->viewPathPattern, $viewPluginBroker, $this->layoutEnabled);
             $this->plugins['view'] = array('\Jentin\Mvc\Plugin\View', $viewPluginArgs);
