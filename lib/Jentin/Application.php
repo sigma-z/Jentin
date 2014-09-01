@@ -72,7 +72,7 @@ class Application
         // router plugin (for controllers and views, where you can call $this->plugin('route')->getUrl())
         $this->plugins['routeUrl'] = new RouteUrl($this->router, $this->request);
         // view directory pattern
-        $viewDirPattern = $this->appRoot . '/%module%/view/%controller%';
+        $viewDirPattern = $this->appRoot . '/%module%/views/%controller%';
 
         // plugin broker for view renderer
         $viewPluginBroker = new PluginBroker();

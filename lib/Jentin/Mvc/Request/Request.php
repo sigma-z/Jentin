@@ -15,8 +15,6 @@ namespace Jentin\Mvc\Request;
  */
 class Request implements RequestInterface
 {
-    /** @var array */
-    protected $files = array();
 
     /** @var array */
     protected $server = array(
@@ -26,9 +24,6 @@ class Request implements RequestInterface
         'SERVER_NAME'   => '',
         'HTTPS'         => ''
     );
-
-    /** @var array */
-    protected $cookie = array();
 
     /** @var string */
     protected $moduleName = 'default';
@@ -70,19 +65,14 @@ class Request implements RequestInterface
      * @param array $paramsPost
      * @param array $paramsGet
      * @param array $server
-     * @param array $cookie
-     * @param array $files
      */
-    public function __construct(array $paramsPost = null, array $paramsGet = null, array $server = null, array $cookie = null, array $files = null)
+    public function __construct(array $paramsPost = null, array $paramsGet = null, array $server = null)
     {
         $paramsPost   = $paramsPost ?: $_POST;
         $paramsGet    = $paramsGet  ?: $_GET;
         $this->params = array_merge($paramsGet, $paramsPost);
         $this->paramNamesPost = array_keys($paramsPost);
         $this->paramNamesGet = array_keys($paramsGet);
-
-        $this->cookie = $cookie ?: $_COOKIE;
-        $this->files  = $files  ?: $_FILES;
         $server       = $server ?: $_SERVER;
         $this->server = array_merge($this->server, $server);
     }
@@ -292,8 +282,8 @@ class Request implements RequestInterface
     public function getRequestUri()
     {
         return isset($this->server['REQUEST_URI'])
-                ? $this->server['REQUEST_URI']
-                : null;
+            ? $this->server['REQUEST_URI']
+            : null;
     }
 
 
@@ -409,8 +399,8 @@ class Request implements RequestInterface
     {
         if ($scheme === null) {
             $scheme = isset($this->server['HTTPS']) && $this->server['HTTPS'] == 'on'
-                    ? 'https'
-                    : 'http';
+                ? 'https'
+                : 'http';
         }
         $this->scheme = $scheme;
     }
@@ -501,7 +491,7 @@ class Request implements RequestInterface
 
 
     /**
-     *
+     * Sets dispatched flag for the request
      *
      * @param  bool $isDispatched
      */

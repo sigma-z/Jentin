@@ -23,52 +23,45 @@ use Jentin\Mvc\Util\Util;
 class View implements ControllerAware
 {
 
-    /**
-     * @var \Jentin\Mvc\Plugin\PluginBrokerInterface
-     */
+    /** @var PluginBrokerInterface */
     protected $pluginBroker;
-    /**
-     * @var \Jentin\Mvc\View\RendererInterface
-     */
+
+    /** @var RendererInterface */
     protected $renderer;
-    /**
-     * @var \Jentin\Mvc\Controller\ControllerInterface
-     */
+
+    /** @var ControllerInterface */
     protected $controller;
-    /**
-     * @var string
-     */
+
+    /** @var string */
     protected $viewDirPattern;
-    /**
-     * @var string
-     */
+
+    /** @var string */
     protected $layout = 'layout';
-    /**
-     * @var bool
-     */
+
+    /** @var bool */
     protected $layoutEnabled = false;
 
 
     /**
      * constructor
      *
-     * @param string                                    $viewDirPattern
-     * @param \Jentin\Mvc\Plugin\PluginBrokerInterface $pluginBroker
-     * @param bool                                      $layoutEnabled
+     * @param string                $viewDirPattern
+     * @param PluginBrokerInterface $pluginBroker
+     * @param bool                  $layoutEnabled
      */
     public function __construct($viewDirPattern, PluginBrokerInterface $pluginBroker, $layoutEnabled = false)
     {
-        $this->viewDirPattern   = $viewDirPattern;
-        $this->pluginBroker     = $pluginBroker;
-        $this->layoutEnabled    = $layoutEnabled;
+        $this->viewDirPattern = $viewDirPattern;
+        $this->pluginBroker   = $pluginBroker;
+        $this->layoutEnabled  = $layoutEnabled;
     }
 
 
     /**
      * sets controller
      *
-     * @param  \Jentin\Mvc\Controller\ControllerInterface $controller
-     * @return View
+     * @param  ControllerInterface $controller
+     * @return $this
      */
     public function setController(ControllerInterface $controller)
     {
@@ -80,7 +73,7 @@ class View implements ControllerAware
     /**
      * gets controller
      *
-     * @return \Jentin\Mvc\Controller\ControllerInterface
+     * @return ControllerInterface
      */
     public function getController()
     {
@@ -92,7 +85,7 @@ class View implements ControllerAware
      * sets layout
      *
      * @param  string $layout
-     * @return View
+     * @return $this
      */
     public function setLayout($layout)
     {
@@ -117,7 +110,7 @@ class View implements ControllerAware
      * sets layout enabled/disabled by flag
      *
      * @param bool $flag
-     * @return View
+     * @return $this
      */
     public function setLayoutEnabled($flag = true)
     {
@@ -138,8 +131,8 @@ class View implements ControllerAware
     /**
      * sets view renderer
      *
-     * @param  \Jentin\Mvc\View\RendererInterface $renderer
-     * @return \Jentin\Mvc\Plugin\View
+     * @param  RendererInterface $renderer
+     * @return $this
      */
     public function setRenderer(RendererInterface $renderer)
     {
@@ -151,7 +144,7 @@ class View implements ControllerAware
     /**
      * gets renderer
      *
-     * @return \Jentin\Mvc\View\RendererInterface
+     * @return RendererInterface
      */
     public function getRenderer()
     {
@@ -164,6 +157,7 @@ class View implements ControllerAware
 
     /**
      * sets template variable
+     *
      * @param string $name
      * @param mixed  $value
      */
@@ -175,6 +169,7 @@ class View implements ControllerAware
 
     /**
      * gets escaped template variable
+     *
      * @param  string $name
      * @return mixed
      */
@@ -186,6 +181,7 @@ class View implements ControllerAware
 
     /**
      * gets escaped template variable
+     *
      * @param  string $name
      * @return mixed
      */
@@ -197,6 +193,7 @@ class View implements ControllerAware
 
     /**
      * gets raw template variable
+     *
      * @param  string $name
      * @return mixed
      */
@@ -263,9 +260,9 @@ class View implements ControllerAware
     public function setTemplatePathByRequest(RequestInterface $request)
     {
         $params = array(
-            'action'        => $request->getActionName(),
-            'controller'    => $request->getControllerName(),
-            'module'        => $request->getModuleName()
+            'action'     => $request->getActionName(),
+            'controller' => $request->getControllerName(),
+            'module'     => $request->getModuleName()
         );
         $templatePath = Util::parsePattern($this->viewDirPattern, $params);
         $this->getRenderer()->setTemplatePath($templatePath);

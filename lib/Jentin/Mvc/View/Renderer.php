@@ -51,7 +51,7 @@ class Renderer implements RendererInterface, Pluggable
     /**
      * constructor
      *
-     * @param \Jentin\Mvc\Plugin\PluginBrokerInterface $pluginBroker
+     * @param PluginBrokerInterface $pluginBroker
      */
     public function __construct(PluginBrokerInterface $pluginBroker = null)
     {
@@ -62,8 +62,8 @@ class Renderer implements RendererInterface, Pluggable
     /**
      * sets file extension
      *
-     * @param   string $fileExtension
-     * @return  Renderer
+     * @param  string $fileExtension
+     * @return $this
      */
     public function setFileExtension($fileExtension)
     {
@@ -86,8 +86,8 @@ class Renderer implements RendererInterface, Pluggable
     /**
      * sets template path
      *
-     * @param   string  $path
-     * @return  Renderer
+     * @param  string  $path
+     * @return $this
      */
     public function setTemplatePath($path)
     {
@@ -99,7 +99,7 @@ class Renderer implements RendererInterface, Pluggable
     /**
      * gets template path
      *
-     * @return  string
+     * @return string
      */
     public function getTemplatePath()
     {
@@ -110,8 +110,8 @@ class Renderer implements RendererInterface, Pluggable
     /**
      * sets template encoding
      *
-     * @param   string  $encoding
-     * @return  Renderer
+     * @param  string  $encoding
+     * @return $this
      */
     public function setEncoding($encoding)
     {
@@ -134,7 +134,7 @@ class Renderer implements RendererInterface, Pluggable
     /**
      * sets vars
      *
-     * @param   array   $vars
+     * @param   array $vars
      * @return  Renderer
      */
     public function setVars(array $vars)
@@ -159,7 +159,7 @@ class Renderer implements RendererInterface, Pluggable
      * sets escape callback for template variables
      *
      * @param  callable $escapeCallback
-     * @return Renderer
+     * @return $this
      */
     public function setEscapeCallback($escapeCallback)
     {
@@ -188,8 +188,8 @@ class Renderer implements RendererInterface, Pluggable
     /**
      * sets plugin broker
      *
-     * @param  \Jentin\Mvc\Plugin\PluginBrokerInterface $pluginBroker
-     * @return Renderer
+     * @param  PluginBrokerInterface $pluginBroker
+     * @return $this
      */
     public function setPluginBroker(PluginBrokerInterface $pluginBroker)
     {
@@ -248,9 +248,9 @@ class Renderer implements RendererInterface, Pluggable
     /**
      * sets template variable
      *
-     * @param   string  $name
-     * @param   mixed   $value
-     * @return  Renderer
+     * @param  string $name
+     * @param  mixed  $value
+     * @return $this
      */
     public function __set($name, $value)
     {
@@ -262,8 +262,8 @@ class Renderer implements RendererInterface, Pluggable
     /**
      * gets the (escaped) value of a template variable
      *
-     * @param   string  $name
-     * @return  mixed
+     * @param  string $name
+     * @return mixed
      */
     public function __get($name)
     {
@@ -274,8 +274,8 @@ class Renderer implements RendererInterface, Pluggable
     /**
      * gets escaped value of a template variable
      *
-     * @param   string  $name
-     * @return  mixed
+     * @param  string $name
+     * @return mixed
      */
     public function esc($name)
     {
@@ -287,8 +287,8 @@ class Renderer implements RendererInterface, Pluggable
     /**
      * gets the raw value of a template variable
      *
-     * @param   string  $name
-     * @return  mixed
+     * @param  string $name
+     * @return mixed
      */
     public function raw($name)
     {
@@ -303,8 +303,8 @@ class Renderer implements RendererInterface, Pluggable
     /**
      * escapes value if string
      *
-     * @param   mixed   $value
-     * @return  mixed
+     * @param  mixed $value
+     * @return mixed
      */
     public function escape($value)
     {
@@ -336,9 +336,9 @@ class Renderer implements RendererInterface, Pluggable
     /**
      * renders view template
      *
-     * @param   string  $name
-     * @param   array   $vars
-     * @return  string
+     * @param  string $name
+     * @param  array  $vars
+     * @return string
      * @throws RendererException
      *   if file could not be found
      *   if file could not be read
