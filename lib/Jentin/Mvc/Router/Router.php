@@ -54,8 +54,9 @@ class Router implements RouterInterface
     /**
      * adds route
      *
-     * @param string         $name
-     * @param RouteInterface|string $route
+     * @param  string                $name
+     * @param  RouteInterface|string $route
+     * @return RouteInterface
      */
     public function addRoute($name, $route)
     {
@@ -63,6 +64,7 @@ class Router implements RouterInterface
             $route = new Route($route);
         }
         $this->routes[$name] = $route;
+        return $route;
     }
 
 

@@ -31,8 +31,9 @@ interface RouterInterface
     /**
      * adds route
      *
-     * @param string $name
-     * @param RouteInterface|string $route
+     * @param  string $name
+     * @param  RouteInterface|string $route
+     * @return RouteInterface
      */
     public function addRoute($name, $route);
 

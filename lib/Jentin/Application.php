@@ -15,6 +15,7 @@ use Jentin\Mvc\Plugin\RouteUrl;
 use Jentin\Mvc\Request\Request;
 use Jentin\Mvc\Request\RequestInterface;
 use Jentin\Mvc\Response\ResponseInterface;
+use Jentin\Mvc\Route\RouteInterface;
 use Jentin\Mvc\Router\Router;
 use Jentin\Mvc\Router\RouterInterface;
 use Symfony\Component\EventDispatcher\EventDispatcher;
@@ -92,6 +93,18 @@ class Application
     {
         $this->router = $router;
         return $this;
+    }
+
+
+    /**
+     * @param  string                $name
+     * @param  RouteInterface|string $route
+     * @return RouteInterface
+     */
+    public function addRoute($name, $route)
+    {
+        $this->initRouter();
+        return $this->router->addRoute($name, $route);
     }
 
 
