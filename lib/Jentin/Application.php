@@ -154,6 +154,8 @@ class Application
 
     protected function initPlugins()
     {
+        $this->initRouter();
+
         // router plugin (for controllers and views, where you can call $this->plugin('route')->getUrl())
         $this->plugins['routeUrl'] = new RouteUrl($this->router, $this->request);
 
