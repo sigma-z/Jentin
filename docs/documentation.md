@@ -84,19 +84,9 @@ In our example there is no application wrapped around Jentin, which you should d
 <?php
 require __DIR__  . '/../../vendor/autoload.php';
 
-// creating the http kernel
-$controllerDirPattern = __DIR__ . '/../app/%Module%/controllers';
-$modules = array('Default');
-$router = new \Jentin\Mvc\Router\Router();
-$eventDispatcher = new \Symfony\Component\EventDispatcher\EventDispatcher();
-$httpKernel = new \Jentin\Mvc\HttpKernel($controllerDirPattern, $modules, $router, $eventDispatcher);
-
-// handling the request
-$request = new \Jentin\Mvc\Request\Request();
-$response = $httpKernel->handleRequest($request);
-
-// sending the response
-$response->sendResponse();
+// creating app
+$app = new \Jentin\Application(__DIR__ . '/../app', array('Default', /* and more */));
+$app->run();
 ```
 
 Routing a request
@@ -123,9 +113,9 @@ The router routes the request by finding a matching route. The first route that 
 Let's see an example:
 
 ```php
-$router = new Router();
-$router->setRoute('test', new Route('/test/%module%/%action%'));
-$router->setRoute('test2', new Route('/test(/%module%)'));
+$app = new \Jentin\Application(__DIR__ . '/../app', array('Default', /* and more */));
+$app->addRoute('test', new Route('/test/%module%/%action%'));
+$app->addRoute('test2', '/test(/%module%)'); // internally it will create a Route instance
 ```
 
 The url ``http://your-domain/test/admin/list-records`` will match route 'test'.
@@ -167,6 +157,12 @@ A controller is a piece of code, often a class, that is called to create a respo
 and uses models and views to create the response.
 
 
+Controller directory structure
+---
+
+documentation in progress ...
+
+
 HTML and JSON responses
 ---
 
@@ -194,26 +190,14 @@ class HelloWorldController extends Controller
 
 ```
 
-The url http://your-domain/default/hello-world/json will output '{"message": "hello world"}".
+The url http://your-domain/de/hello-world/json will output '{"message": "hello world"}".
 
 The url http://your-domain/default/hello-world/html will output 'hello world'.
 
 
-If you like to have it much more easier, then try out the ``AutoConvertResponseIntoHtmlOrJsonListener`` class.
-Just let the listener listen to the event ``\Jentin\Mvc\Event\MvcEvent::ON_CONTROLLER_RESULT``.
-It will create the response automatically by converting an array to a
-json response and all the other to an html response.
-
-```php
-$htmlJsonControllerResultListener = new \Jentin\Mvc\EventListener\AutoConvertResponseIntoHtmlOrJsonListener();
-$eventDispatcher = new \Symfony\Component\EventDispatcher\EventDispatcher();
-$eventDispatcher->addListener(
-    \Jentin\Mvc\Event\MvcEvent::ON_CONTROLLER_RESULT,
-    array($htmlJsonControllerResultListener, 'getResponse')
-);
-```
-
-This enables you to simplify your controllers with the same result.
+If you like to have it much more easier, then you can return a string for html responses and an array for json responses.
+Jentin will automatically convert the result to a response instance. If you want to map your response results on your own, then
+take a look at the event ``ON_FILTER_RESPONSE``.
 
 ```php
 use Jentin\Mvc\Controller\Controller;
@@ -401,13 +385,103 @@ $eventDispatcher->addListener(
 Plugins
 ===
 
+Jentin supports plugins for controllers and views. A plugin is class or a class name, that will be instantiated when it is used.
+The plugin class does not have to implement a certain interface or extend a special class.
+
+To make the plugin available in your controller, you must register the plugin.
+
+```php
+$myPlugin = new MyPlugin();
+$controllerPluginBroker = new PluginBroker();
+$controllerPluginBroker->register('myPlugin', $myPlugin);
+
+$httpKernel = new HttpKernel(/* http kernel arguments */);
+$httpKernel->setControllerPluginBroker($controllerPluginBroker);
+```
+
+This is how you can use your plugin in the controller class.
+
+```php
+class SomeController extends Controller
+{
+    public function someAction()
+    {
+        return $this->plugin('myPlugin')->createResponse();
+    }
+}
+```
+
 
 Views
 ---
 
+**Note:** This plugin is enabled by default.
+
+The view feature itself is a plugin for the controller. But it also can be extended with plugins.
+The view plugin broker is an argument for the view class, which a plugin for the controller.
+
+```php
+$myViewPlugin = new MyViewPlugin();
+$viewPluginBroker = new PluginBroker();
+$viewPluginBroker->register('myViewPlugin', $myViewPlugin);
+
+$view = new \Jentin\Mvc\Plugin\View($viewPathPattern, $viewPluginBroker, $layoutEnabled);
+$controllerPluginBroker = new PluginBroker();
+$controllerPluginBroker->register('view', $view);
+
+$httpKernel = new HttpKernel(/* http kernel arguments */);
+$httpKernel->setControllerPluginBroker($controllerPluginBroker);
+```
+
+This is how you disable the view plugin:
+
+```php
+$app = new \Jentin\Application(/* arguments */);
+$app->disableViewPlugin();
+$app->run();
+```
+
+View variables
+...
+
+documentation in progress ...
+
+
+View layouts
+....
+
+documentation in progress ...
+
+
 RouteUrl
 ---
+
+**Note:** This plugin is enabled by default.
+
+The RouteUrl plugin is useful to build urls for a specific route and request parameters.
+
+```php
+class SomeController extends Controller
+{
+    public function someAction()
+    {
+        return $this->plugin('route')->url('hello', array(
+            'module' => 'default',
+            'controller' => 'index',
+            'action' => 'index',
+            'name' => 'John'
+        ));
+    }
+```
+
+If the route 'hello' looks like '/%module%/%controller%/%action%(/%name%)' for example,
+it will create the url '/default/index/index/John' as the result.
+
+This plugin is available in controller classes and views, too.
+
 
 Caching
 ---
 
+There is no caching implementation in Jentin. But you can use the event dispatcher to implement your own cache easily.
+You also should take a look at [Varnish](https://www.varnish-cache.org/).

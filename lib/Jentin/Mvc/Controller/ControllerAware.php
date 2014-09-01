@@ -9,6 +9,8 @@
 
 namespace Jentin\Mvc\Controller;
 
+use Jentin\Mvc\Plugin\PluginBrokerInterface;
+
 /**
  * ControllerAware
  * @author Steffen Zeidler <sigma_z@sigma-scripts.de>
@@ -19,7 +21,7 @@ interface ControllerAware
     /**
      * sets controller
      *
-     * @param  \Jentin\Mvc\Controller\ControllerInterface $controller
+     * @param  ControllerInterface $controller
      * @return ControllerAware
      */
     public function setController(ControllerInterface $controller);
@@ -27,8 +29,12 @@ interface ControllerAware
     /**
      * gets controller
      *
-     * @return \Jentin\Mvc\Controller\ControllerInterface
+     * @return ControllerInterface
      */
     public function getController();
 
+    /**
+     * @return PluginBrokerInterface
+     */
+    public function getPluginBroker();
 }

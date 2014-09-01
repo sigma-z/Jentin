@@ -302,4 +302,13 @@ class View implements ControllerAware
         throw new \DomainException('Layout could not be found! (Checked paths ' . implode(', ', $layouts) . ')');
     }
 
+
+    /**
+     * @return PluginBrokerInterface
+     */
+    public function getPluginBroker()
+    {
+        return $this->pluginBroker;
+    }
+
 }
