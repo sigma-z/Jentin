@@ -12,6 +12,7 @@ $start = microtime(true);
 require __DIR__  . '/../../vendor/autoload.php';
 
 $app = new \Jentin\Application(__DIR__ . '/../app', array('Default'));
+$app->enableLayoutView();
 $app->run();
 
 if (0 === strpos($app->getResponse()->getHeader('Content-Type'), 'text/html')) {

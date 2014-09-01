@@ -47,11 +47,25 @@ class Application
     /** @var string */
     private $appRoot = '';
 
+    /** @var string */
+    private $controllerPathPattern = '';
+
+    /** @var string */
+    private $viewPathPattern = '';
+
+    /** @var bool */
+    private $layoutEnabled = false;
+
+    /** @var bool */
+    private $viewPluginDisabled = false;
+
 
     public function __construct($appRoot, array $modules)
     {
         $this->appRoot = $appRoot;
         $this->modules = $modules;
+        $this->controllerPathPattern = $this->appRoot . '/%Module%/controllers';
+        $this->viewPathPattern = $this->appRoot . '/%module%/views/%controller%';
     }
 
 
@@ -72,10 +86,56 @@ class Application
 
     /**
      * @param RouterInterface $router
+     * @return $this
      */
     public function setRouter(RouterInterface $router)
     {
         $this->router = $router;
+        return $this;
+    }
+
+
+    /**
+     * @param  string $controllerPathPattern
+     * @return $this
+     */
+    public function setControllerPathPattern($controllerPathPattern)
+    {
+        $this->controllerPathPattern = $controllerPathPattern;
+        return $this;
+    }
+
+
+    /**
+     * @param  string $viewPathPattern
+     * @return $this
+     */
+    public function setViewPathPattern($viewPathPattern)
+    {
+        $this->viewPathPattern = $viewPathPattern;
+        return $this;
+    }
+
+
+    /**
+     * @param  bool $enabled
+     * @return $this
+     */
+    public function enableLayoutView($enabled = true)
+    {
+        $this->layoutEnabled = $enabled;
+        return $this;
+    }
+
+
+    /**
+     * @param  bool $disable
+     * @return $this
+     */
+    public function disableViewPlugin($disable = true)
+    {
+        $this->viewPluginDisabled = $disable;
+        return $this;
     }
 
 
@@ -83,16 +143,15 @@ class Application
     {
         // router plugin (for controllers and views, where you can call $this->plugin('route')->getUrl())
         $this->plugins['routeUrl'] = new RouteUrl($this->router, $this->request);
-        // view directory pattern
-        $viewDirPattern = $this->appRoot . '/%module%/views/%controller%';
 
-        // plugin broker for view renderer
-        $viewPluginBroker = new PluginBroker();
-        $viewPluginBroker->register('route', array($this->plugins['routeUrl']));
-        // enable layout?
-        $layoutEnabled = true;
-        $viewPluginArgs = array($viewDirPattern, $viewPluginBroker, $layoutEnabled);
-        $this->plugins['view'] = array('\Jentin\Mvc\Plugin\View', $viewPluginArgs);
+        if (!$this->viewPluginDisabled) {
+            // plugin broker for view renderer
+            $viewPluginBroker = new PluginBroker();
+            $viewPluginBroker->register('route', array($this->plugins['routeUrl']));
+            // enable layout?
+            $viewPluginArgs = array($this->viewPathPattern, $viewPluginBroker, $this->layoutEnabled);
+            $this->plugins['view'] = array('\Jentin\Mvc\Plugin\View', $viewPluginArgs);
+        }
     }
 
 
@@ -103,14 +162,14 @@ class Application
     {
         $this->init();
 
-        // controller directory pattern
-        $controllerDirPattern = $this->appRoot . '/%Module%/controllers';
         // creating the http kernel
-        $httpKernel = new HttpKernel($controllerDirPattern, $this->modules, $this->router, $this->eventDispatcher);
+        $httpKernel = new HttpKernel($this->controllerPathPattern, $this->modules, $this->router, $this->eventDispatcher);
         // controller plugin broker
         $controllerPluginBroker = new PluginBroker();
         $controllerPluginBroker->register('route', $this->plugins['routeUrl']);
-        $controllerPluginBroker->register('view', $this->plugins['view']);
+        if (!$this->viewPluginDisabled) {
+            $controllerPluginBroker->register('view', $this->plugins['view']);
+        }
 
         $httpKernel->setControllerPluginBroker($controllerPluginBroker);
 

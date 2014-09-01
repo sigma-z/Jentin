@@ -33,7 +33,7 @@ class View implements ControllerAware
     protected $controller;
 
     /** @var string */
-    protected $viewDirPattern;
+    protected $viewPathPattern = '';
 
     /** @var string */
     protected $layout = 'layout';
@@ -45,15 +45,15 @@ class View implements ControllerAware
     /**
      * constructor
      *
-     * @param string                $viewDirPattern
+     * @param string                $viewPathPattern
      * @param PluginBrokerInterface $pluginBroker
      * @param bool                  $layoutEnabled
      */
-    public function __construct($viewDirPattern, PluginBrokerInterface $pluginBroker, $layoutEnabled = false)
+    public function __construct($viewPathPattern, PluginBrokerInterface $pluginBroker, $layoutEnabled = false)
     {
-        $this->viewDirPattern = $viewDirPattern;
-        $this->pluginBroker   = $pluginBroker;
-        $this->layoutEnabled  = $layoutEnabled;
+        $this->viewPathPattern = $viewPathPattern;
+        $this->pluginBroker    = $pluginBroker;
+        $this->layoutEnabled   = $layoutEnabled;
     }
 
 
@@ -254,8 +254,7 @@ class View implements ControllerAware
     /**
      * sets template path by request
      *
-     * @param  \Jentin\Mvc\Request\RequestInterface $request
-     * @param  string $name
+     * @param RequestInterface $request
      */
     public function setTemplatePathByRequest(RequestInterface $request)
     {
@@ -264,7 +263,7 @@ class View implements ControllerAware
             'controller' => $request->getControllerName(),
             'module'     => $request->getModuleName()
         );
-        $templatePath = Util::parsePattern($this->viewDirPattern, $params);
+        $templatePath = Util::parsePattern($this->viewPathPattern, $params);
         $this->getRenderer()->setTemplatePath($templatePath);
     }
 

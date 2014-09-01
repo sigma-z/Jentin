@@ -51,7 +51,7 @@ class HttpKernel
      * controller pattern (could look like ../%module%/%controller%/controllers)
      * @var string
      */
-    protected $controllerDirPattern = '';
+    protected $controllerPathPattern = '';
 
     /**
      * modules, that are active for the dispatching process
@@ -75,20 +75,20 @@ class HttpKernel
     /**
      * constructor
      *
-     * @param   string                        $controllerDirPattern
+     * @param   string                        $controllerPathPattern
      * @param   array                         $modules
      * @param   RouterInterface               $router
      * @param   null|EventDispatcherInterface $eventDispatcher
      * @param   null|PluginBrokerInterface    $controllerPluginBroker
      */
     public function __construct(
-        $controllerDirPattern,
+        $controllerPathPattern,
         array $modules,
         RouterInterface $router,
         EventDispatcherInterface $eventDispatcher = null,
         PluginBrokerInterface $controllerPluginBroker = null
     ) {
-        $this->controllerDirPattern = $controllerDirPattern;
+        $this->controllerPathPattern = $controllerPathPattern;
         $this->modules = $modules;
         $this->router = $router;
         $this->eventDispatcher = $eventDispatcher;
@@ -375,7 +375,7 @@ class HttpKernel
             'controller'    => $controllerName,
             'module'        => $moduleName
         );
-        $controllerDir = Util::parsePattern($this->controllerDirPattern, $params);
+        $controllerDir = Util::parsePattern($this->controllerPathPattern, $params);
         if (!is_dir($controllerDir)) {
             $controllerNameCamelCased = Util::getCamelCased($controllerName);
             throw new HttpKernelException(
