@@ -216,11 +216,11 @@ class Route implements RouteInterface
     /**
      * gets url for route by given params
      *
-     * @param array  $params
-     * @param string $query
-     * @param string $asterisk
+     * @param  array  $params
+     * @param  string $query
+     * @param  string $asterisk
      * @return string
-     * @throws \DomainException if route misses params
+     * @throws \InvalidArgumentException if route misses params
      */
     public function getUrl(array $params = array(), $query = '', $asterisk = '')
     {
