@@ -29,12 +29,12 @@ interface RouterInterface
 
 
     /**
-     * sets route
+     * adds route
      *
      * @param string $name
-     * @param RouteInterface $route
+     * @param RouteInterface|string $route
      */
-    public function setRoute($name, RouteInterface $route);
+    public function addRoute($name, $route);
 
 
     /**

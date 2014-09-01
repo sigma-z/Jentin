@@ -59,32 +59,6 @@ class RouterTest extends \PHPUnit_Framework_TestCase
     }
 
 
-    public function testCustomPlaceholderToBeMappedAsRequestParameter()
-    {
-        $this->givenIHaveARouter();
-        $this->givenIHaveDefinedTheRoute_withPattern('hello', '/%module%(/%controller%)(/%action%)(/%name%)');
-        $this->givenIHaveARequestWithUri('/default/index/index/john-doe');
-        $this->whenIRouteTheRequest();
-        $this->thenItShouldHaveRoutedByTheRoute('hello');
-        $this->thenTheRequestShouldHaveTheParameter_withValue('name', 'john-doe');
-        $this->thenTheRequestShouldHaveTheModule('default');
-        $this->thenTheRequestShouldHaveTheController('index');
-        $this->thenTheRequestShouldHaveTheAction('index');
-    }
-
-
-    public function testCustomPlaceholderWithDefaultRoute()
-    {
-        $this->givenIHaveARouter();
-        $this->givenIHaveARequestWithUri('/default/index/index/john-doe');
-        $this->whenIRouteTheRequest();
-        $this->thenItShouldHaveRoutedByTheRoute('default');
-        $this->thenTheRequestShouldHaveTheModule('default');
-        $this->thenTheRequestShouldHaveTheController('index');
-        $this->thenTheRequestShouldHaveTheAction('index');
-    }
-
-
     /**
      * @return array[]
      */
@@ -113,6 +87,40 @@ class RouterTest extends \PHPUnit_Framework_TestCase
                 'expectedAction' => 'index'
             ),
         );
+    }
+
+
+    public function testCustomPlaceholderToBeMappedAsRequestParameter()
+    {
+        $this->givenIHaveARouter();
+        $this->givenIHaveDefinedTheRoute_withPattern('hello', '/%module%(/%controller%)(/%action%)(/%name%)');
+        $this->givenIHaveARequestWithUri('/default/index/index/john-doe');
+        $this->whenIRouteTheRequest();
+        $this->thenItShouldHaveRoutedByTheRoute('hello');
+        $this->thenTheRequestShouldHaveTheParameter_withValue('name', 'john-doe');
+        $this->thenTheRequestShouldHaveTheModule('default');
+        $this->thenTheRequestShouldHaveTheController('index');
+        $this->thenTheRequestShouldHaveTheAction('index');
+    }
+
+
+    public function testCustomPlaceholderWithDefaultRoute()
+    {
+        $this->givenIHaveARouter();
+        $this->givenIHaveARequestWithUri('/default/index/index/john-doe');
+        $this->whenIRouteTheRequest();
+        $this->thenItShouldHaveRoutedByTheRoute('default');
+        $this->thenTheRequestShouldHaveTheModule('default');
+        $this->thenTheRequestShouldHaveTheController('index');
+        $this->thenTheRequestShouldHaveTheAction('index');
+    }
+
+
+    public function testAddRouteAsStringWillCreateARouteInstance()
+    {
+        $this->givenIHaveARouter();
+        $this->whenIAddRouteForName_asString('hello', '/%module%(/%controller%)(/%action%)(/%name%)');
+        $this->thenItShouldHaveARouteInstanceForRoute('hello');
     }
 
 
@@ -222,4 +230,21 @@ class RouterTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($actionName, $this->request->getActionName(), "Expected that action is $actionName!");
     }
 
+
+    /**
+     * @param string $name
+     * @param string $pattern
+     */
+    private function whenIAddRouteForName_asString($name, $pattern)
+    {
+        $this->router->addRoute($name, $pattern);
+    }
+
+
+    private function thenItShouldHaveARouteInstanceForRoute($name)
+    {
+        $route = $this->router->getRoute($name);
+        $this->assertNotNull($route);
+        $this->assertInstanceOf('\Jentin\Mvc\Route\Route', $route);
+    }
 }
