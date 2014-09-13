@@ -29,7 +29,7 @@ class RendererTest extends \PHPUnit_Framework_TestCase
 
 
     /**
-     * @uses test.tpl
+     * @uses test.phtml
      *
      * @return Renderer
      */
@@ -50,7 +50,7 @@ class RendererTest extends \PHPUnit_Framework_TestCase
 
 
     /**
-     * @uses test-plugin.tpl
+     * @uses test-plugin.phtml
      * @depends testRender
      */
     public function testRenderWithPlugin(Renderer $renderer)
@@ -81,7 +81,7 @@ class RendererTest extends \PHPUnit_Framework_TestCase
 
 
     /**
-     * @uses test.tpl
+     * @uses test.phtml
      * @depends testRender
      */
     public function testRenderWithEscapedVars(Renderer $renderer)

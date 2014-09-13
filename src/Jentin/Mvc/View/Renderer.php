@@ -23,7 +23,7 @@ class Renderer implements RendererInterface, Pluggable
      * template file extension
      * @var string
      */
-    protected $fileExtension = 'tpl';
+    protected $fileExtension = 'phtml';
     /**
      * template path
      * @var string
@@ -176,8 +176,7 @@ class Renderer implements RendererInterface, Pluggable
     public function getEscapeCallback()
     {
         if (null === $this->escapeCallback) {
-            $renderer = $this;
-            $this->setEscapeCallback(function($value) use ($renderer) {
+            $this->setEscapeCallback(function($value, Renderer $renderer) {
                 return htmlspecialchars($value, ENT_COMPAT, $renderer->getEncoding());
             });
         }
@@ -312,7 +311,7 @@ class Renderer implements RendererInterface, Pluggable
             return $value;
         }
         $escapeCallback = $this->getEscapeCallback();
-        return call_user_func($escapeCallback, $value);
+        return call_user_func($escapeCallback, $value, $this);
     }
 
 

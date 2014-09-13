@@ -14,7 +14,12 @@
     },
     "autoload": {
         "psr-0": {
-            "Jentin": "lib"
+            "Jentin": "src"
         }
+    },
+    "scripts": {
+        "post-install-cmd": [
+            "php installDefaultApp.php"
+        ]
     }
 }

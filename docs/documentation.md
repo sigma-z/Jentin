@@ -9,6 +9,12 @@ just provides the basis for an MVC application. It does not provide a Model laye
 In fact even the provided View layer is optional.
 
 
+License
+---
+
+Jentin MVC Framework is released under **BSD-3-Clause** license.
+
+
 Installation
 ---
 
@@ -19,7 +25,7 @@ Add the following requirement in your ``composer.json`` file:
 ```js
 {
     "require": {
-        "sigma-z/jentin": "*"
+        "sigma-z/jentin": "~1"
     }
 }
 ```
@@ -29,6 +35,30 @@ If you don't know how Composer works, please check out
 their [Getting Started](http://getcomposer.org/doc/00-intro.md) to set up.
 
 Jentin requires the [Symfony EventDispatcher](https://github.com/symfony/EventDispatcher).
+
+After installing your file structure looks like:
+
+```
+`- app
+   `- Default
+      `- controllers
+         `- IndexController
+      `- views
+         `- index
+            `- index.phtml
+`- public
+   `- .htaccess
+   `- index.php
+`- vendor
+   `- composer
+   `- sigma-z
+      `- jentin
+   `- symfony
+      `- event-dispatcher
+   `- autoload.php
+`- composer.json
+`- composer.lock
+```
 
 
 Configuration
@@ -47,10 +77,17 @@ RewriteRule ^.*$ - [L]
 RewriteRule ^.*$ index.php [NC]
 ```
 
+
 Class loading
 ---
 
 Most times you be satisfied by loading the ``vendor/autoload.php`` created by Composer.
+
+```php
+<?php
+require '/path/to/vendor/autoload.php';
+```
+
 
 But you can also use the class loader provided by Jentin ``\Jentin\ClassLoader\NamespaceClassLoader`` or any other sufficient class loader.
 
@@ -71,6 +108,7 @@ $classLoader->setNamespace('Symfony', '/path/to/Symfony');
 $classLoader->register();
 
 ```
+
 
 Front controller
 ---
@@ -94,21 +132,23 @@ Routing a request
 
 You can define routes to map requests to their corresponding controllers.
 
-The default route uses the pattern: ``(/%module%)(/%controller%)(/%action%)``
+This the default route pattern ``(/%module%)(/%controller%)(/%action%)(/.*)``, which is used as fallback,
+if no other route has matched the request url.
 
 When a request is routed the placeholders (marked with % as delimiter, here module, controller, and action) are mapped as request parameters.
-The brackets marks that a placeholder is optional. A request has the parameters ``module``, ``controller``, and ``action``
-defined by default, even if none of your defined routes will match.
+The brackets mark that a placeholder is optional. A request defines a ``module``, a ``controller``, and an ``action``.
 
-Imagine a request is sent to the url ``http://your-domain/`` the route will match. Request object will then have the following parameters:
+Imagine a request is sent with the url ``http://your-host/``. Request object when matching the default route,
+will then have the following properties:
 
 - module: default
 - controller: index
 - action: index
 
-Tthe urls ``http://your-domain/`` and ``http://your-domain/default/index/index`` will lead to the same result.
+The urls ``http://your-host/`` and ``http://your-host/default/index/index`` will lead to the same result.
 
-The router routes the request by finding a matching route. The first route that matches the pattern will be used for the request.
+The router routes the request by finding a route that matches the request url. The first route that matches will be used for the request
+by parsing the placeholders into request parameters.
 
 Let's see an example:
 
@@ -118,9 +158,9 @@ $app->addRoute('test', new Route('/test/%module%/%action%'));
 $app->addRoute('test2', '/test(/%module%)'); // internally it will create a Route instance
 ```
 
-The url ``http://your-domain/test/admin/list-records`` will match route 'test'.
+The url ``http://your-host/test/admin/list-records`` will match route 'test'.
 
-The url ``http://your-domain/test/test-module`` will match the route 'test2', because ``/%action%`` is required for the route 'test'.
+The url ``http://your-host/test/test-module`` will match the route 'test2', because ``/%action%`` is required for the route 'test'.
 
 
 Route with parameters
@@ -138,8 +178,8 @@ Here the request will have access to the parameter 'sid' defined by the route.
 Route with a callback
 ---
 
-A route can have a callback that is called by the ``HttpKernel``, if the route pattern matches. It this case the callback is the action method,
-that means you do not have to create a controller class.
+A route can have a callback that is called by the ``HttpKernel``, if the route pattern matches.
+It this case the callback is the action method, that means you do not have to create a controller class.
 
 ```php
 $route = new Route('(/%module%)(/%controller%)(/%action%)', array(), function() {
@@ -157,10 +197,86 @@ A controller is a piece of code, often a class, that is called to create a respo
 and uses models and views to create the response.
 
 
-Controller directory structure
+Default controller directory structure
 ---
 
-documentation in progress ...
+By installing Jentin via composer, the default directories ``app`` and ``public`` are created.
+
+The script ``public/index.php`` should be the only php file that can be accessed from your web server.
+
+The ``app`` directory contains the modules as directories. Each module has ``controllers`` and ``views`` as subdirectories.
+Each controller has its own view directory ``views/<controller name>``. And each action of the controller can have a view script.
+
+```
+`- app
+   `- Default
+      `- controllers
+         `- IndexController
+      `- views
+         `- index
+            `- index.phtml
+`- public
+   `- index.php
+```
+
+If you request ``http://your-host/`` you should see:
+
+```
+Jentin MVC Framework has been installed successfully.
+```
+
+
+Customized controller directory structure
+---
+
+Of course the directory structure can be customized in the front controller script public/index.php.
+
+The controller path pattern uses placeholders:
+
+- ``%Module%`` camel cased name, like Default, AppStore
+- ``%module%`` lower cased name dash separated, like default, app-store
+- ``%Controller%`` camel cased name, like Index, AppStore
+- ``%controller%`` lower cased name dash separated, like index, app-store
+
+
+For example:
+
+```php
+$app = new \Jentin\Application($appPath, $modules);
+$app->setControllerPathPattern($appPath . '/%module%');
+$app->setViewPathPattern($appPath . '/%module%/views/%controller%');
+$app->run();
+```
+
+Directory structure:
+
+```
+`- app
+   `- default
+      `- IndexController
+      `- views
+         `- index
+            `- index.phtml
+`- public
+   `- index.php
+```
+
+
+Controller class naming
+---
+
+The default pattern for naming controller classes is ``\%Module%Module\%Controller%Controller``.
+
+The same placeholder rules as above applies to the controller class name pattern.
+As you can see you can customize the controller name as you wish to fit your needs.
+
+In the example a custom namespace is added:
+
+```php
+$app = new \Jentin\Application($appPath, $modules);
+$app->setControllerClassNamePattern('\MyWorld\%Module%Module\%Controller%Controller');
+$app->run();
+```
 
 
 HTML and JSON responses
@@ -190,9 +306,9 @@ class HelloWorldController extends Controller
 
 ```
 
-The url http://your-domain/de/hello-world/json will output '{"message": "hello world"}".
+The url http://your-host/de/hello-world/json will output '{"message": "hello world"}".
 
-The url http://your-domain/default/hello-world/html will output 'hello world'.
+The url http://your-host/default/hello-world/html will output 'hello world'.
 
 
 If you like to have it much more easier, then you can return a string for html responses and an array for json responses.
@@ -216,6 +332,7 @@ class HelloWorldController extends Controller
 }
 ```
 
+
 Redirect responses
 ---
 
@@ -227,7 +344,7 @@ class SomeController extends Controller
 {
     public function redirectAction()
     {
-        return new RedirectResponse('http://your-domain/');
+        return new RedirectResponse('http://your-host/');
     }
 }
 ```
@@ -441,16 +558,66 @@ $app->disableViewPlugin();
 $app->run();
 ```
 
+
 View variables
 ...
 
-documentation in progress ...
+Assigning variables to the view object:
+
+```php
+$view->homeUrl = $homeUrl;
+$view->welcomeTitle = $welcomeTitle;
+```
+
+Accessing the variable in the view script:
+
+```html
+<h1><?php echo $this->welcomeTitle ?></h1>
+
+<a href="<?php echo $this->raw('homeUrl') ?>">Back to home</a>
+```
+
+``$this->welcomeTitle`` will escape the value for use in HTML.
+You can also write in a more explicit way ``$this->esc('welcomeTitle')`` which does the same.
+
+If you do not want a value to be escaped, then you can use ``$this->raw('homeUrl')`` to get the raw value.
+
+
+You can also define your own escaping:
+
+```php
+$view->getRenderer()->setEscapeCallback(function ($value, Jentin\Mvc\View\Renderer $renderer) {
+    // your code
+});
+```
 
 
 View layouts
-....
+...
 
-documentation in progress ...
+Enabling layouts.
+
+```
+$app = new \Jentin\Application($appPath, $modules);
+$app->enableLayoutView();   // enabling layouts
+$app->run();
+```
+
+When a view is rendered, it looks for a ``layout.phtml`` file.
+
+First it checks if this file is located in the same directory like the view that has been rendered.
+If there is no layout file, it looks into the parent directory.
+
+```
+`- app
+   `- default
+      `- IndexController
+      `- views
+         `- index
+            `- index.phtml
+            `- layout.phtml     // controller layout
+         `- layout.phtml        // module layout
+```
 
 
 RouteUrl

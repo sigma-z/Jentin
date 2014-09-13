@@ -288,7 +288,6 @@ class View implements ControllerAware
         $templateExtension = $this->getRenderer()->getFileExtension();
         $templateName = $layout . ($templateExtension ? '.' . $templateExtension : '');
         $layouts = array(
-            $layout,
             $layoutDir . '/' . $templateName,
             $layoutDir . '/../' . $templateName
         );

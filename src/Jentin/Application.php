@@ -49,6 +49,9 @@ class Application
     private $appRoot = '';
 
     /** @var string */
+    private $controllerClassNamePattern = '';
+
+    /** @var string */
     private $controllerPathPattern = '';
 
     /** @var string */
@@ -65,8 +68,9 @@ class Application
     {
         $this->appRoot = $appRoot;
         $this->modules = $modules;
-        $this->controllerPathPattern = $this->appRoot . '/%Module%/controllers';
+        $this->controllerClassNamePattern = '\%Module%Module\%Controller%Controller';
         $this->viewPathPattern = $this->appRoot . '/%module%/views/%controller%';
+        $this->controllerPathPattern = $this->appRoot . '/%Module%/controllers';
     }
 
 
@@ -105,6 +109,19 @@ class Application
     {
         $this->initRouter();
         return $this->router->addRoute($name, $route);
+    }
+
+
+    /**
+     * sets controller name pattern
+     *
+     * @param   string $pattern
+     * @return  HttpKernel
+     */
+    public function setControllerClassNamePattern($pattern)
+    {
+        $this->controllerClassNamePattern = $pattern;
+        return $this;
     }
 
 
@@ -186,6 +203,7 @@ class Application
             $controllerPluginBroker->register('view', $this->plugins['view']);
         }
 
+        $httpKernel->setControllerClassNamePattern($this->controllerClassNamePattern);
         $httpKernel->setControllerPluginBroker($controllerPluginBroker);
 
         return $httpKernel;
