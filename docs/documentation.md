@@ -8,6 +8,8 @@ This implementation of the [MVC (Model-View-Controller) pattern](http://martinfo
 just provides the basis for an MVC application. It does not provide a Model layer.
 In fact even the provided View layer is optional.
 
+Jentin requires the [Symfony EventDispatcher](https://github.com/symfony/EventDispatcher).
+
 
 License
 ---
@@ -20,7 +22,10 @@ Installation
 
 Jentin can be installed with [Composer](http://www.getcomposer.org).
 
-Add the following requirement in your ``composer.json`` file:
+If you don't know how Composer works, please check out
+their [Getting Started](http://getcomposer.org/doc/00-intro.md) to set up.
+
+Create a ``composer.json`` file with the following requirement:
 
 ```js
 {
@@ -30,11 +35,17 @@ Add the following requirement in your ``composer.json`` file:
 }
 ```
 
-Call ``composer install`` from your command line to add ``Jentin`` to your ``vendor`` folder.
-If you don't know how Composer works, please check out
-their [Getting Started](http://getcomposer.org/doc/00-intro.md) to set up.
+Now call the ``install`` command from your command line:
 
-Jentin requires the [Symfony EventDispatcher](https://github.com/symfony/EventDispatcher).
+```bash
+composer install
+```
+
+If you like you can create the default app structure as an easy start for using Jentin, you can do so by executing this script:
+
+```bash
+php vendor/sigma-z/jentin/installDefaultApp.php
+```
 
 After installing your file structure looks like:
 
@@ -60,13 +71,20 @@ After installing your file structure looks like:
 `- composer.lock
 ```
 
+If you set up your web server that ``public`` is your document root then you can request
+``http://your-host/`` in your browser and you should see:
+
+```
+Jentin MVC Framework has been installed successfully.
+```
+
 
 Configuration
 ---
 
-To map your requests to your front controller you usually use for Apache a ``.htaccess`` file.
-The document root should be a folder containing your front controller (ie. index.php) and all the client stuff
-like css, javascript and other static files. The document root should be the only folder web server should have access to.
+To map your requests to your front controller you usually use for Apache an ``.htaccess`` file.
+The document root should be the directory (i.e. public) containing your front controller (ie. index.php) and all the client stuff
+like css, javascript and other static files. The document root should be the only directory where web server should have access to.
 
 ```
 RewriteEngine on
@@ -81,32 +99,11 @@ RewriteRule ^.*$ index.php [NC]
 Class loading
 ---
 
-Most times you be satisfied by loading the ``vendor/autoload.php`` created by Composer.
+Auto loading the Jentin classes is done by requiring the ``vendor/autoload.php`` file created by Composer.
 
 ```php
 <?php
 require '/path/to/vendor/autoload.php';
-```
-
-
-But you can also use the class loader provided by Jentin ``\Jentin\ClassLoader\NamespaceClassLoader`` or any other sufficient class loader.
-
-```php
-<?php
-require '/path/to/Jentin/ClassLoader/NamespaceClassLoader.php';
-
-// class loader
-$classLoader = new \Jentin\ClassLoader\NamespaceClassLoader();
-
-// define where to load the Jentin classes from
-$classLoader->setNamespace('Jentin', '/path/to/Jentin');
-
-// define where to load the Symfony EventDispatcher classes from
-$classLoader->setNamespace('Symfony', '/path/to/Symfony');
-
-// register class loader for autoloading
-$classLoader->register();
-
 ```
 
 
@@ -120,7 +117,7 @@ In our example there is no application wrapped around Jentin, which you should d
 
 ```php
 <?php
-require __DIR__  . '/../../vendor/autoload.php';
+require __DIR__  . '/../vendor/autoload.php';
 
 // creating app
 $app = new \Jentin\Application(__DIR__ . '/../app', array('Default', /* and more */));
@@ -200,9 +197,7 @@ and uses models and views to create the response.
 Default controller directory structure
 ---
 
-By installing Jentin via composer, the default directories ``app`` and ``public`` are created.
-
-The script ``public/index.php`` should be the only php file that can be accessed from your web server.
+The front controller script ``public/index.php`` should be the only php file that can be accessed from your web server.
 
 The ``app`` directory contains the modules as directories. Each module has ``controllers`` and ``views`` as subdirectories.
 Each controller has its own view directory ``views/<controller name>``. And each action of the controller can have a view script.
@@ -217,12 +212,6 @@ Each controller has its own view directory ``views/<controller name>``. And each
             `- index.phtml
 `- public
    `- index.php
-```
-
-If you request ``http://your-host/`` you should see:
-
-```
-Jentin MVC Framework has been installed successfully.
 ```
 
 

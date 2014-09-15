@@ -8,7 +8,7 @@
             "email": "sigma_z@sigma-scripts.de"
         }
     ],
-    "minimum-stability": "dev",
+    "minimum-stability": "stable",
     "require": {
         "symfony/event-dispatcher": "~2"
     },
@@ -18,8 +18,11 @@
         }
     },
     "scripts": {
-        "post-install-cmd": [
+        "post-create-project-cmd": [
             "php installDefaultApp.php"
         ]
+    },
+    "config": {
+        "preferred-install": "dist"
     }
 }
