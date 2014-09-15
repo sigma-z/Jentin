@@ -34,7 +34,7 @@ use Jentin\Mvc\Event\ResponseFilterEvent;
 class HttpKernel
 {
 
-    const VERSION = '1.0';
+    const VERSION = '1.0.1';
 
 
     /**
