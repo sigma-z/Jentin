@@ -185,11 +185,6 @@ class Controller implements ControllerInterface, Pluggable
     }
 
 
-    /**
-     * dispatches the action
-     *
-     * @throws ControllerException if action method is not found
-     */
     public function dispatch()
     {
         $this->preDispatch();
@@ -198,6 +193,9 @@ class Controller implements ControllerInterface, Pluggable
     }
 
 
+    /**
+     * @throws ControllerException
+     */
     protected function processDispatch()
     {
         $controllerEvent = new ControllerEvent($this);
