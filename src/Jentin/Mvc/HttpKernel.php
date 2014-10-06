@@ -276,10 +276,8 @@ class HttpKernel
 
         $this->request->setDispatched(true);
 
-        // controller dispatch
-        $controller->preDispatch();
+        // dispatch controller action
         $controller->dispatch();
-        $controller->postDispatch();
 
         $this->response = $controller->getResponse();
     }

@@ -192,13 +192,20 @@ class Controller implements ControllerInterface, Pluggable
      */
     public function dispatch()
     {
+        $this->preDispatch();
+        $this->processDispatch();
+        $this->postDispatch();
+    }
+
+
+    protected function processDispatch()
+    {
         $controllerEvent = new ControllerEvent($this);
         $this->eventDispatcher->dispatch(MvcEvent::ON_CONTROLLER_DISPATCH, $controllerEvent);
         if ($controllerEvent->hasResponse()) {
             $this->response = $controllerEvent->getResponse();
             return;
         }
-
         $actionMethod = $this->getActionMethod();
         if (method_exists($this, $actionMethod)) {
             $response = call_user_func(array($this, $actionMethod));
@@ -207,7 +214,6 @@ class Controller implements ControllerInterface, Pluggable
             }
             return;
         }
-
         $moduleName = $this->request->getModuleName();
         $controllerName = $this->request->getControllerName();
         throw new ControllerException(
