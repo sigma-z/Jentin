@@ -448,6 +448,25 @@ class Request implements RequestInterface
 
 
     /**
+     * gets server var
+     *
+     * @param  string|null $name
+     * @param  mixed|null  $default
+     * @return mixed
+     */
+    public function getServer($name = null, $default = null)
+    {
+        if ($name === null) {
+            return $this->server;
+        }
+
+        return isset($this->server[$name])
+            ? $this->server[$name]
+            : $default;
+    }
+
+
+    /**
      * checks, if request was a xml http request, or not
      *
      * @return boolean

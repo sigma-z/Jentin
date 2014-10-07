@@ -106,12 +106,12 @@ class RequestTest extends \PHPUnit_Framework_TestCase
     {
         $testData = array();
 
-        // testcase 1: host by HTTP_HOST
+        // test case 1: host by HTTP_HOST
         $testData[] = array(
             array('HTTP_HOST' => 'localhost'),
             'localhost'
         );
-        // testcase 2: host by SERVER_NAME
+        // test case 2: host by SERVER_NAME
         $testData[] = array(
             array('SERVER_NAME' => 'localhost'),
             'localhost'
@@ -230,6 +230,21 @@ class RequestTest extends \PHPUnit_Framework_TestCase
         );
 
         return $testCases;
+    }
+
+
+    public function testGetServer()
+    {
+        $serverVars = array(
+            'REQUEST_URI' => '/test/abc/123/test.php',
+            'HTTPS' => 'on'
+        );
+        $request = new Request(array(), array(), $serverVars);
+
+        $this->assertEquals($serverVars['REQUEST_URI'], $request->getServer('REQUEST_URI'));
+        $this->assertNull($request->getServer('TEST_SOMETHING'));
+        $this->assertEquals('Something', $request->getServer('TEST_SOMETHING', 'Something'));
+        $this->assertInternalType('array', $request->getServer());
     }
 
 }

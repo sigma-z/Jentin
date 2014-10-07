@@ -149,6 +149,16 @@ interface RequestInterface
 
 
     /**
+     * gets server var
+     *
+     * @param  string|null $name
+     * @param  mixed|null  $default
+     * @return mixed
+     */
+    public function getServer($name = null, $default = null);
+
+
+    /**
      * gets url query
      *
      * @return string
