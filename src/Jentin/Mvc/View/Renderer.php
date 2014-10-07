@@ -300,6 +300,18 @@ class Renderer implements RendererInterface, Pluggable
 
 
     /**
+     * returns true, if view var is set
+     *
+     * @param  string $name
+     * @return bool
+     */
+    public function __isset($name)
+    {
+        return isset($this->vars[$name]);
+    }
+
+
+    /**
      * escapes value if string
      *
      * @param  mixed $value

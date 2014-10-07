@@ -111,4 +111,12 @@ interface RendererInterface
      */
     public function raw($name);
 
+    /**
+     * returns true, if view var is set
+     *
+     * @param  string $name
+     * @return bool
+     */
+    public function __isset($name);
+
 }
