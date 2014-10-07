@@ -80,10 +80,11 @@ class Response implements ResponseInterface
     /**
      * gets header
      *
-     * @param   string  $name
+     * @param   string $name
+     * @param   mixed  $default
      * @return  string|array|null
      */
-    public function getHeader($name)
+    public function getHeader($name, $default = null)
     {
         if (isset($this->headers[$name])) {
             $values = array();
@@ -92,7 +93,7 @@ class Response implements ResponseInterface
             }
             return isset($values[1]) ? $values : $values[0];
         }
-        return null;
+        return $default;
     }
 
 

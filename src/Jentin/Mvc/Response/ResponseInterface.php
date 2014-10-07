@@ -28,10 +28,11 @@ interface ResponseInterface
     /**
      * gets header
      *
-     * @param  string  $name
+     * @param  string $name
+     * @param  mixed  $default
      * @return string|array|null
      */
-    public function getHeader($name);
+    public function getHeader($name, $default = null);
 
     /**
      * append content
