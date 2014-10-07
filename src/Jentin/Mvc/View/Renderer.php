@@ -291,7 +291,7 @@ class Renderer implements RendererInterface, Pluggable
      */
     public function raw($name)
     {
-        if (!isset($this->vars[$name])) {
+        if (!array_key_exists($name, $this->vars)) {
             trigger_error("Template variable '$name' does not exist", E_USER_NOTICE);
             return null;
         }

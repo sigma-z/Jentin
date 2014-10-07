@@ -22,6 +22,7 @@ class RendererTest extends \PHPUnit_Framework_TestCase
     /** @var Renderer */
     private $renderer;
 
+
     protected function setUp()
     {
         $this->renderer = new Renderer();
@@ -50,8 +51,11 @@ class RendererTest extends \PHPUnit_Framework_TestCase
 
 
     /**
-     * @uses test-plugin.phtml
+     * @uses    test-plugin.phtml
      * @depends testRender
+     * @param Renderer $renderer
+     * @throws \Jentin\Mvc\View\RendererException
+     * @return \Jentin\Mvc\View\Renderer
      */
     public function testRenderWithPlugin(Renderer $renderer)
     {
@@ -73,6 +77,8 @@ class RendererTest extends \PHPUnit_Framework_TestCase
     /**
      * @expectedException \Jentin\Mvc\View\RendererException
      * @depends testRenderWithPlugin
+     * @param Renderer $renderer
+     * @throws \Jentin\Mvc\View\RendererException
      */
     public function testRenderTemplateNotFound(Renderer $renderer)
     {
@@ -89,6 +95,22 @@ class RendererTest extends \PHPUnit_Framework_TestCase
         $actual = $renderer->render('test', array('name' => '"World" & "Universe"'));
         $expected = 'Hello &quot;World&quot; &amp; &quot;Universe&quot;!';
         $this->assertEquals($actual, $expected);
+    }
+
+
+    public function testGetNullVarDoesNotTriggerError()
+    {
+        $this->renderer->setVars(array('test' => null));
+        $this->assertNull($this->renderer->raw('test'));
+    }
+
+
+    /**
+     * @expectedException \PHPUnit_Framework_Error_Notice
+     */
+    public function testGetNotExistingVarTriggersError()
+    {
+        $this->renderer->raw('test');
     }
 
 }
