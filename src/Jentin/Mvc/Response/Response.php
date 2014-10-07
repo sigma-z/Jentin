@@ -244,7 +244,7 @@ class Response implements ResponseInterface
     {
         $headersSent = headers_sent($file, $line);
         if ($headersSent && $throwExceptionOnHeadersSent) {
-            throw new ResponseException("Headers has been already sent! (file: $file in line $file)");
+            throw new ResponseException("Headers has been already sent! (file: $file in line $line)");
         }
         return $headersSent === false;
     }
