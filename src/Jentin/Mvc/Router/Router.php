@@ -68,9 +68,16 @@ class Router implements RouterInterface
     }
 
 
+    /**
+     * adds route
+     *
+     * @param  string $name
+     * @param  RouteInterface|string $route
+     * @return RouteInterface
+     */
     public function setRoute($name, $route)
     {
-        $this->addRoute($name, $route);
+        return $this->addRoute($name, $route);
     }
 
 

@@ -147,7 +147,6 @@ interface RequestInterface
      */
     public function getBasePath();
 
-
     /**
      * gets server var
      *
@@ -157,6 +156,14 @@ interface RequestInterface
      */
     public function getServer($name = null, $default = null);
 
+    /**
+     * gets cookie by name
+     *
+     * @param  string $name
+     * @param  mixed  $default
+     * @return mixed
+     */
+    public function getCookie($name, $default = null);
 
     /**
      * gets url query

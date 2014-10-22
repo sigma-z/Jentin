@@ -261,45 +261,63 @@ class RouteTest extends \PHPUnit_Framework_TestCase
      * @dataProvider provideGetUrl
      * @param string $pattern
      * @param array  $params
+     * @param string $query
+     * @param string $asterisk
      * @param string $expected
      */
-    public function testGetUrl($pattern, $params, $expected)
+    public function testGetUrl($pattern, $params, $query, $asterisk, $expected)
     {
         $route = new Route($pattern);
-        $actual = $route->getUrl($params);
+        $actual = $route->getUrl($params, $query, $asterisk);
         $this->assertEquals($expected, $actual);
     }
 
 
     public function provideGetUrl()
     {
-        $testData = array();
+        $testCases = array();
 
-        $testData[] = array(
+        $testCases[] = array(
             '(/%module%)(/%controller%)(/%action%)',
             array(),
-            ''
+            '',
+            '',
+            '/default/index/index'
         );
 
-        $testData[] = array(
+        $testCases[] = array(
+            '(/%module%)(/%controller%)(/%action%)',
+            array('controller' => 'test'),
+            '',
+            '',
+            '/default/test/index'
+        );
+
+        $testCases[] = array(
             '/module(/%id%)(/%action%)',
             array(),
+            '',
+            '',
             '/module'
         );
 
-        $testData[] = array(
+        $testCases[] = array(
             '/module(/%id%)(/%action%)',
             array('id' => '123'),
-            '/module/123'
+            '',
+            '',
+            '/module/123/index'
         );
 
-        $testData[] = array(
+        $testCases[] = array(
             '/module(/%id%)(/%action%)',
             array('action' => 'action'),
+            '',
+            '',
             '/module'
         );
 
-        return $testData;
+        return $testCases;
     }
 
 

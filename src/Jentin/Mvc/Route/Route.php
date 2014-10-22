@@ -9,6 +9,7 @@
 
 namespace Jentin\Mvc\Route;
 
+use Jentin\Mvc\Request\Request;
 use Jentin\Mvc\Request\RequestInterface;
 use Jentin\Mvc\Response\ResponseInterface;
 use Jentin\Mvc\Util\Util;
@@ -232,6 +233,12 @@ class Route implements RouteInterface
         }
 
         if ($placeHolders) {
+            $defaultParams = array(
+                'module' => Request::DEFAULT_MODULE,
+                'controller' => Request::DEFAULT_CONTROLLER,
+                'action' => Request::DEFAULT_ACTION,
+            );
+            $params = array_merge($defaultParams, $params);
             $url = Util::parsePattern($this->pattern, $params, '%', false);
             // check if optional placeholders are not replaced through parse
             $placeHoldersSubPattern = implode('|', $placeHolders);
