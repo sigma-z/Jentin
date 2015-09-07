@@ -124,6 +124,19 @@ class RouterRoutingTest extends \PHPUnit_Framework_TestCase
     }
 
 
+    public function testCustomDefaultRoute()
+    {
+        $this->givenIHaveARouter();
+        $this->givenIHaveDefinedTheRoute_withPattern('default', '/!(/%module%)(/%controller%)(/%action%)');
+        $this->givenIHaveARequestWithUri('/!/default/download/index');
+        $this->whenIRouteTheRequest();
+        $this->thenItShouldHaveRoutedByTheRoute('default');
+        $this->thenTheRequestShouldHaveTheModule('default');
+        $this->thenTheRequestShouldHaveTheController('download');
+        $this->thenTheRequestShouldHaveTheAction('index');
+    }
+
+
     private function givenIHaveARouter()
     {
         $this->router = new Router();
