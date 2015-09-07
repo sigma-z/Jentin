@@ -330,7 +330,7 @@ class Request implements RequestInterface
                 $baseUrl = substr($baseUrl, 0, strlen($basePath) + 1);
             }
             else {
-                if (($pos = strpos('?', $baseUrl))) {
+                if (($pos = strpos($baseUrl, '?'))) {
                     $baseUrl = substr($baseUrl, 0, $pos);
                 }
                 if ($baseUrl[strlen($baseUrl) - 1] != '/') {
