@@ -24,7 +24,6 @@ abstract class MvcEvent extends Event
     const ON_CONTROLLER             = 'jentin.mvc.onController';
     const ON_CONTROLLER_DISPATCH    = 'jentin.mvc.onControllerDispatch';
     const ON_FILTER_RESPONSE        = 'jentin.mvc.onFilterResponse';
-    const ON_CONTROLLER_RESULT      = 'jentin.mvc.onControllerResult';
 
 
     /** @var ResponseInterface|mixed */
