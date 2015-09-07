@@ -16,7 +16,7 @@ use Jentin\Mvc\Router\Router;
 /**
  * @author Steffen Zeidler <sigma_z@sigma-scripts.de>
  */
-class RouterTest extends \PHPUnit_Framework_TestCase
+class RouterRoutingTest extends \PHPUnit_Framework_TestCase
 {
 
     /** @var Router */
@@ -158,6 +158,16 @@ class RouterTest extends \PHPUnit_Framework_TestCase
 
 
     /**
+     * @param string $name
+     * @param string $pattern
+     */
+    private function whenIAddRouteForName_asString($name, $pattern)
+    {
+        $this->router->addRoute($name, $pattern);
+    }
+
+
+    /**
      * @param string $expectedRouteName
      */
     private function thenItShouldHaveRoutedByTheRoute($expectedRouteName)
@@ -228,16 +238,6 @@ class RouterTest extends \PHPUnit_Framework_TestCase
     private function thenTheRequestShouldHaveTheAction($actionName)
     {
         $this->assertEquals($actionName, $this->request->getActionName(), "Expected that action is $actionName!");
-    }
-
-
-    /**
-     * @param string $name
-     * @param string $pattern
-     */
-    private function whenIAddRouteForName_asString($name, $pattern)
-    {
-        $this->router->addRoute($name, $pattern);
     }
 
 

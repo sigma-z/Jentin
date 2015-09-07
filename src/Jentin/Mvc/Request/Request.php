@@ -16,6 +16,10 @@ namespace Jentin\Mvc\Request;
 class Request implements RequestInterface
 {
 
+    const DEFAULT_MODULE = 'default';
+    const DEFAULT_CONTROLLER = 'index';
+    const DEFAULT_ACTION = 'index';
+
     /** @var array */
     protected $server = array(
         'REQUEST_URI'   => '',
@@ -26,13 +30,13 @@ class Request implements RequestInterface
     );
 
     /** @var string */
-    protected $moduleName = 'default';
+    protected $moduleName = self::DEFAULT_MODULE;
 
     /** @var string */
-    protected $controllerName = 'index';
+    protected $controllerName = self::DEFAULT_CONTROLLER;
 
     /** @var string */
-    protected $actionName = 'index';
+    protected $actionName = self::DEFAULT_ACTION;
 
     /** @var array */
     protected $params = array();
@@ -58,6 +62,9 @@ class Request implements RequestInterface
     /** @var array */
     protected $paramNamesGet = array();
 
+    /** @var array */
+    protected $cookies;
+
 
     /**
      * constructor
@@ -65,8 +72,9 @@ class Request implements RequestInterface
      * @param array $paramsPost
      * @param array $paramsGet
      * @param array $server
+     * @param array $cookies
      */
-    public function __construct(array $paramsPost = null, array $paramsGet = null, array $server = null)
+    public function __construct(array $paramsPost = null, array $paramsGet = null, array $server = null, array $cookies = null)
     {
         $paramsPost   = $paramsPost ?: $_POST;
         $paramsGet    = $paramsGet  ?: $_GET;
@@ -75,6 +83,7 @@ class Request implements RequestInterface
         $this->paramNamesGet = array_keys($paramsGet);
         $server       = $server ?: $_SERVER;
         $this->server = array_merge($this->server, $server);
+        $this->cookies = $cookies ?: $_COOKIE;
     }
 
 
@@ -462,6 +471,32 @@ class Request implements RequestInterface
 
         return isset($this->server[$name])
             ? $this->server[$name]
+            : $default;
+    }
+
+
+    /**
+     * gets cookies
+     *
+     * @return array
+     */
+    public function getCookies()
+    {
+        return $this->cookies;
+    }
+
+
+    /**
+     * gets cookie by name
+     *
+     * @param  string $name
+     * @param  mixed  $default
+     * @return mixed
+     */
+    public function getCookie($name, $default = null)
+    {
+        return isset($this->cookies[$name])
+            ? $this->cookies[$name]
             : $default;
     }
 
