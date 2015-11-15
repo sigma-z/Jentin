@@ -69,7 +69,7 @@ class Application
         $this->appRoot = $appRoot;
         $this->modules = $modules;
         $this->controllerClassNamePattern = '\%Module%Module\%Controller%Controller';
-        $this->viewPathPattern = $this->appRoot . '/%module%/views/%controller%';
+        $this->viewPathPattern = $this->appRoot . '/%Module%/views/%controller%';
         $this->controllerPathPattern = $this->appRoot . '/%Module%/controllers';
     }
 
