@@ -20,6 +20,15 @@ class Request implements RequestInterface
     const DEFAULT_CONTROLLER = 'index';
     const DEFAULT_ACTION = 'index';
 
+    /** @var string */
+    protected static $defaultModuleName = self::DEFAULT_MODULE;
+
+    /** @var string */
+    protected static $defaultControllerName = self::DEFAULT_CONTROLLER;
+
+    /** @var string */
+    protected static $defaultActionName = self::DEFAULT_ACTION;
+
     /** @var array */
     protected $server = array(
         'REQUEST_URI'   => '',
@@ -30,13 +39,13 @@ class Request implements RequestInterface
     );
 
     /** @var string */
-    protected $moduleName = self::DEFAULT_MODULE;
+    protected $moduleName = '';
 
     /** @var string */
-    protected $controllerName = self::DEFAULT_CONTROLLER;
+    protected $controllerName = '';
 
     /** @var string */
-    protected $actionName = self::DEFAULT_ACTION;
+    protected $actionName = '';
 
     /** @var array */
     protected $params = array();
@@ -84,6 +93,11 @@ class Request implements RequestInterface
         $server       = $server ?: $_SERVER;
         $this->server = array_merge($this->server, $server);
         $this->cookies = $cookies ?: $_COOKIE;
+
+        // init module / controller / action
+        $this->moduleName = self::$defaultModuleName;
+        $this->controllerName = self::$defaultControllerName;
+        $this->actionName = self::$defaultActionName;
     }
 
 
@@ -229,6 +243,24 @@ class Request implements RequestInterface
 
 
     /**
+     * @param string $defaultModuleName
+     */
+    public static function setDefaultModuleName($defaultModuleName)
+    {
+        self::$defaultModuleName = $defaultModuleName;
+    }
+
+
+    /**
+     * @return string
+     */
+    public static function getDefaultModuleName()
+    {
+        return self::$defaultModuleName;
+    }
+
+
+    /**
      * sets controller name
      *
      * @return string
@@ -251,6 +283,24 @@ class Request implements RequestInterface
 
 
     /**
+     * @param string $defaultControllerName
+     */
+    public static function setDefaultControllerName($defaultControllerName)
+    {
+        self::$defaultControllerName = $defaultControllerName;
+    }
+
+
+    /**
+     * @return string
+     */
+    public static function getDefaultControllerName()
+    {
+        return self::$defaultControllerName;
+    }
+
+
+    /**
      * gets action name
      *
      * @return string
@@ -269,6 +319,24 @@ class Request implements RequestInterface
     public function setActionName($actionName)
     {
         $this->actionName = $actionName;
+    }
+
+
+    /**
+     * @param string $defaultActionName
+     */
+    public static function setDefaultActionName($defaultActionName)
+    {
+        self::$defaultActionName = $defaultActionName;
+    }
+
+
+    /**
+     * @return string
+     */
+    public static function getDefaultActionName()
+    {
+        return self::$defaultActionName;
     }
 
 
