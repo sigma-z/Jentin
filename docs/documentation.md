@@ -232,8 +232,8 @@ For example:
 
 ```php
 $app = new \Jentin\Application($appPath, $modules);
-$app->setControllerPathPattern($appPath . '/%module%');
-$app->setViewPathPattern($appPath . '/%module%/views/%controller%');
+$app->setControllerPathPattern($appPath . '/%Module%');
+$app->setViewPathPattern($appPath . '/%Module%/views/%controller%');
 $app->run();
 ```
 
