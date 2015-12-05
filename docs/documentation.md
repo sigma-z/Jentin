@@ -27,7 +27,7 @@ their [Getting Started](http://getcomposer.org/doc/00-intro.md) to set up.
 
 Create a ``composer.json`` file with the following requirement:
 
-```js
+```json
 {
     "require": {
         "sigma-z/jentin": "~1"
