@@ -129,7 +129,7 @@ Routing a request
 
 You can define routes to map requests to their corresponding controllers.
 
-This the default route pattern ``(/%module%)(/%controller%)(/%action%)(/.*)``, which is used as fallback,
+This the default route pattern ``(/%module%)(/%controller%)(/%action%)(/*)``, which is used as fallback,
 if no other route has matched the request url.
 
 When a request is routed the placeholders (marked with % as delimiter, here module, controller, and action) are mapped as request parameters.
