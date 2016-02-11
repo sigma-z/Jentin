@@ -27,7 +27,7 @@ their [Getting Started](http://getcomposer.org/doc/00-intro.md) to set up.
 
 Create a ``composer.json`` file with the following requirement:
 
-```js
+```json
 {
     "require": {
         "sigma-z/jentin": "~1"
@@ -129,7 +129,7 @@ Routing a request
 
 You can define routes to map requests to their corresponding controllers.
 
-This the default route pattern ``(/%module%)(/%controller%)(/%action%)(/.*)``, which is used as fallback,
+This the default route pattern ``(/%module%)(/%controller%)(/%action%)(/*)``, which is used as fallback,
 if no other route has matched the request url.
 
 When a request is routed the placeholders (marked with % as delimiter, here module, controller, and action) are mapped as request parameters.
@@ -232,8 +232,8 @@ For example:
 
 ```php
 $app = new \Jentin\Application($appPath, $modules);
-$app->setControllerPathPattern($appPath . '/%module%');
-$app->setViewPathPattern($appPath . '/%module%/views/%controller%');
+$app->setControllerPathPattern($appPath . '/%Module%');
+$app->setViewPathPattern($appPath . '/%Module%/views/%controller%');
 $app->run();
 ```
 
