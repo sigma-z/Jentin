@@ -144,6 +144,10 @@ class MockResponseFlush extends Response
     }
 
 
+    /**
+     * @param string $header
+     * @param bool   $replace
+     */
     protected function sendHeader($header, $replace = true)
     {
     }
