@@ -224,13 +224,18 @@ class Response implements ResponseInterface
 
     public function sendContent()
     {
-        echo $this->content;
+        if ($this->content !== '') {
+            echo $this->content;
+        }
     }
 
 
     public function flushResponse()
     {
-        $this->sendResponse();
+        if ($this->canSendHeaders(false)) {
+            $this->sendHeaders();
+        }
+        $this->sendContent();
         $this->content = '';
     }
 

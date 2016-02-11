@@ -28,6 +28,7 @@ class ResponseFlushTest extends \PHPUnit_Framework_TestCase
         $this->whenIAppendTheResponseContentWith('Lorem ipsum!');
         $this->whenIFlushTheResponse();
         $this->thenTheHeadersShouldBeSent();
+        $this->thenSendingHeadersIsNotPossible();
         $this->thenTheSentResponseContentShouldBeEquals('Lorem ipsum!');
         $this->thenTheResponseContentShouldBeEquals('');
         $this->thenTheResponseHaveSentTheHeader('X-My-Custom-Header: test');
@@ -79,7 +80,7 @@ class ResponseFlushTest extends \PHPUnit_Framework_TestCase
 
     private function thenTheHeadersShouldBeSent()
     {
-        $this->assertTrue($this->response->canSendHeaders(false));
+        $this->assertTrue($this->response->headersSent);
     }
 
 
@@ -110,6 +111,12 @@ class ResponseFlushTest extends \PHPUnit_Framework_TestCase
         $this->assertContains($header, $headerSent);
     }
 
+
+    private function thenSendingHeadersIsNotPossible()
+    {
+        $this->assertFalse($this->response->canSendHeaders(false));
+    }
+
 }
 
 
@@ -123,6 +130,9 @@ class MockResponseFlush extends Response
     /** @var string */
     public $contentSent = '';
 
+    /** @var bool */
+    public $headersSent = false;
+
 
     /**
      * @param  bool $throwExceptionOnHeadersSent
@@ -130,7 +140,7 @@ class MockResponseFlush extends Response
      */
     public function canSendHeaders($throwExceptionOnHeadersSent = true)
     {
-        return true;
+        return $this->headersSent === false;
     }
 
 
@@ -141,6 +151,7 @@ class MockResponseFlush extends Response
 
     public function sendContent()
     {
+        $this->headersSent = true;
         $this->contentSent .= $this->content;
     }
 
