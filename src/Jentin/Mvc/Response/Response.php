@@ -32,7 +32,7 @@ class Response implements ResponseInterface
     protected $cookies = array();
 
     /** @var bool */
-    private $statusSent = false;
+    protected $statusSent = false;
 
 
     /**
