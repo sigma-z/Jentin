@@ -16,22 +16,20 @@ namespace Jentin\Mvc\Response;
 class Response implements ResponseInterface
 {
 
-    /**
-     * @var string
-     */
+    /** @var string */
     protected $content = '';
-    /**
-     * @var integer
-     */
+
+    /** @var int */
     protected $statusCode = 200;
-    /**
-     * @var string
-     */
+
+    /** @var string */
     protected $statusMessage = 'OK';
-    /**
-     * @var array
-     */
+
+    /** @var array */
     protected $headers = array();
+
+    /** @var ResponseCookie[] */
+    protected $cookies = array();
 
 
     /**
@@ -80,9 +78,9 @@ class Response implements ResponseInterface
     /**
      * gets header
      *
-     * @param   string $name
-     * @param   mixed  $default
-     * @return  string|array|null
+     * @param string $name
+     * @param mixed  $default
+     * @return string|array|null
      */
     public function getHeader($name, $default = null)
     {
@@ -117,7 +115,7 @@ class Response implements ResponseInterface
     /**
      * sets content type
      *
-     * @param  string   $contentType
+     * @param string $contentType
      */
     public function setContentType($contentType)
     {
@@ -128,7 +126,7 @@ class Response implements ResponseInterface
     /**
      * sends response headers
      *
-     * @param  bool $throwExceptionOnHeadersSent
+     * @param bool $throwExceptionOnHeadersSent
      * @throws ResponseException
      */
     public function sendHeaders($throwExceptionOnHeadersSent = true)
@@ -152,13 +150,15 @@ class Response implements ResponseInterface
                 $headerEntry['sent'] = true;
             }
         }
+
+        $this->sendCookies();
     }
 
 
     /**
      * appends content
      *
-     * @param   string  $content
+     * @param string $content
      */
     public function appendContent($content)
     {
@@ -224,6 +224,15 @@ class Response implements ResponseInterface
 
 
     /**
+     * @param ResponseCookie $cookie
+     */
+    public function setCookie(ResponseCookie $cookie)
+    {
+        $this->cookies[] = $cookie;
+    }
+
+
+    /**
      * sends response to browser
      */
     public function sendResponse()
@@ -252,7 +261,7 @@ class Response implements ResponseInterface
 
 
     /**
-     * @param  bool $throwExceptionOnHeadersSent
+     * @param bool $throwExceptionOnHeadersSent
      * @return bool
      * @throws ResponseException
      */
@@ -273,6 +282,22 @@ class Response implements ResponseInterface
     protected function sendHeader($header, $replace = true)
     {
         header($header, $replace);
+    }
+
+
+    protected function sendCookies()
+    {
+        foreach ($this->cookies as $cookie) {
+            setcookie(
+                $cookie->getName(),
+                $cookie->getValue(),
+                $cookie->getExpire(),
+                $cookie->getPath(),
+                $cookie->getDomain(),
+                $cookie->isSecure(),
+                $cookie->isHttpOnly()
+            );
+        }
     }
 
 }
