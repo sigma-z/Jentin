@@ -213,6 +213,17 @@ class Response implements ResponseInterface
 
 
     /**
+     * gets http response status message
+     *
+     * @return string
+     */
+    public function getStatusMessage()
+    {
+        return $this->statusMessage;
+    }
+
+
+    /**
      * sends response to browser
      */
     public function sendResponse()
