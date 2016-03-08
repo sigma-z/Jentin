@@ -301,7 +301,7 @@ class Response implements ResponseInterface
     }
 
 
-    private function sendStatusHeader()
+    protected function sendStatusHeader()
     {
         if (!$this->statusSent) {
             $this->sendHeader("HTTP/1.1 $this->statusCode $this->statusMessage");
@@ -313,7 +313,7 @@ class Response implements ResponseInterface
     /**
      * @return bool
      */
-    private function havingPendingHeaders()
+    protected function havingPendingHeaders()
     {
         if (!$this->statusSent) {
             return true;
