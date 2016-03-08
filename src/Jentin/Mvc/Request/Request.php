@@ -72,7 +72,7 @@ class Request implements RequestInterface
     protected $paramNamesGet = array();
 
     /** @var array */
-    protected $cookies;
+    protected $cookies = array();
 
 
     /**
@@ -475,7 +475,7 @@ class Request implements RequestInterface
     public function setScheme($scheme = null)
     {
         if ($scheme === null) {
-            $scheme = isset($this->server['HTTPS']) && $this->server['HTTPS'] == 'on'
+            $scheme = isset($this->server['HTTPS']) && $this->server['HTTPS'] === 'on'
                 ? 'https'
                 : 'http';
         }
