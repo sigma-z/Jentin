@@ -9,6 +9,7 @@
 namespace Test\Jentin\Mvc\Response;
 
 use Jentin\Mvc\Response\Response;
+use Jentin\Mvc\Response\ResponseException;
 
 /**
  * @author  Steffen Zeidler <sigma_z@sigma-scripts.de>
@@ -32,6 +33,41 @@ class ResponseFlushTest extends \PHPUnit_Framework_TestCase
         $this->thenTheSentResponseContentShouldBeEquals('Lorem ipsum!');
         $this->thenTheResponseContentShouldBeEquals('');
         $this->thenTheResponseHaveSentTheHeader('X-My-Custom-Header: test');
+    }
+
+
+    public function testFlushResponseSendsHeaderAndDoesNotThrowHeadersAlreadySentExceptionAfterSendingResponse()
+    {
+        $this->givenIHaveAResponse();
+        $this->whenISetHeaderName_withValue('X-My-Custom-Header', 'test');
+        $this->whenIAppendTheResponseContentWith("Lorem ipsum!\n");
+        $this->whenIFlushTheResponse();
+        $this->thenSendingHeadersIsNotPossible();
+        $this->thenTheHeadersShouldBeSent();
+        $this->thenTheResponseHaveSentTheHeader('X-My-Custom-Header: test');
+
+        $this->whenIAppendTheResponseContentWith("Lorem ipsum!\n");
+        $this->whenISendTheResponse();
+        $this->thenTheSentResponseContentShouldBeEquals("Lorem ipsum!\nLorem ipsum!\n");
+    }
+
+
+    /**
+     * @expectedException \Jentin\Mvc\Response\ResponseException
+     */
+    public function testFlushResponseSendsHeaderAndSendingResponseWithHeaderWillThrowHeadersAlreadySentException()
+    {
+        $this->givenIHaveAResponse();
+        $this->whenISetHeaderName_withValue('X-My-Custom-Header', 'test');
+        $this->whenIAppendTheResponseContentWith("Lorem ipsum!\n");
+        $this->whenIFlushTheResponse();
+        $this->thenSendingHeadersIsNotPossible();
+        $this->thenTheHeadersShouldBeSent();
+        $this->thenTheResponseHaveSentTheHeader('X-My-Custom-Header: test');
+
+        $this->whenISetHeaderName_withValue('X-My-Custom-Header', 'test');
+        $this->whenIAppendTheResponseContentWith("Lorem ipsum!\n");
+        $this->whenISendTheResponse();
     }
 
 
@@ -75,6 +111,12 @@ class ResponseFlushTest extends \PHPUnit_Framework_TestCase
     private function whenIFlushTheResponse()
     {
         $this->response->flushResponse();
+    }
+
+
+    private function whenISendTheResponse()
+    {
+        $this->response->sendResponse();
     }
 
 
@@ -137,9 +179,13 @@ class MockResponseFlush extends Response
     /**
      * @param  bool $throwExceptionOnHeadersSent
      * @return bool
+     * @throws ResponseException
      */
     public function canSendHeaders($throwExceptionOnHeadersSent = true)
     {
+        if ($this->headersSent && $throwExceptionOnHeadersSent) {
+            throw new ResponseException("Headers has been already sent!");
+        }
         return $this->headersSent === false;
     }
 

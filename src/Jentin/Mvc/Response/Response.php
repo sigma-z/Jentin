@@ -31,6 +31,9 @@ class Response implements ResponseInterface
     /** @var ResponseCookie[] */
     protected $cookies = array();
 
+    /** @var bool */
+    private $statusSent = false;
+
 
     /**
      * constructor
@@ -131,27 +134,23 @@ class Response implements ResponseInterface
      */
     public function sendHeaders($throwExceptionOnHeadersSent = true)
     {
-        // throws exception when headers already sent
-        $this->canSendHeaders($throwExceptionOnHeadersSent);
-
-        $this->sendHeader("HTTP/1.1 $this->statusCode $this->statusMessage");
-        $contentType = $this->getHeader('Content-Type');
-        if (!$contentType) {
-            $contentType = 'text/html; charset=utf-8';
-        }
-        $this->sendHeader('Content-Type: ' . $contentType);
-
-        foreach ($this->headers as $name => &$headerEntries) {
-            foreach ($headerEntries as &$headerEntry) {
-                if ($name == 'Content-Type' || $headerEntry['sent'] === true) {
-                    continue;
-                }
-                $this->sendHeader($name . ': ' . $headerEntry['value'], $headerEntry['replace']);
-                $headerEntry['sent'] = true;
+        if ($this->havingPendingHeaders()) {
+            // throws exception when headers already sent
+            $this->canSendHeaders($throwExceptionOnHeadersSent);
+            $this->sendStatusHeader();
+            $contentType = $this->getHeader('Content-Type');
+            if (!$contentType) {
+                $contentType = 'text/html; charset=utf-8';
+                $this->setHeader('Content-Type', $contentType);
             }
+            foreach ($this->headers as $name => &$headerEntries) {
+                foreach ($headerEntries as &$headerEntry) {
+                    $this->sendHeader($name . ': ' . $headerEntry['value'], $headerEntry['replace']);
+                    $headerEntry['sent'] = true;
+                }
+            }
+            $this->sendCookies();
         }
-
-        $this->sendCookies();
     }
 
 
@@ -298,6 +297,36 @@ class Response implements ResponseInterface
                 $cookie->isHttpOnly()
             );
         }
+        $this->cookies = array();
+    }
+
+
+    private function sendStatusHeader()
+    {
+        if (!$this->statusSent) {
+            $this->sendHeader("HTTP/1.1 $this->statusCode $this->statusMessage");
+            $this->statusSent = true;
+        }
+    }
+
+
+    /**
+     * @return bool
+     */
+    private function havingPendingHeaders()
+    {
+        if (!$this->statusSent) {
+            return true;
+        }
+
+        foreach ($this->headers as $name => $headerEntries) {
+            foreach ($headerEntries as $headerEntry) {
+                if ($headerEntry['sent'] === false) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
 }
