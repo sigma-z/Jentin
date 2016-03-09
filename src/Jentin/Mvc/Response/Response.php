@@ -251,9 +251,7 @@ class Response implements ResponseInterface
 
     public function flushResponse()
     {
-        if ($this->canSendHeaders(false)) {
-            $this->sendHeaders();
-        }
+        $this->sendHeaders();
         $this->sendContent();
         $this->content = '';
     }
