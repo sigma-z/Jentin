@@ -26,7 +26,7 @@ class RequestTest extends \PHPUnit_Framework_TestCase
      */
     public function testGetBaseUrl(array $server, $expectedBaseUrl)
     {
-        $request = new Request(array(), array(), $server);
+        $request = new Request([], [], $server);
         $this->assertEquals($expectedBaseUrl, $request->getBaseUrl());
     }
 
@@ -36,53 +36,77 @@ class RequestTest extends \PHPUnit_Framework_TestCase
      */
     public function provideGetBaseUrl()
     {
-        $testData = array();
+        return [
+            'request uri contains script file' => [
+                ['REQUEST_URI' => '/test/abc/123/test.php'],
+                '/test/abc/123/'
+            ],
+            'request uri contains only path with slash at the end' => [
+                ['REQUEST_URI' => '/test/abc/123/'],
+                '/test/abc/123/'
+            ],
+            'request uri contains only path without slash at the end' => [
+                ['REQUEST_URI' => '/test/abc/123'],
+                '/test/abc/'
+            ],
+            'request uri contains script name and query string' => [
+                ['REQUEST_URI' => '/test/abc/123/info.php?test=123&foo=on'],
+                '/test/abc/123/'
+            ],
+            'request uri contains query string' => [
+                ['REQUEST_URI' => '/test/abc/123?test=123&foo=on'],
+                '/test/abc/'
+            ],
+            'request uri contains query string and anchor' => [
+                ['REQUEST_URI' => '/test/abc/123?test=123&foo=on#test'],
+                '/test/abc/'
+            ],
+            'request uri contains anchor' => [
+                ['REQUEST_URI' => '/test/abc/123#test'],
+                '/test/abc/'
+            ],
+            'request uri contains base path' => [
+                [
+                    'REQUEST_URI' => '/test/abc/123/',
+                    'SCRIPT_NAME' => '/test/abc/test.php'
+                ],
+                '/test/abc/'
+            ],
+            'script with routing within document root' => [
+                [
+                    'REQUEST_URI' => '/module/controller/action?param=1',
+                    'SCRIPT_NAME' => '/test.php'
+                ],
+                '/'
+            ]
+        ];
+    }
 
-        // testcase 1: request uri contains script file
-        $testData[] = array(
-            array('REQUEST_URI' => '/test/abc/123/test.php'),
-            '/test/abc/123/'
-        );
-        // testcase 2: request uri contains only path with slash at the end
-        $testData[] = array(
-            array('REQUEST_URI' => '/test/abc/123/'),
-            '/test/abc/123/'
-        );
-        // testcase 3: request uri contains only path without slash at the end
-        $testData[] = array(
-            array('REQUEST_URI' => '/test/abc/123'),
-            '/test/abc/'
-        );
-        // testcase 4: request uri contains script name and query string
-        $testData[] = array(
-            array('REQUEST_URI' => '/test/abc/123/info.php?test=123&huhu=on'),
-            '/test/abc/123/'
-        );
-        // testcase 5: request uri contains query string
-        $testData[] = array(
-            array('REQUEST_URI' => '/test/abc/123?test=123&huhu=on'),
-            '/test/abc/'
-        );
-        // testcase 6: request uri contains query string and anchor
-        $testData[] = array(
-            array('REQUEST_URI' => '/test/abc/123?test=123&huhu=on#test'),
-            '/test/abc/'
-        );
-        // testcase 7: request uri contains anchor
-        $testData[] = array(
-            array('REQUEST_URI' => '/test/abc/123#test'),
-            '/test/abc/'
-        );
-        // testcase 8: request uri contains base path
-        $testData[] = array(
-            array(
-                'REQUEST_URI' => '/test/abc/123/',
-                'SCRIPT_NAME' => '/test/abc/test.php'
-            ),
-            '/test/abc/'
-        );
 
-        return $testData;
+    /**
+     * @dataProvider provideGetBasePath
+     * @param string $serverScriptName
+     * @param string $expectedBasePath
+     */
+    public function testGetBasePath($serverScriptName, $expectedBasePath)
+    {
+        $request = new Request([], [], ['SCRIPT_NAME' => $serverScriptName]);
+        $this->assertEquals($expectedBasePath, $request->getBasePath());
+
+    }
+
+
+    /**
+     * @return array[]
+     */
+    public function provideGetBasePath()
+    {
+        return [
+            'root-path' => ['/', '/'],
+            'root-path-with-windows-directory-separator' => ['\\', '/'],
+            'path' => ['/path/to/script.php', '/path/to'],
+            'path-with-windows-directory-separator' => ['\path\to\script.php', '/path/to'],
+        ];
     }
 
 

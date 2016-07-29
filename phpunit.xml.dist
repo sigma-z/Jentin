@@ -12,6 +12,12 @@
         </testsuite>
     </testsuites>
 
+    <filter>
+        <whitelist processUncoveredFilesFromWhitelist="true">
+            <directory suffix=".php">src</directory>
+        </whitelist>
+    </filter>
+
     <!--logging>
         <log type="junit" target="test/build/logs/junit.xml" logIncompleteSkipped="false"/>
         <log type="coverage-html" target="test/build/coverage" charset="UTF-8"

@@ -372,7 +372,7 @@ class Request implements RequestInterface
     public function setBasePath($basePath = null)
     {
         if ($basePath === null) {
-            $basePath = dirname($this->server['SCRIPT_NAME']);
+            $basePath = str_replace('\\', '/', dirname($this->server['SCRIPT_NAME']));
         }
         $this->basePath = $basePath;
     }
@@ -403,15 +403,19 @@ class Request implements RequestInterface
             $basePath = $this->getBasePath();
             $baseUrl = $this->getRequestUri();
 
-            if ($basePath && substr($baseUrl, 0, strlen($basePath)) == $basePath) {
-                $baseUrl = substr($baseUrl, 0, strlen($basePath) + 1);
+            if ($basePath && substr($baseUrl, 0, strlen($basePath)) === $basePath) {
+                $basePathLength = strlen($basePath);
+                if ($basePath !== '/') {
+                    $basePathLength++;
+                }
+                $baseUrl = substr($baseUrl, 0, $basePathLength);
             }
             else {
                 if (($pos = strpos($baseUrl, '?'))) {
                     $baseUrl = substr($baseUrl, 0, $pos);
                 }
                 if ($baseUrl[strlen($baseUrl) - 1] != '/') {
-                    $baseUrl = dirname($baseUrl) . '/';
+                    $baseUrl = str_replace('\\', '/', dirname($baseUrl)) . '/';
                 }
             }
         }
