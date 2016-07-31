@@ -92,7 +92,6 @@ class RequestTest extends \PHPUnit_Framework_TestCase
     {
         $request = new Request([], [], ['SCRIPT_NAME' => $serverScriptName]);
         $this->assertEquals($expectedBasePath, $request->getBasePath());
-
     }
 
 
@@ -101,12 +100,15 @@ class RequestTest extends \PHPUnit_Framework_TestCase
      */
     public function provideGetBasePath()
     {
-        return [
+        $testCases = [
             'root-path' => ['/', '/'],
-            'root-path-with-windows-directory-separator' => ['\\', '/'],
             'path' => ['/path/to/script.php', '/path/to'],
-            'path-with-windows-directory-separator' => ['\path\to\script.php', '/path/to'],
         ];
+        if (PHP_OS === 'Windows') {
+            $testCases['root-path-with-windows-directory-separator'] = ['\\', '/'];
+            $testCases['path-with-windows-directory-separator'] = ['\path\to\script.php', '/path/to'];
+        }
+        return $testCases;
     }
 
 
