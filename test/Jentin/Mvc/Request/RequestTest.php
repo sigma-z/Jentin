@@ -104,7 +104,7 @@ class RequestTest extends \PHPUnit_Framework_TestCase
             'root-path' => ['/', '/'],
             'path' => ['/path/to/script.php', '/path/to'],
         ];
-        if (PHP_OS === 'Windows') {
+        if (DIRECTORY_SEPARATOR === '\\') {
             $testCases['root-path-with-windows-directory-separator'] = ['\\', '/'];
             $testCases['path-with-windows-directory-separator'] = ['\path\to\script.php', '/path/to'];
         }
