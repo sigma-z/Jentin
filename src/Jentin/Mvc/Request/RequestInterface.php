@@ -19,8 +19,9 @@ interface RequestInterface
     /**
      * sets param by name
      *
-     * @param   string  $key
-     * @param   mixed   $value
+     * @param string  $key
+     * @param mixed   $value
+     * @return $this
      */
     public function setParam($key, $value);
 
@@ -37,6 +38,7 @@ interface RequestInterface
      * sets params
      *
      * @param array $params
+     * @return $this
      */
     public function setParams(array $params);
 
@@ -74,6 +76,7 @@ interface RequestInterface
      * sets module name
      *
      * @param string $moduleName
+     * @return $this
      */
     public function setModuleName($moduleName);
 
@@ -88,6 +91,7 @@ interface RequestInterface
      * sets controller name
      *
      * @param string $controllerName
+     * @return $this
      */
     public function setControllerName($controllerName);
 
@@ -102,6 +106,7 @@ interface RequestInterface
      * sets action name
      *
      * @param string $actionName
+     * @return $this
      */
     public function setActionName($actionName);
 
@@ -116,6 +121,7 @@ interface RequestInterface
      * sets request uri
      *
      * @param string $requestUri
+     * @return $this
      */
     public function setRequestUri($requestUri);
 
@@ -123,6 +129,7 @@ interface RequestInterface
      * sets base url
      *
      * @param string $baseUrl
+     * @return $this
      */
     public function setBaseUrl($baseUrl = null);
 
@@ -137,6 +144,7 @@ interface RequestInterface
      * sets base path
      *
      * @param string $basePath
+     * @return $this
      */
     public function setBasePath($basePath = null);
 
@@ -185,6 +193,7 @@ interface RequestInterface
      * Sets the request as dispatched, set by the controller
      *
      * @param  bool $isDispatched
+     * @return $this
      */
     public function setDispatched($isDispatched = true);
 

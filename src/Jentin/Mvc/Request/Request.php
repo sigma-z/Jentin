@@ -29,14 +29,14 @@ class Request implements RequestInterface
     /** @var string */
     protected static $defaultActionName = self::DEFAULT_ACTION;
 
-    /** @var array */
-    protected $server = array(
+    /** @var string[] */
+    protected $server = [
         'REQUEST_URI'   => '',
         'SCRIPT_NAME'   => '',
         'HTTP_HOST'     => 'localhost',
         'SERVER_NAME'   => '',
         'HTTPS'         => ''
-    );
+    ];
 
     /** @var string */
     protected $moduleName = '';
@@ -104,21 +104,23 @@ class Request implements RequestInterface
     /**
      * sets param by name
      *
-     * @param   string  $key
-     * @param   mixed   $value
+     * @param string $key
+     * @param mixed  $value
+     * @return $this
      */
     public function setParam($key, $value)
     {
         $this->params[$key] = $value;
+        return $this;
     }
 
 
     /**
      * gets param by name
      *
-     * @param   string  $name
-     * @param   mixed   $default
-     * @return  mixed
+     * @param string $name
+     * @param mixed  $default
+     * @return mixed
      */
     public function getParam($name, $default = null)
     {
@@ -126,7 +128,7 @@ class Request implements RequestInterface
             if (is_array($this->params[$name])) {
                 return $this->params[$name];
             }
-            else if ($this->params[$name] != '') {
+            else if ($this->params[$name] !== '') {
                 return trim($this->params[$name]);
             }
         }
@@ -189,10 +191,12 @@ class Request implements RequestInterface
      * sets params
      *
      * @param array $params
+     * @return $this
      */
     public function setParams(array $params)
     {
         $this->params = $params;
+        return $this;
     }
 
 
@@ -204,7 +208,7 @@ class Request implements RequestInterface
      */
     public function isPost($name)
     {
-        return in_array($name, $this->paramNamesPost);
+        return in_array($name, $this->paramNamesPost, true);
     }
 
 
@@ -216,7 +220,7 @@ class Request implements RequestInterface
      */
     public function isGet($name)
     {
-        return in_array($name, $this->paramNamesGet);
+        return in_array($name, $this->paramNamesGet, true);
     }
 
 
@@ -235,10 +239,12 @@ class Request implements RequestInterface
      * sets module name
      *
      * @param string $moduleName
+     * @return $this
      */
     public function setModuleName($moduleName)
     {
         $this->moduleName = $moduleName;
+        return $this;
     }
 
 
@@ -275,10 +281,12 @@ class Request implements RequestInterface
      * sets controller name
      *
      * @param string $controllerName
+     * @return $this
      */
     public function setControllerName($controllerName)
     {
         $this->controllerName = $controllerName;
+        return $this;
     }
 
 
@@ -315,10 +323,12 @@ class Request implements RequestInterface
      * sets action name
      *
      * @param string $actionName
+     * @return $this
      */
     public function setActionName($actionName)
     {
         $this->actionName = $actionName;
+        return $this;
     }
 
 
@@ -344,10 +354,12 @@ class Request implements RequestInterface
      * sets request uri
      *
      * @param string $requestUri
+     * @return $this
      */
     public function setRequestUri($requestUri)
     {
         $this->server['REQUEST_URI'] = $requestUri;
+        return $this;
     }
 
 
@@ -368,6 +380,7 @@ class Request implements RequestInterface
      * sets base path
      *
      * @param string $basePath
+     * @return $this
      */
     public function setBasePath($basePath = null)
     {
@@ -375,6 +388,7 @@ class Request implements RequestInterface
             $basePath = str_replace('\\', '/', dirname($this->server['SCRIPT_NAME']));
         }
         $this->basePath = $basePath;
+        return $this;
     }
 
 
@@ -396,6 +410,7 @@ class Request implements RequestInterface
      * sets base url
      *
      * @param string $baseUrl
+     * @return $this
      */
     public function setBaseUrl($baseUrl = null)
     {
@@ -411,15 +426,18 @@ class Request implements RequestInterface
                 $baseUrl = substr($baseUrl, 0, $basePathLength);
             }
             else {
-                if (($pos = strpos($baseUrl, '?'))) {
+                $pos = strpos($baseUrl, '?');
+                if ($pos > 0) {
                     $baseUrl = substr($baseUrl, 0, $pos);
                 }
-                if ($baseUrl[strlen($baseUrl) - 1] != '/') {
+                if ($baseUrl[strlen($baseUrl) - 1] !== '/') {
                     $baseUrl = str_replace('\\', '/', dirname($baseUrl)) . '/';
                 }
             }
         }
         $this->baseUrl = $baseUrl;
+
+        return $this;
     }
 
 
@@ -441,6 +459,7 @@ class Request implements RequestInterface
      * sets host
      *
      * @param string $host
+     * @return $this
      */
     public function setHost($host = null)
     {
@@ -454,6 +473,7 @@ class Request implements RequestInterface
         }
 
         $this->host = $host;
+        return $this;
     }
 
 
@@ -475,6 +495,7 @@ class Request implements RequestInterface
      * sets scheme
      *
      * @param string $scheme
+     * @return $this
      */
     public function setScheme($scheme = null)
     {
@@ -484,6 +505,7 @@ class Request implements RequestInterface
                 : 'http';
         }
         $this->scheme = $scheme;
+        return $this;
     }
 
 
@@ -580,7 +602,7 @@ class Request implements RequestInterface
      */
     public function isXmlHttpRequest()
     {
-        return $this->getHeader('X_REQUESTED_WITH') == 'XMLHttpRequest';
+        return $this->getHeader('X_REQUESTED_WITH') === 'XMLHttpRequest';
     }
 
 
@@ -619,11 +641,13 @@ class Request implements RequestInterface
     /**
      * Sets dispatched flag for the request
      *
-     * @param  bool $isDispatched
+     * @param bool $isDispatched
+     * @return $this
      */
     public function setDispatched($isDispatched = true)
     {
         $this->isDispatched = $isDispatched;
+        return $this;
     }
 
 
