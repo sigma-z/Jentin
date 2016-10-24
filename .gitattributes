@@ -1,0 +1,14 @@
+# Auto detect text files and perform LF normalization
+
+# used to remove files from deployment using `git archive`
+# git files
+    .gitattributes      export-ignore
+    .gitignore          export-ignore
+# test files
+    phpunit.xml.dist    export-ignore
+    **/test             export-ignore
+# travis configuration
+    .travis.yml         export-ignore
+# documentation and example files
+    **/doc              export-ignore
+    **/example          export-ignore
