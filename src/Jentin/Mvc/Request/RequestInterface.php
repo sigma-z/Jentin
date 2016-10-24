@@ -50,12 +50,26 @@ interface RequestInterface
     public function getParams();
 
     /**
+     * @param string $key
+     * @param mixed  $value
+     * @return $this
+     */
+    public function setPostParam($key, $value);
+
+    /**
      * Returns true, if request param is a post parameter
      *
      * @param  string $name
      * @return bool
      */
     public function isPost($name);
+
+    /**
+     * @param string $key
+     * @param mixed  $value
+     * @return $this
+     */
+    public function setGetParam($key, $value);
 
     /**
      * Returns true, if request param is a get parameter
@@ -163,6 +177,18 @@ interface RequestInterface
      * @return mixed
      */
     public function getServer($name = null, $default = null);
+
+    /**
+     * @return string
+     */
+    public function getMethod();
+
+    /**
+     * gets cookies
+     *
+     * @return array
+     */
+    public function getCookies();
 
     /**
      * gets cookie by name

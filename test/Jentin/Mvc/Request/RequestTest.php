@@ -120,7 +120,7 @@ class RequestTest extends \PHPUnit_Framework_TestCase
      */
     public function testGetHost(array $server, $expectedHost)
     {
-        $request = new Request(array(), array(), $server);
+        $request = new Request([], [], $server);
         $this->assertEquals($expectedHost, $request->getHost());
     }
 
@@ -130,18 +130,18 @@ class RequestTest extends \PHPUnit_Framework_TestCase
      */
     public function provideGetHost()
     {
-        $testData = array();
+        $testData = [];
 
         // test case 1: host by HTTP_HOST
-        $testData[] = array(
-            array('HTTP_HOST' => 'localhost'),
+        $testData[] = [
+            ['HTTP_HOST' => 'localhost'],
             'localhost'
-        );
+        ];
         // test case 2: host by SERVER_NAME
-        $testData[] = array(
-            array('SERVER_NAME' => 'localhost'),
+        $testData[] = [
+            ['SERVER_NAME' => 'localhost'],
             'localhost'
-        );
+        ];
 
         return $testData;
     }
@@ -149,18 +149,46 @@ class RequestTest extends \PHPUnit_Framework_TestCase
 
     public function testGetScheme()
     {
-        $server = array('HTTPS' => 'on');
-        $request = new Request(array(), array(), $server);
+        $server = ['HTTPS' => 'on'];
+        $request = new Request([], [], $server);
         $this->assertEquals('https', $request->getScheme());
     }
 
 
     public function testPostParamsPreferredOverGetParams()
     {
-        $request = new Request(array('test' => 'post'), array('test' => 'get'));
+        $post = ['test' => 'post'];
+        $get = ['test' => 'get'];
+        $request = new Request($post, $get);
         $this->assertEquals('post', $request->getParam('test'));
         $this->assertTrue($request->isGet('test'));
         $this->assertTrue($request->isPost('test'));
+    }
+
+
+    public function testSetPostParam()
+    {
+        $post = [];
+        $get = ['test' => 'abc'];
+        $request = new Request($post, $get);
+        $request->setPostParam('test', '123');
+
+        $this->assertEquals('123', $request->getParam('test'));
+        $this->assertTrue($request->isPost('test'));
+    }
+
+
+    public function testSetGetParam()
+    {
+        $post = ['test' => 'abc'];
+        $request = new Request($post);
+        $request->setGetParam('test', '123');
+        $request->setGetParam('abc', 'xyz');
+
+        $this->assertEquals('abc', $request->getParam('test'));
+        $this->assertTrue($request->isPost('test'));
+        $this->assertEquals('xyz', $request->getParam('abc'));
+        $this->assertTrue($request->isGet('abc'));
     }
 
 
@@ -173,7 +201,7 @@ class RequestTest extends \PHPUnit_Framework_TestCase
     public function testGetQuery($url, $expected)
     {
         $server = array('REQUEST_URI' => $url);
-        $request = new Request(array(), array(), $server);
+        $request = new Request([], [], $server);
         $this->assertEquals($expected['query'], $request->getQuery());
     }
 
@@ -187,7 +215,7 @@ class RequestTest extends \PHPUnit_Framework_TestCase
     public function testGetFragment($url, $expected)
     {
         $server = array('REQUEST_URI' => $url);
-        $request = new Request(array(), array(), $server);
+        $request = new Request([], [], $server);
         $this->assertEquals($expected['fragment'], $request->getFragment());
     }
 
@@ -197,63 +225,63 @@ class RequestTest extends \PHPUnit_Framework_TestCase
      */
     public function provideRequestUrls()
     {
-        $testCases = array();
+        $testCases = [];
 
-        $testCases[] = array(
+        $testCases[] = [
             '/test/abc/action?hello=world#?_de=123',
-            array(
+            [
                 'query' => 'hello=world',
                 'fragment' => '?_de=123'
-            )
-        );
+            ]
+        ];
 
-        $testCases[] = array(
+        $testCases[] = [
             '/test/abc/action',
-            array(
+            [
                 'query' => '',
                 'fragment' => ''
-            )
-        );
+            ]
+        ];
 
-        $testCases[] = array(
+        $testCases[] = [
             '/test/abc/action#_dc=123',
-            array(
+            [
                 'query' => '',
                 'fragment' => '_dc=123'
-            )
-        );
+            ]
+        ];
 
-        $testCases[] = array(
+        $testCases[] = [
             '/test/abc/action#_dc=123?hello=world',
-            array(
+            [
                 'query' => '',
                 'fragment' => '_dc=123?hello=world'
-            )
-        );
+            ]
+        ];
 
-        $testCases[] = array(
+        $testCases[] = [
             '/test/abc/action?hello=world',
-            array(
+            [
                 'query' => 'hello=world',
                 'fragment' => ''
-            )
-        );
+            ]
+        ];
 
-        $testCases[] = array(
+        $testCases[] = [
             '/test/abc/action?##hello=world',
-            array(
+            [
                 'query' => '',
                 'fragment' => '#hello=world'
-            )
-        );
+            ]
+        ];
 
-        $testCases[] = array(
+        $testCases[] = [
             '/test/abc/action??##hello=world',
-            array(
+            [
                 'query' => '?',
                 'fragment' => '#hello=world'
-            )
-        );
+            ]
+        ];
 
         return $testCases;
     }
@@ -261,11 +289,11 @@ class RequestTest extends \PHPUnit_Framework_TestCase
 
     public function testGetServer()
     {
-        $serverVars = array(
+        $serverVars = [
             'REQUEST_URI' => '/test/abc/123/test.php',
             'HTTPS' => 'on'
-        );
-        $request = new Request(array(), array(), $serverVars);
+        ];
+        $request = new Request([], [], $serverVars);
 
         $this->assertEquals($serverVars['REQUEST_URI'], $request->getServer('REQUEST_URI'));
         $this->assertNull($request->getServer('TEST_SOMETHING'));

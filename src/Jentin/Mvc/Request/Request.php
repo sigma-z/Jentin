@@ -201,6 +201,26 @@ class Request implements RequestInterface
 
 
     /**
+     * @param string $key
+     * @param mixed  $value
+     * @return $this
+     */
+    public function setPostParam($key, $value)
+    {
+        $pos = array_search($key, $this->paramNamesGet, true);
+        if ($pos !== false) {
+            unset($this->paramNamesPost[$pos]);
+        }
+
+        $this->params[$key] = $value;
+        if (!in_array($key, $this->paramNamesPost, true)) {
+            $this->paramNamesPost[] = $key;
+        }
+        return $this;
+    }
+
+
+    /**
      * Returns true, if request param is a post parameter
      *
      * @param  string $name
@@ -209,6 +229,23 @@ class Request implements RequestInterface
     public function isPost($name)
     {
         return in_array($name, $this->paramNamesPost, true);
+    }
+
+
+    /**
+     * @param string $key
+     * @param mixed  $value
+     * @return $this
+     */
+    public function setGetParam($key, $value)
+    {
+        if (!$this->isPost($key)) {
+            $this->params[$key] = $value;
+            if (!in_array($key, $this->paramNamesGet, true)) {
+                $this->paramNamesGet[] = $key;
+            }
+        }
+        return $this;
     }
 
 
@@ -526,8 +563,8 @@ class Request implements RequestInterface
     /**
      * gets header by name
      *
-     * @param   string  $headerName
-     * @return  string
+     * @param  string $headerName
+     * @return string|null
      */
     public function getHeader($headerName)
     {
@@ -566,6 +603,17 @@ class Request implements RequestInterface
         return isset($this->server[$name])
             ? $this->server[$name]
             : $default;
+    }
+
+
+    /**
+     * returns the method by which the request was made
+     *
+     * @return string
+     */
+    public function getMethod()
+    {
+        return $this->getServer('REQUEST_METHOD');
     }
 
 
