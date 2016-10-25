@@ -10,5 +10,5 @@
 # travis configuration
     .travis.yml         export-ignore
 # documentation and example files
-    **/doc              export-ignore
+    **/docs             export-ignore
     **/example          export-ignore
