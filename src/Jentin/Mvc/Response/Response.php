@@ -52,6 +52,7 @@ class Response implements ResponseInterface
      * @param string $name
      * @param string $value
      * @param bool   $replace
+     * @return $this
      */
     public function setHeader($name, $value = '', $replace = true)
     {
@@ -66,15 +67,18 @@ class Response implements ResponseInterface
         else {
             $this->headers[$name][] = $header;
         }
+        return $this;
     }
 
 
     /**
      * @param string $name
+     * @return $this
      */
     public function unsetHeader($name)
     {
         unset($this->headers[$name]);
+        return $this;
     }
 
 
@@ -119,10 +123,11 @@ class Response implements ResponseInterface
      * sets content type
      *
      * @param string $contentType
+     * @return $this
      */
     public function setContentType($contentType)
     {
-        $this->setHeader('Content-Type', $contentType);
+        return $this->setHeader('Content-Type', $contentType);
     }
 
 
@@ -155,18 +160,33 @@ class Response implements ResponseInterface
 
 
     /**
-     * appends content
+     * sets body/content
      *
      * @param string $content
+     * @return $this
      */
-    public function appendContent($content)
+    public function setContent($content)
     {
-        $this->content .= $content;
+        $this->content = $content;
+        return $this;
     }
 
 
     /**
-     * gets content
+     * appends body/content
+     *
+     * @param string $content
+     * @return $this
+     */
+    public function appendContent($content)
+    {
+        $this->content .= $content;
+        return $this;
+    }
+
+
+    /**
+     * gets body/content
      *
      * @return string
      */
@@ -177,26 +197,52 @@ class Response implements ResponseInterface
 
 
     /**
-     * sets content
+     * alias of setContent()
      *
      * @param string $content
+     * @return $this
      */
-    public function setContent($content)
+    public function setBody($content)
     {
-        $this->content = $content;
+        return $this->setContent($content);
+    }
+
+
+    /**
+     * alias of appendContent()
+     *
+     * @param string $content
+     * @return $this
+     */
+    public function appendBody($content)
+    {
+        return $this->appendContent($content);
+    }
+
+
+    /**
+     * alias of getContent()
+     *
+     * @return string
+     */
+    public function getBody()
+    {
+        return $this->getContent();
     }
 
 
     /**
      * sets http response status
      *
-     * @param integer $code
+     * @param int     $code
      * @param string  $message
+     * @return $this
      */
     public function setStatus($code, $message = '')
     {
         $this->statusCode = $code;
         $this->statusMessage = $message;
+        return $this;
     }
 
 

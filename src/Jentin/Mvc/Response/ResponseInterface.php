@@ -22,8 +22,16 @@ interface ResponseInterface
      * @param string $name
      * @param string $value
      * @param bool   $replace
+     * @return $this
      */
     public function setHeader($name, $value = '', $replace = true);
+
+
+    /**
+     * @param $name
+     * @return $this
+     */
+    public function unsetHeader($name);
 
     /**
      * gets header
@@ -38,6 +46,7 @@ interface ResponseInterface
      * append content
      *
      * @param string $content
+     * @return $this
      */
     public function appendContent($content);
 
@@ -52,6 +61,7 @@ interface ResponseInterface
      * sets content
      *
      * @param string $content
+     * @return $this
      */
     public function setContent($content);
 
@@ -64,5 +74,22 @@ interface ResponseInterface
      * sends response
      */
     public function sendResponse();
+
+    /**
+     * @param int    $code
+     * @param string $message
+     * @return $this
+     */
+    public function setStatus($code, $message = '');
+
+    /**
+     * @return int
+     */
+    public function getStatusCode();
+
+    /**
+     * @return string
+     */
+    public function getStatusMessage();
 
 }
