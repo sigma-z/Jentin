@@ -184,6 +184,14 @@ interface RequestInterface
     public function getMethod();
 
     /**
+     * gets header by name
+     *
+     * @param  string $headerName
+     * @return string|null
+     */
+    public function getHeader($headerName);
+
+    /**
      * gets cookies
      *
      * @return array
