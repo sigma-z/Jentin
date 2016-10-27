@@ -43,6 +43,12 @@ interface ResponseInterface
     public function getHeader($name, $default = null);
 
     /**
+     * @param string $contentType
+     * @return $this
+     */
+    public function setContentType($contentType);
+
+    /**
      * append content
      *
      * @param string $content

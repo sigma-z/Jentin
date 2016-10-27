@@ -236,7 +236,6 @@ class HttpKernel
 
     /**
      * @param  Route\RouteInterface $route
-     * @return bool|ResponseInterface
      */
     private function dispatchRouteCallback(RouteInterface $route)
     {
@@ -346,7 +345,7 @@ class HttpKernel
         // absolute controller class name (with namespace)
         $fullQualifiedClassName = Util::parsePattern($this->controllerClassNamePattern, $params);
         // add namespace separator to make the class name absolute
-        if ($fullQualifiedClassName[0] != '\\') {
+        if ($fullQualifiedClassName[0] !== '\\') {
             $fullQualifiedClassName = '\\' . $fullQualifiedClassName;
         }
         return $fullQualifiedClassName;
@@ -365,7 +364,7 @@ class HttpKernel
     public function getControllerPath($moduleName, $controllerName)
     {
         $moduleNameCamelCased = Util::getCamelCased($moduleName);
-        if (!in_array($moduleNameCamelCased, $this->modules)) {
+        if (!in_array($moduleNameCamelCased, $this->modules, true)) {
             throw new HttpKernelException("Module '$moduleNameCamelCased' is not defined!");
         }
 
@@ -391,7 +390,7 @@ class HttpKernel
      * @param  ResponseInterface|mixed $responseContent
      * @return ResponseInterface
      */
-    private function convertResponseIntoHtmlOrJsonResponse($responseContent)
+    protected function convertResponseIntoHtmlOrJsonResponse($responseContent)
     {
         if ($responseContent instanceof ResponseInterface) {
             return $responseContent;

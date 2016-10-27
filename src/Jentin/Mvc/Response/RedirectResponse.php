@@ -34,10 +34,11 @@ class RedirectResponse extends Response
      * sets redirect url
      *
      * @param string $url
+     * @return $this
      */
     public function setRedirectUrl($url)
     {
-        $this->setHeader('Location', $url);
+        return $this->setHeader('Location', $url);
     }
 
 
