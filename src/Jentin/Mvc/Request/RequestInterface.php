@@ -206,14 +206,12 @@ interface RequestInterface
      */
     public function getQuery();
 
-
     /**
      * gets url fragment
      *
      * @return string
      */
     public function getFragment();
-
 
     /**
      * Sets the request as dispatched, set by the controller
@@ -223,12 +221,17 @@ interface RequestInterface
      */
     public function setDispatched($isDispatched = true);
 
-
     /**
      * If the request has not been dispatched, yet, it returns false
      *
      * @return bool
      */
     public function isDispatched();
+
+    /** @return string */
+    public function getScheme();
+
+    /** @return string */
+    public function getHost();
 
 }
