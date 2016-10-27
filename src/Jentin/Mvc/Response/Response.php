@@ -25,7 +25,7 @@ class Response implements ResponseInterface
     /** @var string */
     protected $statusMessage = 'OK';
 
-    /** @var array */
+    /** @var array[] */
     protected $headers = array();
 
     /** @var ResponseCookie[] */
