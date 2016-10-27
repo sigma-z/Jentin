@@ -26,10 +26,10 @@ class Response implements ResponseInterface
     protected $statusMessage = 'OK';
 
     /** @var array[] */
-    protected $headers = array();
+    protected $headers = [];
 
     /** @var ResponseCookie[] */
-    protected $cookies = array();
+    protected $cookies = [];
 
     /** @var bool */
     protected $statusSent = false;
@@ -62,7 +62,7 @@ class Response implements ResponseInterface
             'sent' => false
         );
         if ($replace) {
-            $this->headers[$name] = array($header);
+            $this->headers[$name] = [$header];
         }
         else {
             $this->headers[$name][] = $header;
