@@ -148,10 +148,10 @@ class Response implements ResponseInterface
                 $contentType = 'text/html; charset=utf-8';
                 $this->setHeader('Content-Type', $contentType);
             }
-            foreach ($this->headers as $name => &$headerEntries) {
-                foreach ($headerEntries as &$headerEntry) {
+            foreach ($this->headers as $name => $headerEntries) {
+                foreach ($headerEntries as $index => $headerEntry) {
                     $this->sendHeader($name . ': ' . $headerEntry['value'], $headerEntry['replace']);
-                    $headerEntry['sent'] = true;
+                    $this->headers[$name][$index]['sent'] = true;
                 }
             }
             $this->sendCookies();
