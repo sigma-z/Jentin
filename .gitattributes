@@ -1,4 +1,4 @@
-# Auto detect text files and perform LF normalization
+*.php text eol=lf
 
 # used to remove files from deployment using `git archive`
 # git files
