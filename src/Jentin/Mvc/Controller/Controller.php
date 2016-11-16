@@ -205,7 +205,7 @@ class Controller implements ControllerInterface, Pluggable
             return;
         }
         $actionMethod = $this->getActionMethod();
-        if (method_exists($this, $actionMethod)) {
+        if (is_callable($this, $actionMethod)) {
             $response = call_user_func(array($this, $actionMethod));
             if ($response) {
                 $this->response = $response;
