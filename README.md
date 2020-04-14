@@ -6,7 +6,7 @@ It components are loose coupled, introduced by interfaces, clean, maintainable a
 
 Requires
 ---
- * PHP 5.5.9 or greater
+ * PHP 7.1.3 or greater
  * Symfony's EventDispatcher (https://github.com/symfony/EventDispatcher)
 
 [On GitHub]: https://github.com/sigma-z/Jentin

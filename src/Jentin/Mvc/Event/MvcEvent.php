@@ -10,7 +10,7 @@
 namespace Jentin\Mvc\Event;
 
 use Jentin\Mvc\Response\ResponseInterface;
-use Symfony\Component\EventDispatcher\Event;
+use Symfony\Contracts\EventDispatcher\Event;
 
 /**
  * Static class, that defines Mvc events as class constants

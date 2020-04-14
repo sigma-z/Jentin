@@ -202,7 +202,7 @@ class HttpKernel
 
         $responseFilterEvent = new ResponseFilterEvent($this->request, $this->response);
         $eventDispatcher = $this->getEventDispatcher();
-        $eventDispatcher->dispatch(MvcEvent::ON_FILTER_RESPONSE, $responseFilterEvent);
+        $eventDispatcher->dispatch($responseFilterEvent, MvcEvent::ON_FILTER_RESPONSE);
 
         $response = $responseFilterEvent->getResponse();
         return $this->convertResponseIntoHtmlOrJsonResponse($response);
@@ -214,7 +214,7 @@ class HttpKernel
         // EVENT onRoute
         $routeEvent = new RouteEvent($this->request);
         $eventDispatcher = $this->getEventDispatcher();
-        $eventDispatcher->dispatch(MvcEvent::ON_ROUTE, $routeEvent);
+        $eventDispatcher->dispatch($routeEvent, MvcEvent::ON_ROUTE);
         if ($routeEvent->hasResponse()) {
             $this->response = $routeEvent->getResponse();
             if ($this->request->isDispatched()) {
@@ -241,7 +241,7 @@ class HttpKernel
     {
         $callbackEvent = new RouteCallbackEvent($this->request, $route, $this->response);
         $eventDispatcher = $this->getEventDispatcher();
-        $eventDispatcher->dispatch(MvcEvent::ON_ROUTE_CALLBACK, $callbackEvent);
+        $eventDispatcher->dispatch($callbackEvent, MvcEvent::ON_ROUTE_CALLBACK);
         if ($callbackEvent->hasResponse()) {
             $this->response = $callbackEvent->getResponse();
             if ($this->request->isDispatched()) {
@@ -263,7 +263,7 @@ class HttpKernel
         // EVENT onController
         $controllerEvent = new ControllerEvent($controller);
         $eventDispatcher = $this->getEventDispatcher();
-        $eventDispatcher->dispatch(MvcEvent::ON_CONTROLLER, $controllerEvent);
+        $eventDispatcher->dispatch($controllerEvent, MvcEvent::ON_CONTROLLER);
         if ($controllerEvent->hasResponse()) {
             $this->response = $controllerEvent->getResponse();
             if ($this->request->isDispatched()) {
