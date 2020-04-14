@@ -1,5 +1,8 @@
-Jentin MVC Framework [![Build Status](https://travis-ci.org/sigma-z/Jentin.png)](https://travis-ci.org/sigma-z/Jentin)
+Jentin MVC Framework
 ===
+[![Latest Stable Version](https://img.shields.io/packagist/v/sigma-z/jentin.svg?style=flat-square)](https://packagist.org/packages/sigma-z/jentin)
+[![Minimum PHP Version](https://img.shields.io/badge/php-%3E%3D%207.2-8892BF.svg?style=flat-square)](https://php.net/)
+[![CI Status](https://github.com/sigma-z/simtt/workflows/Continuous%20Integration/badge.svg)](https://github.com/sigma-z/jentin/actions)
 
 It's lightweight and object orientated programmed.
 It components are loose coupled, introduced by interfaces, clean, maintainable and extensible.
