@@ -204,7 +204,7 @@ class Route implements RouteInterface
         if (preg_match($routePattern, $url, $matches)) {
             foreach ($matches as $name => $value) {
                 $value = rtrim($value, '/');
-                if ($name[0] == 'P' && !empty($value)) {
+                if (!empty($value) && strpos($name, 'P') === 0) {
                     $params[substr($name, 1)] = rtrim($value, '/');
                 }
             }
