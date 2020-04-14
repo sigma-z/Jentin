@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "10fd3b5759da1ca3e4d1731452be717a",
+    "content-hash": "5a04dc2cfab24be89b6cb1f7b46d008b",
     "packages": [
         {
             "name": "symfony/event-dispatcher",
@@ -1660,6 +1660,8 @@
     "stability-flags": [],
     "prefer-stable": false,
     "prefer-lowest": false,
-    "platform": [],
+    "platform": {
+        "php": "^7.2"
+    },
     "platform-dev": []
 }
