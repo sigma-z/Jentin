@@ -31,9 +31,6 @@ jobs:
         php-version: ${{ matrix.php-version }}
         ini-values: assert.exception=1, zend.assertions=1
 
-    - name: Validate composer.json and composer.lock
-      run: composer validate
-
     - name: Install lowest dependencies with composer
       if: matrix.dependencies == 'lowest'
       run: composer update --no-ansi --no-interaction --no-progress --prefer-lowest
