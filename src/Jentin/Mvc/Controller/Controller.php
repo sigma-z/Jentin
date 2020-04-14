@@ -199,7 +199,7 @@ class Controller implements ControllerInterface, Pluggable
     protected function processDispatch()
     {
         $controllerEvent = new ControllerEvent($this);
-        $this->eventDispatcher->dispatch(MvcEvent::ON_CONTROLLER_DISPATCH, $controllerEvent);
+        $this->eventDispatcher->dispatch($controllerEvent, MvcEvent::ON_CONTROLLER_DISPATCH);
         if ($controllerEvent->hasResponse()) {
             $this->response = $controllerEvent->getResponse();
             return;

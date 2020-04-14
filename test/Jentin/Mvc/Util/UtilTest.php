@@ -10,12 +10,13 @@
 namespace Test\Jentin\Mvc;
 
 use Jentin\Mvc\Util\Util;
+use PHPUnit\Framework\TestCase;
 
 /**
  * UtilTest
  * @author Steffen Zeidler <sigma_z@sigma-scripts.de>
  */
-class UtilTest extends \PHPUnit_Framework_TestCase
+class UtilTest extends TestCase
 {
 
     /**

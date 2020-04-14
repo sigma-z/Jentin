@@ -10,12 +10,13 @@
 namespace Test\Jentin\Mvc;
 
 use Jentin\Mvc\Request\Request;
+use PHPUnit\Framework\TestCase;
 
 /**
  * RequestTest
  * @author Steffen Zeidler <sigma_z@sigma-scripts.de>
  */
-class RequestTest extends \PHPUnit_Framework_TestCase
+class RequestTest extends TestCase
 {
 
     /**
