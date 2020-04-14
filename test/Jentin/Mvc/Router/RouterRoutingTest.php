@@ -12,11 +12,12 @@ namespace Test\Jentin\Mvc\Router;
 use Jentin\Mvc\Request\Request;
 use Jentin\Mvc\Route\Route;
 use Jentin\Mvc\Router\Router;
+use PHPUnit\Framework\TestCase;
 
 /**
  * @author Steffen Zeidler <sigma_z@sigma-scripts.de>
  */
-class RouterRoutingTest extends \PHPUnit_Framework_TestCase
+class RouterRoutingTest extends TestCase
 {
 
     /** @var Router */

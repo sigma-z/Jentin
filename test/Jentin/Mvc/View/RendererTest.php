@@ -11,12 +11,13 @@ namespace Test\Jentin\Mvc\View;
 
 use Jentin\Mvc\View\Renderer,
     Jentin\Mvc\Plugin\PluginBroker;
+use PHPUnit\Framework\TestCase;
 
 /**
  * RendererTest
  * @author Steffen Zeidler <sigma_z@sigma-scripts.de>
  */
-class RendererTest extends \PHPUnit_Framework_TestCase
+class RendererTest extends TestCase
 {
 
     /** @var Renderer */
@@ -106,7 +107,7 @@ class RendererTest extends \PHPUnit_Framework_TestCase
 
 
     /**
-     * @expectedException \PHPUnit_Framework_Error_Notice
+     * @expectedException \PHPUnit\Framework\Error\Notice
      */
     public function testGetNotExistingVarTriggersError()
     {

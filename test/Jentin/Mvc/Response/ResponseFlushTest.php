@@ -10,12 +10,13 @@ namespace Test\Jentin\Mvc\Response;
 
 use Jentin\Mvc\Response\Response;
 use Jentin\Mvc\Response\ResponseException;
+use PHPUnit\Framework\TestCase;
 
 /**
  * @author  Steffen Zeidler <sigma_z@sigma-scripts.de>
  * @created 01.08.2014
  */
-class ResponseFlushTest extends \PHPUnit_Framework_TestCase
+class ResponseFlushTest extends TestCase
 {
 
     /** @var MockResponseFlush */

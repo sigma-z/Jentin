@@ -10,12 +10,13 @@
 namespace Test\Jentin\Mvc\Response;
 
 use Jentin\Mvc\Response\RedirectResponse;
+use PHPUnit\Framework\TestCase;
 
 /**
  * RedirectResponseTest
  * @author Steffen Zeidler <sigma_z@sigma-scripts.de>
  */
-class RedirectResponseTest extends \PHPUnit_Framework_TestCase
+class RedirectResponseTest extends TestCase
 {
 
     /**

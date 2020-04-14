@@ -11,12 +11,13 @@ namespace Test\Jentin\Mvc;
 
 use Jentin\Mvc\HttpKernel;
 use Jentin\Mvc\Router\Router;
+use PHPUnit\Framework\TestCase;
 
 /**
  * DispatcherTest
  * @author Steffen Zeidler <sigma_z@sigma-scripts.de>
  */
-class HttpKernelTest extends \PHPUnit_Framework_TestCase
+class HttpKernelTest extends TestCase
 {
 
     /**

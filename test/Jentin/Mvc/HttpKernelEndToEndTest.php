@@ -20,11 +20,12 @@ use Jentin\Mvc\Response\Response;
 use Jentin\Mvc\Response\ResponseInterface;
 use Jentin\Mvc\Route\Route;
 use Jentin\Mvc\Router\Router;
+use PHPUnit\Framework\TestCase;
 
 /**
  * @author Steffen Zeidler <sigma_z@sigma-scripts.de>
  */
-class HttpKernelEndToEndTest extends \PHPUnit_Framework_TestCase
+class HttpKernelEndToEndTest extends TestCase
 {
 
     /** @var HttpKernel */

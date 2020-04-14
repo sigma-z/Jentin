@@ -10,12 +10,13 @@
 namespace Test\Jentin\Mvc\Response;
 
 use Jentin\Mvc\Response\Response;
+use PHPUnit\Framework\TestCase;
 
 /**
  * ResponseTest
  * @author Steffen Zeidler <sigma_z@sigma-scripts.de>
  */
-class ResponseTest extends \PHPUnit_Framework_TestCase
+class ResponseTest extends TestCase
 {
 
     /** @var Response */
